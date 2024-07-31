@@ -1,0 +1,27 @@
+sequenceDiagram
+    participant Client
+    participant API
+    participant DBService
+    participant JudgeService
+    participant InvestmentService
+
+    Client->>API: POST /api/session/create
+    API->>DBService: createSession()
+    DBService-->>API: sessionId
+    API-->>Client: sessionId
+
+    Client->>API: POST /api/session/activate
+    API->>DBService: getSession(sessionId)
+    DBService-->>API: session
+    API->>JudgeService: judge(session.images, impressionText)
+    JudgeService-->>API: chosenImageIndex
+    API->>InvestmentService: applyStrategy(chosenImageIndex)
+    API->>InvestmentService: evaluateMostSuccessful()
+    InvestmentService-->>API: mostSuccessfulStrategy
+    API->>DBService: updateSession(sessionId, {strategy, isReady: true})
+    API-->>Client: Success message
+
+    Client->>API: GET /api/session/{sessionId}
+    API->>DBService: getSession(sessionId)
+    DBService-->>API: session
+    API-->>Client: {imageUrl, successfulPrediction}

@@ -1,0 +1,11 @@
+{
+  "df0933a4-3b53-4b10-9556-8fa267033fb0": {
+    "id": "df0933a4-3b53-4b10-9556-8fa267033fb0",
+    "images": [
+      "image1.jpg",
+      "image2.jpg"
+    ],
+    "isReady": true,
+    "strategy": 0
+  }
+}
