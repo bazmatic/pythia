@@ -1,7 +1,7 @@
 // pages/api/session/activate.ts
 import { NextApiRequest, NextApiResponse } from 'next';
-import db from '@/services/db';
-import { Session } from '@/types';
+import { useService } from '@/services/container';
+import { SessionService } from '@/services/session.service';
 
 /**
  * @swagger
@@ -17,41 +17,26 @@ import { Session } from '@/types';
  *             properties:
  *               sessionId:
  *                 type: string
+ *                 example: "ddcbbb78-d5e9-4090-af86-b27cc910df8e"
  *               impressionText:
  *                 type: string
+ *                 example: "A dark scene with vertical components. standing on white carpet"
  *     responses:
  *       200:
  *         description: Successfully activated the session
  *       404:
  *         description: Session not found
  */
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     const { sessionId, impressionText } = req.body;
 
-    const session: Session = db.getSession(sessionId);
-    if (!session) {
-      return res.status(404).json({ error: 'Session not found' });
-    }
+    const sessionService = useService<SessionService>('session');
+    await sessionService.activateSession(sessionId, impressionText);
+    const session = await sessionService.getSession(sessionId);
 
-    // Mock services (replace with actual implementations)
-    const judgeService = (images: string[], impression: string) => Math.floor(Math.random() * images.length);
-    const investmentService = {
-      applyStrategy: (strategy: number) => {},
-      evaluateMostSuccessful: () => Math.floor(Math.random() * 2),
-    };
+    res.status(200).json(session);
 
-    const chosenImageIndex = judgeService(session.images, impressionText);
-    const mostSuccessfulStrategy = chosenImageIndex;
-    // investmentService.applyStrategy(chosenImageIndex);
-    // const mostSuccessfulStrategy = investmentService.evaluateMostSuccessful();
-
-    db.updateSession(sessionId, {
-      strategy: mostSuccessfulStrategy,
-      isReady: true,
-    });
-
-    res.status(200).json({ message: 'Session activated successfully' });
   } else {
     res.status(405).end();
   }

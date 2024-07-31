@@ -17,24 +17,36 @@ export class ImageService {
     }
   }
 
-  public getRandomImageUrls(count: number): string[] {
+  public getRandomName(): string {
     const allImages: string[] = fs.readdirSync(this.imagePath)
       .filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file));
     
-    const selectedImages: string[] = [];
-    for (let i = 0; i < count; i++) {
-      if (allImages.length > 0) {
-        const randomIndex = Math.floor(Math.random() * allImages.length);
-        selectedImages.push(allImages[randomIndex]);
-        allImages.splice(randomIndex, 1);
+    if (allImages.length === 0) {
+      throw new Error('No images found in the image directory');
+    }
+
+    const randomIndex = Math.floor(Math.random() * allImages.length);
+    return (allImages[randomIndex]);
+  }
+
+  public getRandomImageNameList(count: number): string[] {
+    const randomNames: string[] = [];
+    while (randomNames.length < count) {
+      const name = this.getRandomName();
+      if (!randomNames.includes(name)) {
+        randomNames.push(name);
       }
     }
 
-    return selectedImages.map(filename => this.getImageUrl(filename));
+    return randomNames;
   }
 
-  getImageUrl(filename: string): string {
-    return `/images/${filename}`;
+  // getImageUrl(filename: string): string {
+  //   return `/images/${filename}`;
+  // }
+
+  getImagePath(filename: string): string {
+    return path.join(this.imagePath, filename);
   }
 }
 

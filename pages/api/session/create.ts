@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { v4 as uuidv4 } from 'uuid';
-import db from '@/services/db';
-import { Session } from '@/types';
+import { useService } from '@/services/container';
+import { SessionService } from '@/services/session.service';
 
 /**
  * @swagger
@@ -19,20 +18,11 @@ import { Session } from '@/types';
  *                 sessionId:
  *                   type: string
  */
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const sessionService = useService<SessionService>('session');
   if (req.method === 'POST') {
-    const sessionId = uuidv4();
-    const images = ['image1.jpg', 'image2.jpg']; // Replace with actual image fetching logic
-
-    const newSession: Session = {
-      id: sessionId,
-      images,
-      isReady: false,
-    };
-
-    db.createSession(newSession);
-
-    res.status(200).json({ sessionId });
+    const session = await sessionService.createSession();
+    res.status(200).json(session);
   } else {
     res.status(405).end();
   }

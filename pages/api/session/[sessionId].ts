@@ -1,7 +1,7 @@
 // pages/api/session/[sessionId].ts
-import { NextApiRequest, NextApiResponse } from 'next';
-import db from '@/services/db';
-import { Session } from '@/types';
+import { useService } from "@/services/container";
+import { Session, SessionService } from "@/services/session.service";
+import { NextApiRequest, NextApiResponse } from "next";
 
 /**
  * @swagger
@@ -22,31 +22,20 @@ import { Session } from '@/types';
  *       404:
  *         description: Session not found
  */
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === 'GET') {
-    const { sessionId } = req.query;
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+    const sessionService = useService<SessionService>("session");
+    if (req.method === "GET") {
+        const sessionId = req.query.sessionId;
+        if (!sessionId || Array.isArray(sessionId)) {
+          return res.status(400).json({ error: 'Invalid session ID' });
+        }
 
-    if (typeof sessionId !== 'string') {
-      return res.status(400).json({ error: 'Invalid sessionId' });
+        const session: Session = await sessionService.getSession(sessionId);
+        if (!session) {
+            res.status(404).json({ error: "Session not found" });
+        }
+        res.status(200).json(session);
+    } else {
+        res.status(405).end();
     }
-
-    const session: Session = db.getSession(sessionId);
-    if (!session) {
-      return res.status(404).json({ error: 'Session not found' });
-    }
-
-    if (!session.isReady) {
-      return res.status(400).json({ error: 'Session is not ready' });
-    }
-
-    const successfulImageUrl = session.images[session.strategy!];
-    const successfulPrediction = session.strategy === 0; // Assuming 0 is always the correct strategy for this example
-
-    res.status(200).json({
-      imageUrl: successfulImageUrl,
-      successfulPrediction,
-    });
-  } else {
-    res.status(405).end();
-  }
 }

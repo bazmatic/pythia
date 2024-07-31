@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import judgeService from '@/services/judge.service';
-import { join } from 'path';
+import judgeService, { JudgeService } from '@/services/judge.service';
+import { useService } from '@/services/container';
+import { ImageService } from '@/services/image.service';
 
 /**
  * @swagger
@@ -37,6 +38,8 @@ import { join } from 'path';
  *         description: Server error
  */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const imageService = useService<ImageService>('session');
+  const judgeService = useService<JudgeService>('judge');
   if (req.method === 'POST') {
     const { imageName, impressionText } = req.body;
 
@@ -46,9 +49,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
       // Assuming images are stored in the public/images directory
-      const imagePath = join(process.cwd(), 'public', 'images', imageName);
-      
-      const score = await judgeService.calculateScore(imagePath, impressionText);
+
+      const imageUrl = imageService.getImagePath(imageName); 
+      const score = 0; // await judgeService.calculateScore(imageUrl, impressionText);
 
       res.status(200).json({ score });
     } catch (error) {

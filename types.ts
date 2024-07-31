@@ -1,8 +1,7 @@
-type Session = {
-    id: string;
-    images: string[];
-    strategy?: number;
-    isReady: boolean;
-  };
-  
-export type { Session };
+
+
+export type InvestmentResult = {
+  strategy: number;
+  result: number;
+};
+
