@@ -11,7 +11,17 @@ interface SessionPageProps {
     error?: string;
 }
 
-export const getServerSideProps: GetServerSideProps<SessionPageProps> = async (context) => {
+interface CalculatedSessionState {
+    isCorrect: boolean;
+    chosenImageSrc: string;
+    targetImageSrc: string;
+    chosenImageNumber: number;
+    targetImageNumber: number;
+}
+
+export const getServerSideProps: GetServerSideProps<
+    SessionPageProps
+> = async context => {
     const sessionService = getService<SessionService>(ServiceName.Session);
     const id = context.params?.id;
 
@@ -42,10 +52,15 @@ export const getServerSideProps: GetServerSideProps<SessionPageProps> = async (c
     }
 };
 
-const SessionPage: React.FC<SessionPageProps> = ({ initialSession, error: initialError }) => {
+const SessionPage: React.FC<SessionPageProps> = ({
+    initialSession,
+    error: initialError
+}) => {
     const [session, setSession] = useState<Session | null>(initialSession);
     const [error, setError] = useState<string | undefined>(initialError);
     const [impressionText, setImpressionText] = useState("");
+    const [calculatedState, setCalculatedState] =
+        useState<CalculatedSessionState | null>(null);
 
     useEffect(() => {
         let intervalId: NodeJS.Timeout;
@@ -62,6 +77,7 @@ const SessionPage: React.FC<SessionPageProps> = ({ initialSession, error: initia
 
                     if (updatedSession.status === SessionStatus.Completed) {
                         clearInterval(intervalId);
+                        calculateSessionState(updatedSession);
                     }
                 } catch (error) {
                     console.error("Error polling session:", error);
@@ -82,6 +98,30 @@ const SessionPage: React.FC<SessionPageProps> = ({ initialSession, error: initia
         };
     }, [session]);
 
+    const calculateSessionState = (completedSession: Session) => {
+        if (!completedSession.chosenImageIdx || !completedSession.targetImageIdx) {
+            return;
+        }
+        const isCorrect =
+            completedSession.chosenImageIdx === completedSession.targetImageIdx;
+        const chosenImageSrc = `/images/${
+            completedSession.images[completedSession.chosenImageIdx]
+        }`;
+        const targetImageSrc = `/images/${
+            completedSession.images[completedSession.targetImageIdx]
+        }`;
+        const chosenImageNumber = completedSession.chosenImageIdx + 1;
+        const targetImageNumber = completedSession.targetImageIdx + 1;
+
+        setCalculatedState({
+            isCorrect,
+            chosenImageSrc,
+            targetImageSrc,
+            chosenImageNumber,
+            targetImageNumber
+        });
+    };
+
     const activateSession = async () => {
         try {
             const response = await fetch("/api/session/activate", {
@@ -101,18 +141,29 @@ const SessionPage: React.FC<SessionPageProps> = ({ initialSession, error: initia
     };
 
     if (error) {
-        return <div className="page-container"><p className="error-text">{error}</p></div>;
+        return (
+            <div className="page-container">
+                <p className="error-text">{error}</p>
+            </div>
+        );
     }
 
     if (!session) {
-        return <div className="page-container"><p className="loading-text">Loading...</p></div>;
+        return (
+            <div className="page-container">
+                <p className="loading-text">Loading...</p>
+            </div>
+        );
     }
 
     return (
         <div className="page-container">
             <h1 className="page-title">Session: {session.id}</h1>
             <div className="session-info">
-                <p className="text-lg mb-2">Status: <span className="font-semibold">{session.status}</span></p>
+                <p className="text-lg mb-2">
+                    Status:{" "}
+                    <span className="font-semibold">{session.status}</span>
+                </p>
             </div>
 
             {session.status === SessionStatus.Pending && (
@@ -142,30 +193,55 @@ const SessionPage: React.FC<SessionPageProps> = ({ initialSession, error: initia
                 </div>
             )}
 
-            {session.status === SessionStatus.Completed && (
+            {session.status === SessionStatus.Completed && calculatedState && (
                 <div className="result-container">
                     <h2 className="result-title">Session Results</h2>
                     <div className="image-container">
-                        <div className="image-wrapper">
-                            <img
-                                src={`/images/${session.images[0]}`}
-                                alt="Image 1"
-                                className="session-image"
-                            />
-                        </div>
-                        <div className="image-wrapper">
-                            <img
-                                src={`/images/${session.images[1]}`}
-                                alt="Image 2"
-                                className="session-image"
-                            />
-                        </div>
+                        {calculatedState.isCorrect ? (
+                            <div className="image-wrapper">
+                                <img
+                                    src={calculatedState.targetImageSrc}
+                                    alt="Chosen and Target Image"
+                                    className="session-image"
+                                />
+                                <p className="result-text">
+                                    You correctly identified the target image.
+                                </p>
+                            </div>
+                        ) : (
+                            <>
+                                <div className="image-wrapper">
+                                    <img
+                                        src={calculatedState.chosenImageSrc}
+                                        alt="Chosen Image"
+                                        className="session-image"
+                                    />
+                                    <p className="result-text">
+                                        Your chosen image
+                                    </p>
+                                </div>
+                                <div className="image-wrapper">
+                                    <img
+                                        src={calculatedState.targetImageSrc}
+                                        alt="Target Image"
+                                        className="session-image"
+                                    />
+                                    <p className="result-text">Target image</p>
+                                </div>
+                            </>
+                        )}
                     </div>
                     <p className="result-text">
-                        You chose image: <span className="font-semibold">{session.chosenImageIdx === 0 ? "Left" : "Right"}</span>
+                        You chose image:{" "}
+                        <span className="font-semibold">
+                            {calculatedState.chosenImageNumber}
+                        </span>
                     </p>
                     <p className="result-text">
-                        Target image was: <span className="font-semibold">{session.targetImageIdx === 0 ? "Left" : "Right"}</span>
+                        Target image was:{" "}
+                        <span className="font-semibold">
+                            {calculatedState.targetImageNumber}
+                        </span>
                     </p>
                 </div>
             )}

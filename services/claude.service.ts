@@ -103,7 +103,8 @@ Also, provide a confidence level (low, medium, or high) for your judgment. Respo
     } else if (parsedJson.chosen_image === IMAGE_B) {
       return 1;
     }
-    throw new Error('Invalid response from Claude Judge');
+    console.error('Invalid response from Claude Judge');
+    return -1;
   } catch (error) {
     console.error('An error occurred:', error);
     throw error;

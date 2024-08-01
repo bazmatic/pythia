@@ -27,8 +27,14 @@ export class JudgeService {
                 impressionText
             )
         ]);
-        // Return the result chosen the most times
 
+		//If any of the responses was -1, warn that some responses were invalid
+		const invalidResponseCount = results.filter(result => result === -1).length;
+		if(invalidResponseCount > 0) {
+			console.warn(`Warning: ${invalidResponseCount} invalid responses received.`);
+		}
+
+        // Return the result chosen the most times
         const frequencies = results.reduce(
             (acc, val) => {
                 acc[val]++;
