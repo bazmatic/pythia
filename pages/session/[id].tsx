@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { GetServerSideProps } from "next";
-import { Session, SessionService } from "@/services/session.service";
+import { Session, SessionService, SessionStatus } from "@/services/session.service";
 import Button from "@/components/button";
 import Textarea from "@/components/textarea";
 import { useService } from "@/services/container";
@@ -10,9 +10,7 @@ interface SessionPageProps {
     error?: string;
 }
 
-export const getServerSideProps: GetServerSideProps<
-    SessionPageProps
-> = async context => {
+export const getServerSideProps: GetServerSideProps<SessionPageProps> = async (context) => {
     const sessionService = useService<SessionService>("session");
     const id = context.params?.id;
 
@@ -46,6 +44,41 @@ export const getServerSideProps: GetServerSideProps<
 const SessionPage: React.FC<SessionPageProps> = ({ initialSession, error }) => {
     const [session, setSession] = useState<Session | null>(initialSession);
     const [impressionText, setImpressionText] = useState("");
+    const [isPolling, setIsPolling] = useState(false);
+
+    useEffect(() => {
+        let intervalId: NodeJS.Timeout;
+
+        const pollSession = async () => {
+            if (session && session.status === "active") {
+                try {
+                    const response = await fetch(`/api/session/${session.id}`);
+                    if (!response.ok) {
+                        throw new Error("Failed to fetch session");
+                    }
+                    const updatedSession = await response.json();
+                    setSession(updatedSession);
+
+                    if (updatedSession.status === SessionStatus.Completed) {
+                        setIsPolling(false);
+                    }
+                } catch (error) {
+                    console.error("Error polling session:", error);
+                    setIsPolling(false);
+                }
+            }
+        };
+
+        if (isPolling) {
+            intervalId = setInterval(pollSession, 5000); // Poll every 5 seconds
+        }
+
+        return () => {
+            if (intervalId) {
+                clearInterval(intervalId);
+            }
+        };
+    }, [isPolling, session]);
 
     if (error) {
         return <div className="text-red-500">{error}</div>;
@@ -67,6 +100,7 @@ const SessionPage: React.FC<SessionPageProps> = ({ initialSession, error }) => {
             }
             const updatedSession = await response.json();
             setSession(updatedSession);
+            setIsPolling(true);  // Start polling after activation
         } catch (error) {
             console.error("Error activating session:", error);
         }
