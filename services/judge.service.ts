@@ -1,5 +1,5 @@
 import { uploadImagesAndAnalyze } from './claude.service';
-import { LlavaService } from './llava.service';
+
 
 export class JudgeService {
 
@@ -10,11 +10,23 @@ export class JudgeService {
   // Given a list of image paths, return the index of the image that best matches the impression text
   async judge(imagesPaths: string[], impressionText: string): Promise<number> {
 
-    return uploadImagesAndAnalyze(imagesPaths[0], imagesPaths[1], impressionText);
-
+    // Judge 3 times in parallel
+  
+    const results = await Promise.all([
+      uploadImagesAndAnalyze(imagesPaths[0], imagesPaths[1], impressionText),
+      uploadImagesAndAnalyze(imagesPaths[1], imagesPaths[0], impressionText),
+      uploadImagesAndAnalyze(imagesPaths[0], imagesPaths[1], impressionText)
+    ]);
+    //return uploadImagesAndAnalyze(imagesPaths[0], imagesPaths[1], impressionText);
+    // Return the result chosen the most times
+    
+    const frequencies = results.reduce((acc, val) => {
+      acc[val]++;
+      return acc;
+    },[0,0,0]);
+    return frequencies.indexOf(Math.max(...frequencies));
   }
 }
-
 
 
 // Create a single instance to be used across the application

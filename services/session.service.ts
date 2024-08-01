@@ -8,6 +8,7 @@ import { InvestmentService, StrategyReport } from "./investment.service";
 export type Session = {
     id: string;
     images: string[];
+    impressionText?: string;    
     chosenImageIdx?: number;
     targetImageIdx?: number;
     status: SessionStatus;
@@ -18,9 +19,6 @@ export enum SessionStatus {
     Active = 'active',
     Completed = 'completed'
 }
-
-
-  
 
 export class SessionService {
 
@@ -52,6 +50,7 @@ export class SessionService {
         const session = await this.getSession(sessionId);
         await this.saveSession ({
             ...session,
+            impressionText,
             status: SessionStatus.Active
         });
         this.processSession(sessionId, impressionText).catch(async (e) => {
