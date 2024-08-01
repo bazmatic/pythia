@@ -1,6 +1,6 @@
 // pages/api/session/activate.ts
 import { NextApiRequest, NextApiResponse } from 'next';
-import { useService } from '@/services/container';
+import { getService } from '@/services/container';
 import { SessionService } from '@/services/session.service';
 
 /**
@@ -31,7 +31,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === 'POST') {
     const { sessionId, impressionText } = req.body;
 
-    const sessionService = useService<SessionService>('session');
+    const sessionService = getService<SessionService>('session');
     await sessionService.activateSession(sessionId, impressionText);
     const session = await sessionService.getSession(sessionId);
 

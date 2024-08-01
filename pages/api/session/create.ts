@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { useService } from '@/services/container';
+import { getService } from '@/services/container';
 import { SessionService } from '@/services/session.service';
 
 /**
@@ -19,7 +19,7 @@ import { SessionService } from '@/services/session.service';
  *                   type: string
  */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const sessionService = useService<SessionService>('session');
+  const sessionService = getService<SessionService>('session');
   if (req.method === 'POST') {
     const session = await sessionService.createSession();
     res.status(200).json(session);

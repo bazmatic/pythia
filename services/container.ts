@@ -5,6 +5,7 @@ import { JudgeService } from '@/services/judge.service';
 import { ImageService } from '@/services/image.service';
 import { InvestmentService } from '@/services/investment.service';
 import { SessionService } from '@/services/session.service';
+import { ServiceName } from '@/types';
 
 export class ServiceContainer {
   private static instance: ServiceContainer;
@@ -12,15 +13,15 @@ export class ServiceContainer {
 
   private constructor() {
     // Initialize services
-    this.services.set('db', new DBService());
-    this.services.set('judge', new JudgeService());
-    this.services.set('image', new ImageService());
-    this.services.set('investment', new InvestmentService(this.get('db')));
-    this.services.set('session', new SessionService(
-      this.get('db'),
-      this.get('judge'),
-      this.get('image'),
-      this.get('investment')
+    this.services.set(ServiceName.Database, new DBService());
+    this.services.set(ServiceName.Judge, new JudgeService());
+    this.services.set(ServiceName.Image, new ImageService());
+    this.services.set(ServiceName.Investment, new InvestmentService(this.get(ServiceName.Database)));
+    this.services.set(ServiceName.Session, new SessionService(
+      this.get(ServiceName.Database),
+      this.get(ServiceName.Judge),
+      this.get(ServiceName.Image),
+      this.get(ServiceName.Investment)
     ));
   }
 
@@ -40,6 +41,6 @@ export class ServiceContainer {
   }
 }
 
-export function useService<T>(serviceName: string): T {
+export function getService<T>(serviceName: string): T {
   return ServiceContainer.getInstance().get<T>(serviceName);
 }

@@ -1,6 +1,7 @@
 // pages/api/session/[sessionId].ts
-import { useService } from "@/services/container";
-import { Session, SessionService } from "@/services/session.service";
+import { getService } from "@/services/container";
+import { SessionService } from "@/services/session.service";
+import { ServiceName, Session } from "@/types";
 import { NextApiRequest, NextApiResponse } from "next";
 
 /**
@@ -22,12 +23,15 @@ import { NextApiRequest, NextApiResponse } from "next";
  *       404:
  *         description: Session not found
  */
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    const sessionService = useService<SessionService>("session");
+export default async function handler(
+    req: NextApiRequest,
+    res: NextApiResponse
+) {
+    const sessionService = getService<SessionService>(ServiceName.Session);
     if (req.method === "GET") {
         const sessionId = req.query.sessionId;
         if (!sessionId || Array.isArray(sessionId)) {
-          return res.status(400).json({ error: 'Invalid session ID' });
+            return res.status(400).json({ error: "Invalid session ID" });
         }
 
         const session: Session = await sessionService.getSession(sessionId);

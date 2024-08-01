@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { GetServerSideProps } from "next";
-import { Session, SessionService } from "@/services/session.service";
+import { SessionService } from "@/services/session.service";
 import Button from "@/components/button";
 import Textarea from "@/components/textarea";
-import { useService } from "@/services/container";
+import { getService } from "@/services/container";
+import { ServiceName, Session, SessionStatus } from "@/types";
 
 interface SessionPageProps {
     initialSession: Session | null;
@@ -11,7 +12,7 @@ interface SessionPageProps {
 }
 
 export const getServerSideProps: GetServerSideProps<SessionPageProps> = async (context) => {
-    const sessionService = useService<SessionService>("session");
+    const sessionService = getService<SessionService>(ServiceName.Session);
     const id = context.params?.id;
 
     if (typeof id !== "string") {
@@ -50,7 +51,7 @@ const SessionPage: React.FC<SessionPageProps> = ({ initialSession, error: initia
         let intervalId: NodeJS.Timeout;
 
         const pollSession = async () => {
-            if (session && session.status === "active") {
+            if (session?.status === SessionStatus.Active) {
                 try {
                     const response = await fetch(`/api/session/${session.id}`);
                     if (!response.ok) {
@@ -59,7 +60,7 @@ const SessionPage: React.FC<SessionPageProps> = ({ initialSession, error: initia
                     const updatedSession = await response.json();
                     setSession(updatedSession);
 
-                    if (updatedSession.status === "completed") {
+                    if (updatedSession.status === SessionStatus.Completed) {
                         clearInterval(intervalId);
                     }
                 } catch (error) {
@@ -70,7 +71,7 @@ const SessionPage: React.FC<SessionPageProps> = ({ initialSession, error: initia
             }
         };
 
-        if (session && session.status === "active") {
+        if (session?.status === SessionStatus.Active) {
             intervalId = setInterval(pollSession, 5000); // Poll every 5 seconds
         }
 
@@ -114,7 +115,7 @@ const SessionPage: React.FC<SessionPageProps> = ({ initialSession, error: initia
                 <p className="text-lg mb-2">Status: <span className="font-semibold">{session.status}</span></p>
             </div>
 
-            {session.status === "pending" && (
+            {session.status === SessionStatus.Pending && (
                 <div className="w-full max-w-md mx-auto">
                     <Textarea
                         value={impressionText}
@@ -135,13 +136,13 @@ const SessionPage: React.FC<SessionPageProps> = ({ initialSession, error: initia
                 </div>
             )}
 
-            {session.status === "active" && (
+            {session.status === SessionStatus.Active && (
                 <div className="loading-text">
                     Please wait. The session is being resolved...
                 </div>
             )}
 
-            {session.status === "completed" && (
+            {session.status === SessionStatus.Completed && (
                 <div className="result-container">
                     <h2 className="result-title">Session Results</h2>
                     <div className="image-container">

@@ -13,6 +13,9 @@ const client = new Anthropic({
   apiKey: ANTHROPIC_API_KEY,
 });
 
+const IMAGE_A = "image_1111";
+const IMAGE_B = "0x4444";
+
 export async function uploadImagesAndAnalyze(
   imageAPath: string,
   imageBPath: string,
@@ -47,17 +50,28 @@ export async function uploadImagesAndAnalyze(
           },
           {
             type: 'text',
-            text: `I've uploaded two images: "image_a" and "image_b".
+            text: `I've uploaded two images: "${IMAGE_A}" and "${IMAGE_B}".
 
 Here are the psychic impressions for one of these images:
 
 ${psychicImpressions}
 
-Please analyze these impressions and determine which image ("image_a" or "image_b") they most closely match.
+Please analyze these impressions and determine which image ("${IMAGE_A}" or "${IMAGE_B}") they most closely match.
+Analyse the following aspects of the impressions:
+1. Lighting
+2. Colors
+3. Shapes
+4. Textures
+5. Emotions
+6. Taste or smell
+7. Sounds
+8. Temperature
+9. Movement
+Based on this analysis, choose the image that best matches the impressions.
 Explain your reasoning, noting specific details from the impressions that correspond to elements in the chosen image.
 Also, provide a confidence level (low, medium, or high) for your judgment. Respond via a JSON object with the following format:
 {
-  "chosen_image": "image_a or image_b",
+  "chosen_image": "${IMAGE_A} or ${IMAGE_B}",
   "confidence_level": "low, medium, or high",
   "reasoning": "Explanation of reasoning"
 }`
@@ -84,9 +98,9 @@ Also, provide a confidence level (low, medium, or high) for your judgment. Respo
 
     const parsedJson = JSON.parse(responseText);
     console.log(parsedJson);
-    if (parsedJson.chosen_image === "image_a") {
+    if (parsedJson.chosen_image === IMAGE_A) {
       return 0;
-    } else if (parsedJson.chosen_image === "image_b") {
+    } else if (parsedJson.chosen_image === IMAGE_B) {
       return 1;
     }
     throw new Error('Invalid response from Claude Judge');
