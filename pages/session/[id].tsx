@@ -17,6 +17,7 @@ interface CalculatedSessionState {
     targetImageSrc: string;
     chosenImageNumber: number;
     targetImageNumber: number;
+    nonTargetImageSrcs: string[];
 }
 
 export const getServerSideProps: GetServerSideProps<
@@ -61,6 +62,13 @@ const SessionPage: React.FC<SessionPageProps> = ({
     const [impressionText, setImpressionText] = useState("");
     const [calculatedState, setCalculatedState] =
         useState<CalculatedSessionState | null>(null);
+    const [showNonTargetImages, setShowNonTargetImages] = useState(false);
+
+    useEffect(() => {
+        if (session?.status === SessionStatus.Completed) {
+            calculateSessionState(session);
+        }
+    }, []);
 
     useEffect(() => {
         let intervalId: NodeJS.Timeout;
@@ -99,7 +107,11 @@ const SessionPage: React.FC<SessionPageProps> = ({
     }, [session]);
 
     const calculateSessionState = (completedSession: Session) => {
-        if (!completedSession.chosenImageIdx || !completedSession.targetImageIdx) {
+        debugger;
+        if (
+            completedSession.chosenImageIdx === undefined ||
+            completedSession.targetImageIdx === undefined
+        ) {
             return;
         }
         const isCorrect =
@@ -113,12 +125,20 @@ const SessionPage: React.FC<SessionPageProps> = ({
         const chosenImageNumber = completedSession.chosenImageIdx + 1;
         const targetImageNumber = completedSession.targetImageIdx + 1;
 
+        const nonTargetImageSrcs = completedSession.images
+            .filter(
+                (_, index) =>
+                    index !== completedSession.targetImageIdx
+            )
+            .map(image => `/images/${image}`);
+
         setCalculatedState({
             isCorrect,
             chosenImageSrc,
             targetImageSrc,
             chosenImageNumber,
-            targetImageNumber
+            targetImageNumber,
+            nonTargetImageSrcs
         });
     };
 
@@ -137,6 +157,105 @@ const SessionPage: React.FC<SessionPageProps> = ({
         } catch (error) {
             console.error("Error activating session:", error);
             setError("Failed to activate session");
+        }
+    };
+
+    const toggleNonTargetImages = () => {
+        setShowNonTargetImages(!showNonTargetImages);
+    };
+
+    const renderPendingSession = () => (
+        <div className="w-full max-w-md mx-auto">
+            <Textarea
+                value={impressionText}
+                onChange={e => setImpressionText(e.target.value)}
+                placeholder="Enter your impression of the images..."
+                className="input-textarea mb-4"
+            />
+            <Button onClick={activateSession} className="submit-button">
+                Submit Impression
+            </Button>
+        </div>
+    );
+
+    const renderActiveSession = () => (
+        <div className="loading-text">
+            Please wait. The session is being resolved...
+        </div>
+    );
+
+    const renderCompletedSession = () => (
+        <div className="result-container">
+            <h2 className="result-title">Session Results</h2>
+            <div className="image-container">
+                
+                    <div className="image-wrapper">
+                        <img
+                            src={calculatedState?.targetImageSrc}
+                            alt="Chosen and Target Image"
+                            className="session-image"
+                        />
+                        {!calculatedState?.isCorrect && (
+                            <p className="result-text">
+                                You did not correctly identify the target image.
+                            </p>
+                        )}
+                        {calculatedState?.isCorrect && (
+                            <p className="result-text">
+                                You correctly identified the target image.
+                            </p>
+                        )}       
+                    </div>            
+            </div>
+            <p className="result-text">
+                You chose image:{" "}
+                <span className="font-semibold">
+                    {calculatedState?.chosenImageNumber}
+                </span>
+            </p>
+            <p className="result-text">
+                Target image was:{" "}
+                <span className="font-semibold">
+                    {calculatedState?.targetImageNumber}
+                </span>
+            </p>
+            <button
+                onClick={toggleNonTargetImages}
+                className="text-blue-500 underline mt-4"
+            >
+                {showNonTargetImages ? "Hide" : "Show"} other images
+            </button>
+            {showNonTargetImages && (
+                <div className="nontarget-images mt-4">
+                    <h3 className="font-semibold mb-2">Other Images:</h3>
+                    <div className="flex flex-wrap justify-center">
+                        {calculatedState?.nonTargetImageSrcs.map(
+                            (src, index) => (
+                                <div key={index} className="image-wrapper m-2">
+                                    <img
+                                        src={src}
+                                        alt={`Image ${index + 1}`}
+                                        className={`session-image ${src === calculatedState?.chosenImageSrc ? "chosen" : "not-chosen"} `}
+                                    />
+                                </div>
+                            )
+                        )}
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+
+    const renderSessionContent = () => {
+        switch (session?.status) {
+            case SessionStatus.Pending:
+                return renderPendingSession();
+            case SessionStatus.Active:
+                return renderActiveSession();
+            case SessionStatus.Completed:
+                return renderCompletedSession();
+            default:
+                return null;
         }
     };
 
@@ -166,20 +285,6 @@ const SessionPage: React.FC<SessionPageProps> = ({
                 </p>
             </div>
 
-            {session.status === SessionStatus.Pending && (
-                <div className="w-full max-w-md mx-auto">
-                    <Textarea
-                        value={impressionText}
-                        onChange={e => setImpressionText(e.target.value)}
-                        placeholder="Enter your impression of the images..."
-                        className="input-textarea mb-4"
-                    />
-                    <Button onClick={activateSession} className="submit-button">
-                        Submit Impression
-                    </Button>
-                </div>
-            )}
-
             {session.impressionText && (
                 <div className="impression-text">
                     <h3 className="font-semibold mb-2">Your impression:</h3>
@@ -187,64 +292,7 @@ const SessionPage: React.FC<SessionPageProps> = ({
                 </div>
             )}
 
-            {session.status === SessionStatus.Active && (
-                <div className="loading-text">
-                    Please wait. The session is being resolved...
-                </div>
-            )}
-
-            {session.status === SessionStatus.Completed && calculatedState && (
-                <div className="result-container">
-                    <h2 className="result-title">Session Results</h2>
-                    <div className="image-container">
-                        {calculatedState.isCorrect ? (
-                            <div className="image-wrapper">
-                                <img
-                                    src={calculatedState.targetImageSrc}
-                                    alt="Chosen and Target Image"
-                                    className="session-image"
-                                />
-                                <p className="result-text">
-                                    You correctly identified the target image.
-                                </p>
-                            </div>
-                        ) : (
-                            <>
-                                <div className="image-wrapper">
-                                    <img
-                                        src={calculatedState.chosenImageSrc}
-                                        alt="Chosen Image"
-                                        className="session-image"
-                                    />
-                                    <p className="result-text">
-                                        Your chosen image
-                                    </p>
-                                </div>
-                                <div className="image-wrapper">
-                                    <img
-                                        src={calculatedState.targetImageSrc}
-                                        alt="Target Image"
-                                        className="session-image"
-                                    />
-                                    <p className="result-text">Target image</p>
-                                </div>
-                            </>
-                        )}
-                    </div>
-                    <p className="result-text">
-                        You chose image:{" "}
-                        <span className="font-semibold">
-                            {calculatedState.chosenImageNumber}
-                        </span>
-                    </p>
-                    <p className="result-text">
-                        Target image was:{" "}
-                        <span className="font-semibold">
-                            {calculatedState.targetImageNumber}
-                        </span>
-                    </p>
-                </div>
-            )}
+            {renderSessionContent()}
         </div>
     );
 };

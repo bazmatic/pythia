@@ -5,6 +5,8 @@ import { ImageService } from "./image.service";
 import { InvestmentService, StrategyReport } from "./investment.service";
 import { Session, SessionStatus } from "@/types";
 
+const IMAGE_COUNT = 2;
+
 export class SessionService {
     constructor(
         private db: DBService,
@@ -15,7 +17,7 @@ export class SessionService {
 
     public async createSession(): Promise<Session> {
         const sessionId = randomUUID();
-        const images = await this.imageService.getRandomImageNameList(2);
+        const images = await this.imageService.getRandomImageNameList(IMAGE_COUNT);
 
         const newSession: Session = {
             id: sessionId,
@@ -52,6 +54,7 @@ export class SessionService {
         const filePaths = session.images.map(imageName =>
             this.imageService.getImagePath(imageName)
         );
+
         const chosenImageIndex = await this.judgeService.judge(
             filePaths,
             impressionText

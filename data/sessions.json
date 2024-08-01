@@ -219,5 +219,36 @@
     "impressionText": "Blue, green, blurry, nature, outside, strings, cold",
     "chosenImageIdx": 0,
     "targetImageIdx": 1
+  },
+  {
+    "id": "0551a66e-a3b6-4a59-9a00-d8f64de68844",
+    "images": [
+      "photo-1634978160062-dbbb1751f786.jpg",
+      "photo-1635737588547-a8d97c2fb531.jpg"
+    ],
+    "status": "active",
+    "impressionText": "White, holes, crisp lines, rustling, smooth, paper-like"
+  },
+  {
+    "id": "cc6e4f56-2967-4fb7-bcaf-e82ef6fc7890",
+    "images": [
+      "photo-1638108799408-81959640913e.jpg",
+      "photo-1635867238567-211a7b61ce40.jpg"
+    ],
+    "status": "completed",
+    "impressionText": "Bright, yellow, hot, cloudy",
+    "chosenImageIdx": 1,
+    "targetImageIdx": 1
+  },
+  {
+    "id": "a5e0cde3-a1a8-46f1-81a5-d18f5c78dbbc",
+    "images": [
+      "photo-1634315100046-b7aef36eaa22.jpg",
+      "photo-1635788798247-92a15f830a3b.jpg"
+    ],
+    "status": "completed",
+    "impressionText": "Curly hair, colourful, outside",
+    "chosenImageIdx": 0,
+    "targetImageIdx": 1
   }
 ]
