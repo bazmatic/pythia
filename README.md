@@ -12,7 +12,7 @@ This game challenges users to provide psychic impressions that guide investment 
 4. The system interprets these impressions as a description of one of the randomly selected images.
 5. Based on which image the system determines the impressions most closely match, the corresponding investment strategy is chosen.
 6. The system simulates the outcomes of both investment strategies.
-7. The image associated with the most successful strategy is revealed to the user.
+7. Only the image associated with the most successful strategy is revealed to the user.
 8. If the user's impressions align with the revealed image, it indicates a successful prediction and potential financial gain.
 
 ## How It Works
@@ -23,8 +23,9 @@ This game challenges users to provide psychic impressions that guide investment 
 - User impressions are analyzed and interpreted as a description of one of the two selected images.
 - The investment strategy associated with the image that best matches the user's impressions is applied.
 - The system simulates the outcomes of both strategies.
-- The image corresponding to the more successful strategy is shown to the user.
+- Only the image corresponding to the more successful strategy is shown to the user. The other image remains hidden to prevent any unintended psychic connections with the "incorrect" image.
 - Success is measured by how well the user's impressions match the revealed image, indicating they "sensed" the more successful strategy.
+- After the game, users have the option to view the "non-target" image(s) that were not initially shown, satisfying curiosity without affecting the game's psychic aspect.
 
 ## Features
 
@@ -33,7 +34,8 @@ This game challenges users to provide psychic impressions that guide investment 
 - **AI-Powered Analysis**: Advanced AI models interpret user impressions to match them with one of the randomly selected images.
 - **Investment Simulation**: The system simulates different investment outcomes based on the strategies associated with each image.
 - **Real-time Processing**: Quick processing of impressions and strategy outcomes.
-- **Visual Feedback**: Users see the outcome of their predictions through the revealed image.
+- **Selective Visual Feedback**: Users see only the image associated with the successful strategy, maintaining the integrity of the psychic experience.
+- **Optional Non-Target Image Reveal**: After the game, users can choose to view the image(s) not initially shown, allowing for reflection and learning.
 
 ## Technical Stack
 
