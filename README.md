@@ -15,6 +15,25 @@ This game challenges users to provide psychic impressions that guide investment 
 7. Only the image associated with the most successful strategy is revealed to the user.
 8. If the user's impressions align with the revealed image, it indicates a successful prediction and potential financial gain.
 
+## About Associative Remote Viewing (ARV)
+
+This game is inspired by the concept of Associative Remote Viewing (ARV), a technique used in parapsychology and psychic research. Here's a brief overview:
+
+- **Definition**: ARV is a method that attempts to predict future events by linking psychic impressions to specific images or objects.
+
+- **Process**: 
+  1. A question with a binary outcome is formulated (e.g., will the stock market go up or down?).
+  2. Two distinct images are chosen, each representing one of the possible outcomes.
+  3. A "viewer" attempts to describe an image they haven't seen, which will be shown to them in the future.
+  4. Their description is matched to one of the pre-selected images.
+  5. The outcome associated with the best-matching image is considered the prediction.
+
+- **Application**: ARV has been experimentally applied to various fields, including financial predictions and event outcomes.
+
+- **Scientific Status**: While some proponents claim success with ARV, it remains a controversial topic in the scientific community. There is no widely accepted scientific evidence for the efficacy of ARV or other forms of psychic phenomena.
+
+Our game adapts the ARV concept into an entertaining and engaging format, allowing users to explore and test their intuitive abilities in a simulated investment scenario.
+
 ## How It Works
 
 - The system has a set of images, each representing a specific investment strategy (e.g., a snake might represent a bearish market, while a mountain could represent a bullish trend).
@@ -49,12 +68,12 @@ This game challenges users to provide psychic impressions that guide investment 
 
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/psychic-investment-game.git
+   git clone https://github.com/bazmatic/rv-investor.git
    ```
 
 2. Install dependencies:
    ```
-   cd psychic-investment-game
+   cd rv-investor
    npm install
    ```
 
@@ -66,7 +85,7 @@ This game challenges users to provide psychic impressions that guide investment 
    ```
 
 4. Add strategy images:
-   Place your strategy-related images in the `public/images` directory. Ensure each image clearly represents a specific investment strategy.
+   Place your random images in the `public/images` directory.
 
 5. Run the development server:
    ```
@@ -79,12 +98,3 @@ This game challenges users to provide psychic impressions that guide investment 
 
 We welcome contributions to improve the Psychic Investment Game! Please feel free to submit issues, feature requests, or pull requests.
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Disclaimer
-
-This game is for entertainment purposes only. The investment strategies and outcomes in the game are simulated and do not reflect real-world financial markets or advice. Always consult with a qualified financial advisor before making any actual investment decisions.
-
-Enjoy the game and may your intuition guide you to successful predictions!
