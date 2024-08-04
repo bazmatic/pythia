@@ -6,7 +6,7 @@ const MainPage = () => {
 
   const createNewSession = async () => {
     try {
-      const response = await fetch('/api/session/create', { method: 'POST' });
+      const response = await fetch('/api/create', { method: 'POST' });
       const data = await response.json();
       router.push(`/session/${data.id}`);
     } catch (error) {

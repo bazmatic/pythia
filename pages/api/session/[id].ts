@@ -6,12 +6,12 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 /**
  * @swagger
- * /api/session/{sessionId}:
+ * /api/session/{id}:
  *   get:
  *     summary: Get session information
  *     parameters:
  *       - in: path
- *         name: sessionId
+ *         name: id
  *         required: true
  *         schema:
  *           type: string
@@ -29,7 +29,7 @@ export default async function handler(
 ) {
     const sessionService = getService<SessionService>(ServiceName.Session);
     if (req.method === "GET") {
-        const sessionId = req.query.sessionId;
+        const sessionId = req.query.id;
         if (!sessionId || Array.isArray(sessionId)) {
             return res.status(400).json({ error: "Invalid session ID" });
         }

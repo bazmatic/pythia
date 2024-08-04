@@ -1,4 +1,5 @@
-import { uploadImagesAndAnalyze } from "./claude.service";
+//import { uploadImagesAndAnalyze } from "./claude.service";
+import { uploadImagesAndAnalyze } from "./openai.service";
 
 export class JudgeService {
     constructor() {}
@@ -16,16 +17,16 @@ export class JudgeService {
                 imagesPaths[1],
                 impressionText
             ),
-            uploadImagesAndAnalyze(
-                imagesPaths[1],
-                imagesPaths[0],
-                impressionText
-            ),
-            uploadImagesAndAnalyze(
-                imagesPaths[0],
-                imagesPaths[1],
-                impressionText
-            )
+            // uploadImagesAndAnalyze(
+            //     imagesPaths[1],
+            //     imagesPaths[0],
+            //     impressionText
+            // ),
+            // uploadImagesAndAnalyze(
+            //     imagesPaths[0],
+            //     imagesPaths[1],
+            //     impressionText
+            // )
         ]);
 
 		//If any of the responses was -1, warn that some responses were invalid

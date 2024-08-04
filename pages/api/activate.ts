@@ -5,7 +5,7 @@ import { SessionService } from '@/services/session.service';
 
 /**
  * @swagger
- * /api/session/activate:
+ * /api/activate:
  *   post:
  *     summary: Activate an existing session
  *     requestBody:
@@ -15,7 +15,7 @@ import { SessionService } from '@/services/session.service';
  *           schema:
  *             type: object
  *             properties:
- *               sessionId:
+ *               id:
  *                 type: string
  *                 example: "ddcbbb78-d5e9-4090-af86-b27cc910df8e"
  *               impressionText:
@@ -29,11 +29,11 @@ import { SessionService } from '@/services/session.service';
  */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
-    const { sessionId, impressionText } = req.body;
+    const { id, impressionText } = req.body;
 
     const sessionService = getService<SessionService>('session');
-    await sessionService.activateSession(sessionId, impressionText);
-    const session = await sessionService.getSession(sessionId);
+    await sessionService.activateSession(id, impressionText);
+    const session = await sessionService.getSession(id);
 
     res.status(200).json(session);
 

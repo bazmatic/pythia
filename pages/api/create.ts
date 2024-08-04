@@ -4,7 +4,7 @@ import { SessionService } from '@/services/session.service';
 
 /**
  * @swagger
- * /api/session/create:
+ * /api/create:
  *   post:
  *     summary: Create a new session
  *     responses:
