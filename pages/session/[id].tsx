@@ -107,7 +107,6 @@ const SessionPage: React.FC<SessionPageProps> = ({
     }, [session]);
 
     const calculateSessionState = (completedSession: Session) => {
-        debugger;
         if (
             completedSession.chosenImageIdx === undefined ||
             completedSession.targetImageIdx === undefined
@@ -126,10 +125,7 @@ const SessionPage: React.FC<SessionPageProps> = ({
         const targetImageNumber = completedSession.targetImageIdx + 1;
 
         const nonTargetImageSrcs = completedSession.images
-            .filter(
-                (_, index) =>
-                    index !== completedSession.targetImageIdx
-            )
+            .filter((_, index) => index !== completedSession.targetImageIdx)
             .map(image => `/images/${image}`);
 
         setCalculatedState({
@@ -165,11 +161,12 @@ const SessionPage: React.FC<SessionPageProps> = ({
     };
 
     const renderPendingSession = () => (
-        <div className="w-full max-w-md mx-auto">
+        <div className="result-container">
+            <h2 className="result-title">Impression</h2>
             <Textarea
                 value={impressionText}
                 onChange={e => setImpressionText(e.target.value)}
-                placeholder="Enter your impression of the images..."
+                placeholder="Enter your impression of the image"
                 className="input-textarea mb-4"
             />
             <Button onClick={activateSession} className="submit-button">
@@ -179,33 +176,43 @@ const SessionPage: React.FC<SessionPageProps> = ({
     );
 
     const renderActiveSession = () => (
-        <div className="loading-text">
-            Please wait. The session is being resolved...
+        <div className="result-container"> 
+            <h2 className="result-title">Resolving</h2>
+            <div className="loading-text">
+                Please wait. The session is being resolved...
+            </div>
+            <div className="impression-text">
+                <h3 className="font-semibold mb-2">Your impression:</h3>
+                <p>{session?.impressionText}</p>
+            </div>
         </div>
     );
 
     const renderCompletedSession = () => (
         <div className="result-container">
-            <h2 className="result-title">Session Results</h2>
+            <h2 className="result-title">Results</h2>
+            <div className="impression-text">
+                <h3 className="font-semibold mb-2">Your impression:</h3>
+                <p>{session?.impressionText}</p>
+            </div>
             <div className="image-container">
-                
-                    <div className="image-wrapper">
-                        <img
-                            src={calculatedState?.targetImageSrc}
-                            alt="Chosen and Target Image"
-                            className="session-image"
-                        />
-                        {!calculatedState?.isCorrect && (
-                            <p className="result-text">
-                                You did not correctly identify the target image.
-                            </p>
-                        )}
-                        {calculatedState?.isCorrect && (
-                            <p className="result-text">
-                                You correctly identified the target image.
-                            </p>
-                        )}       
-                    </div>            
+                <div className="image-wrapper">
+                    <img
+                        src={calculatedState?.targetImageSrc}
+                        alt="Chosen and Target Image"
+                        className="session-image"
+                    />
+                    {!calculatedState?.isCorrect && (
+                        <p className="result-text">
+                            You did not correctly identify the target image.
+                        </p>
+                    )}
+                    {calculatedState?.isCorrect && (
+                        <p className="result-text">
+                            You correctly identified the target image.
+                        </p>
+                    )}
+                </div>
             </div>
             <p className="result-text">
                 You chose image:{" "}
@@ -235,7 +242,12 @@ const SessionPage: React.FC<SessionPageProps> = ({
                                     <img
                                         src={src}
                                         alt={`Image ${index + 1}`}
-                                        className={`session-image ${src === calculatedState?.chosenImageSrc ? "chosen" : "not-chosen"} `}
+                                        className={`session-image ${
+                                            src ===
+                                            calculatedState?.chosenImageSrc
+                                                ? "chosen"
+                                                : "not-chosen"
+                                        } `}
                                     />
                                 </div>
                             )
@@ -277,24 +289,22 @@ const SessionPage: React.FC<SessionPageProps> = ({
 
     return (
         <div className="page-container">
-            <h1 className="page-title">Session: {session.id}</h1>
-            <div className="session-info">
-                <p className="text-lg mb-2">
-                    Status:{" "}
-                    <span className="font-semibold">{session.status}</span>
-                </p>
-            </div>
-
-            {session.impressionText && (
-                <div className="impression-text">
-                    <h3 className="font-semibold mb-2">Your impression:</h3>
-                    <p>{session.impressionText}</p>
-                </div>
-            )}
+            <h1 className="page-title">{session.id}</h1>
 
             {renderSessionContent()}
         </div>
     );
 };
+
+// function sessionStatusToExplanation(status: SessionStatus): string {
+//     switch (status) {
+//         case SessionStatus.Pending:
+//             return "Provide your impression of the image that will soon be shown.";
+//         case SessionStatus.Active:
+//             return "Processing. Please wait for the results.";
+//         case SessionStatus.Completed:
+//             return "Your session has been completed. See the results below.";
+//     }
+// }
 
 export default SessionPage;

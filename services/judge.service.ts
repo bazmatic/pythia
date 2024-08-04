@@ -1,33 +1,28 @@
 //import { uploadImagesAndAnalyze } from "./claude.service";
-import { uploadImagesAndAnalyze } from "./openai.service";
+import { IJudgeProvider } from "@/types";
+import { OpenAIJudgeProvider } from "./openai.service";
 
 export class JudgeService {
-    constructor() {}
+    private judgeCount: number;
+    constructor(private judgeProvider: IJudgeProvider) {
+        this.judgeCount = process.env.JUDGE_COUNT ? parseInt(process.env.JUDGE_COUNT) : 1;
+    }
 
     // Given a list of image paths, return the index of the image that best matches the impression text
     async judge(
         imagesPaths: string[],
         impressionText: string
     ): Promise<number> {
-        // Judge 3 times in parallel
-
-        const results = await Promise.all([
-            uploadImagesAndAnalyze(
-                imagesPaths[0],
-                imagesPaths[1],
-                impressionText
-            ),
-            // uploadImagesAndAnalyze(
-            //     imagesPaths[1],
-            //     imagesPaths[0],
-            //     impressionText
-            // ),
-            // uploadImagesAndAnalyze(
-            //     imagesPaths[0],
-            //     imagesPaths[1],
-            //     impressionText
-            // )
-        ]);
+        // Judge the impression judgeCount times
+        const results = await Promise.all(
+            Array.from({ length: this.judgeCount }, async () => {
+                return await this.judgeProvider.uploadImagesAndAnalyze(
+                    imagesPaths[0],
+                    imagesPaths[1],
+                    impressionText
+                );
+            })
+        );
 
 		//If any of the responses was -1, warn that some responses were invalid
 		const invalidResponseCount = results.filter(result => result === -1).length;
@@ -48,6 +43,7 @@ export class JudgeService {
 }
 
 // Create a single instance to be used across the application
-const judgeService = new JudgeService();
 
-export default judgeService;
+//const judgeService = new JudgeService(new OpenAIJudgeProvider());
+
+//export default judgeService;
