@@ -1,16 +1,25 @@
 import { extractJson, IJudgeProvider } from "@/types";
 import axios from "axios";
 import fs from "fs";
+import path from "path";
+import _ from "lodash";
 
 export class LlavaJudgeProvider implements IJudgeProvider {
     private readonly ollamaEndpoint: string;
     private readonly IMAGE_A = "llava_image_1111";
     private readonly IMAGE_B = "llava_image_0x4444";
+    private promptTemplate: string;
 
     constructor(
         ollamaEndpoint: string = "http://127.0.0.1:11434/api/generate"
     ) {
         this.ollamaEndpoint = ollamaEndpoint;
+        this.promptTemplate = this.loadPromptTemplate();
+    }
+
+    private loadPromptTemplate() {
+        const templatePath = path.join(process.cwd(), 'prompts', 'llava_analysis_prompt.txt');
+        return fs.readFileSync(templatePath, 'utf-8');
     }
 
     async provideJudgement(
@@ -30,7 +39,7 @@ export class LlavaJudgeProvider implements IJudgeProvider {
             base64ImageB,
             psychicImpressions
         );
-        console.log("Ready to process reponse", response);
+        console.log("Ready to process response", response);
         return this.processResponse(response);
     }
 
@@ -40,8 +49,8 @@ export class LlavaJudgeProvider implements IJudgeProvider {
         psychicImpressions: string
     ): Promise<string> {
         const introPrompt = `I'm going to show you two images. The first image is named "${this.IMAGE_A}" and the second image is named "${this.IMAGE_B}".`;
-        const imageAPrompt = `This is image "${this.IMAGE_A}". Please describe it in detail:`;
-        const imageBPrompt = `This is image "${this.IMAGE_B}". Please describe it in detail:`;
+        const imageAPrompt = `This is image "${this.IMAGE_A}". Simply respond with the text "OK" to continue.`;
+        const imageBPrompt = `This is image "${this.IMAGE_B}". Simply respond with the text "OK" to continue.`;
         const analysisPrompt = this.generateAnalysisPrompt(psychicImpressions);
         const payload: any = {
             model: "llava"
@@ -107,8 +116,8 @@ export class LlavaJudgeProvider implements IJudgeProvider {
             throw new Error("Failed to query Llava model");
         }
     }
+
     private processResponse(responseText: string): number {
-        debugger;
         console.log("processResponse: ", responseText);
         const json = extractJson(responseText);
         if (!json) {
@@ -123,22 +132,11 @@ export class LlavaJudgeProvider implements IJudgeProvider {
         throw new Error(`Invalid chosen_image value: ${json.chosen_image}`);
     }
 
-    private generateAnalysisPrompt(psychicImpressions: string): string {
-        return `Now that you've seen both images, please analyze the following psychic impressions and determine which image they most closely match:
-
-${psychicImpressions}
-
-Based on your analysis, choose the image that best matches the impressions.
-Explain your reasoning, noting specific details from the impressions that correspond to elements in the chosen image.
-Also, provide a confidence level (low, medium, or high) for your judgment.
-
-Respond with a JSON object in the following format:
-{
-  "chosen_image": "${this.IMAGE_A} or ${this.IMAGE_B}",
-  "confidence_level": "low, medium, or high",
-  "reasoning": "Explanation of reasoning"
-}
-
-Provide only the JSON object in your response, without any additional text.`;
+    private generateAnalysisPrompt(impressions: string): string {
+        return _.template(this.promptTemplate)({
+            IMAGE_A: this.IMAGE_A,
+            IMAGE_B: this.IMAGE_B,
+            IMPRESSIONS: impressions
+        });
     }
 }
