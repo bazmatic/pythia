@@ -144,10 +144,10 @@ const SessionPage: React.FC<SessionPageProps> = ({
 
     const activateSession = async () => {
         try {
-            const response = await fetch("/api/session/activate", {
+            const response = await fetch("/api/activate", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ sessionId: session?.id, impressionText })
+                body: JSON.stringify({ id: session?.id, impressionText })
             });
             if (!response.ok) {
                 throw new Error("Failed to activate session");
