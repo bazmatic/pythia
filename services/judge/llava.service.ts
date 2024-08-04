@@ -18,7 +18,7 @@ export class LlavaJudgeProvider implements IJudgeProvider {
     }
 
     private loadPromptTemplate() {
-        const templatePath = path.join(process.cwd(), 'prompts', 'llava_analysis_prompt.txt');
+        const templatePath = path.join(process.cwd(), 'prompts', 'analysis_prompt.txt');
         return fs.readFileSync(templatePath, 'utf-8');
     }
 
