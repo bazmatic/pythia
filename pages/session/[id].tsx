@@ -176,7 +176,7 @@ const SessionPage: React.FC<SessionPageProps> = ({
     );
 
     const renderActiveSession = () => (
-        <div className="result-container"> 
+        <div className="result-container">
             <h2 className="result-title">Resolving</h2>
             <div className="loading-text">
                 Please wait. The session is being resolved...
@@ -196,10 +196,11 @@ const SessionPage: React.FC<SessionPageProps> = ({
                 <p>{session?.impressionText}</p>
             </div>
             <div className="image-container">
+                <h2>Target image</h2>
                 <div className="image-wrapper">
                     <img
                         src={calculatedState?.targetImageSrc}
-                        alt="Chosen and Target Image"
+                        alt="Target Image"
                         className="session-image"
                     />
                     {!calculatedState?.isCorrect && (
@@ -214,6 +215,7 @@ const SessionPage: React.FC<SessionPageProps> = ({
                     )}
                 </div>
             </div>
+
             <p className="result-text">
                 You chose image:{" "}
                 <span className="font-semibold">
@@ -234,11 +236,19 @@ const SessionPage: React.FC<SessionPageProps> = ({
             </button>
             {showNonTargetImages && (
                 <div className="nontarget-images mt-4">
-                    <h3 className="font-semibold mb-2">Other Images:</h3>
+                    <h3 className="font-semibold mb-2">Other Images</h3>
+                    <p>Not the target</p>
                     <div className="flex flex-wrap justify-center">
                         {calculatedState?.nonTargetImageSrcs.map(
                             (src, index) => (
                                 <div key={index} className="image-wrapper m-2">
+                                    {calculatedState?.chosenImageSrc ===
+                                        src && (
+                                        <p className="result-text">
+                                            You chose this image
+                                        </p>
+                                    )}
+
                                     <img
                                         src={src}
                                         alt={`Image ${index + 1}`}

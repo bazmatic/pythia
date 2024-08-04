@@ -1,7 +1,6 @@
 import { CollectionName, DBService } from "./db.service";
-import { randomUUID } from "crypto";
-import { JudgeService } from "./judge.service";
-import { ImageService } from "./image.service";
+import { JudgeService } from "@/services/judge/judge.service";
+import { ImageService } from "@/services/image.service";
 import { InvestmentService, StrategyReport } from "./investment.service";
 import { Session, SessionStatus } from "@/types";
 
@@ -16,7 +15,7 @@ export class SessionService {
     ) {}
 
     public async createSession(): Promise<Session> {
-        const sessionId = randomUUID();
+        const sessionId = this.generateSessionId();
         const images = await this.imageService.getRandomImageNameList(IMAGE_COUNT);
 
         const newSession: Session = {
@@ -88,5 +87,15 @@ export class SessionService {
 
     public async saveSession(session: Session): Promise<void> {
         return this.db.saveItem<Session>(CollectionName.Sessions, session);
+    }
+
+    private generateSessionId(): string {
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        const length = 10;
+        let result = '';
+        for (let i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * characters.length));
+        }
+        return result;
     }
 }

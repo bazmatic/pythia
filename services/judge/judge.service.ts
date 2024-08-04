@@ -1,6 +1,5 @@
 //import { uploadImagesAndAnalyze } from "./claude.service";
 import { IJudgeProvider } from "@/types";
-import { OpenAIJudgeProvider } from "./openai.service";
 
 export class JudgeService {
     private judgeCount: number;
@@ -41,9 +40,3 @@ export class JudgeService {
         return frequencies.indexOf(Math.max(...frequencies));
     }
 }
-
-// Create a single instance to be used across the application
-
-//const judgeService = new JudgeService(new OpenAIJudgeProvider());
-
-//export default judgeService;
