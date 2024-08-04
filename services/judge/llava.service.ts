@@ -13,7 +13,7 @@ export class LlavaJudgeProvider implements IJudgeProvider {
         this.ollamaEndpoint = ollamaEndpoint;
     }
 
-    async uploadImagesAndAnalyze(
+    async provideJudgement(
         imageAPath: string,
         imageBPath: string,
         psychicImpressions: string

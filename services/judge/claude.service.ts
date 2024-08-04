@@ -1,7 +1,9 @@
 import dotenv from "dotenv";
-import fs from "fs/promises";
+import fs from "fs";
+import path from "path";
 import Anthropic from "@anthropic-ai/sdk";
 import { extractJson, IJudgeProvider } from "@/types";
+import _ from "lodash";
 
 dotenv.config();
 
@@ -9,6 +11,7 @@ export class ClaudeJudgeProvider implements IJudgeProvider {
     private client: Anthropic;
     private readonly IMAGE_A = "image_1111";
     private readonly IMAGE_B = "0x4444";
+    private promptTemplate: string;
 
     constructor() {
         const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
@@ -16,16 +19,22 @@ export class ClaudeJudgeProvider implements IJudgeProvider {
             throw new Error("ANTHROPIC_API_KEY is not set in the environment variables");
         }
         this.client = new Anthropic({ apiKey: ANTHROPIC_API_KEY });
+        this.promptTemplate = this.loadPromptTemplate();
     }
 
-    async uploadImagesAndAnalyze(
+    private loadPromptTemplate() {
+        const templatePath = path.join(process.cwd(), 'prompts', 'analysis_prompt.txt');
+        return fs.readFileSync(templatePath, 'utf-8');
+    }
+
+    async provideJudgement(
         imageAPath: string,
         imageBPath: string,
         psychicImpressions: string
     ): Promise<number> {
         const [imageABuffer, imageBBuffer] = await Promise.all([
-            fs.readFile(imageAPath),
-            fs.readFile(imageBPath)
+            fs.promises.readFile(imageAPath),
+            fs.promises.readFile(imageBPath)
         ]);
 
         const messages: Anthropic.Messages.MessageParam[] = [
@@ -83,30 +92,12 @@ export class ClaudeJudgeProvider implements IJudgeProvider {
         return this.handleResponse(responseText);
     }
 
-    private generatePrompt(psychicImpressions: string): string {
-        return `Now that you've seen both images, here are the psychic impressions for one of these images:
-
-${psychicImpressions}
-
-Please analyze these impressions and determine which image ("${this.IMAGE_A}" or "${this.IMAGE_B}") they most closely match.
-Analyse the following aspects of the images:
-1. Lighting
-2. Colors
-3. Shapes
-4. Textures
-5. Emotions
-6. Taste or smell
-7. Sounds
-8. Temperature
-9. Movement
-Based on this analysis, choose the image that best matches the impressions.
-Explain your reasoning, noting specific details from the impressions that correspond to elements in the chosen image.
-Also, provide a confidence level (low, medium, or high) for your judgment. Respond via a JSON object with the following format:
-{
-  "chosen_image": "${this.IMAGE_A} or ${this.IMAGE_B}",
-  "confidence_level": "low, medium, or high",
-  "reasoning": "Explanation of reasoning"
-}`;
+    private generatePrompt(impressions: string): string {
+        return _.template(this.promptTemplate)({
+            IMAGE_A: this.IMAGE_A,
+            IMAGE_B: this.IMAGE_B,
+            IMPRESSIONS: impressions
+        });
     }
 
     private extractResponseText(response: Anthropic.Messages.Message): string {
@@ -117,7 +108,6 @@ Also, provide a confidence level (low, medium, or high) for your judgment. Respo
     }
 
     private handleResponse(responseText: string): number {
-        // Select the section from the first "{" to the last "}"
         const parsedJson = extractJson(responseText);
         if (parsedJson.chosen_image === this.IMAGE_A) {
             return 0;

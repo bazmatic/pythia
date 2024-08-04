@@ -15,7 +15,7 @@ export class JudgeService {
         // Judge the impression judgeCount times
         const results = await Promise.all(
             Array.from({ length: this.judgeCount }, async () => {
-                return await this.judgeProvider.uploadImagesAndAnalyze(
+                return await this.judgeProvider.provideJudgement(
                     imagesPaths[0],
                     imagesPaths[1],
                     impressionText

@@ -28,7 +28,7 @@ export enum ServiceName {
 }
 
 export interface IJudgeProvider {
-    uploadImagesAndAnalyze(
+    provideJudgement(
         imagesPathA: string,
         imagePathB: string,
         impressionText: string
