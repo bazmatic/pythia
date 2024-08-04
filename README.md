@@ -1,40 +1,88 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Psychic Investment Game
 
-## Getting Started
+Welcome to the Psychic Investment Game, an innovative platform that combines intuitive impressions with simulated financial investments!
 
-First, run the development server:
+## Overview
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+This game challenges users to provide psychic impressions that guide investment decisions. Here's how it works:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. The system randomly selects two images, each associated with a different investment strategy.
+2. Users are asked to focus and obtain psychic impressions about an image they haven't seen yet.
+3. They provide these impressions to the system.
+4. The system interprets these impressions as a description of one of the randomly selected images.
+5. Based on which image the system determines the impressions most closely match, the corresponding investment strategy is chosen.
+6. The system simulates the outcomes of both investment strategies.
+7. The image associated with the most successful strategy is revealed to the user.
+8. If the user's impressions align with the revealed image, it indicates a successful prediction and potential financial gain.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## How It Works
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+- The system has a set of images, each representing a specific investment strategy (e.g., a snake might represent a bearish market, while a mountain could represent a bullish trend).
+- At the start of each game, two images are randomly selected, each tied to a different investment choice.
+- Users focus on getting impressions about an unseen image, not knowing which images have been selected.
+- User impressions are analyzed and interpreted as a description of one of the two selected images.
+- The investment strategy associated with the image that best matches the user's impressions is applied.
+- The system simulates the outcomes of both strategies.
+- The image corresponding to the more successful strategy is shown to the user.
+- Success is measured by how well the user's impressions match the revealed image, indicating they "sensed" the more successful strategy.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## Features
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- **Session Creation**: Users can start new game sessions.
+- **Psychic Impressions**: Users input their intuitive feelings about an unseen image.
+- **AI-Powered Analysis**: Advanced AI models interpret user impressions to match them with one of the randomly selected images.
+- **Investment Simulation**: The system simulates different investment outcomes based on the strategies associated with each image.
+- **Real-time Processing**: Quick processing of impressions and strategy outcomes.
+- **Visual Feedback**: Users see the outcome of their predictions through the revealed image.
 
-## Learn More
+## Technical Stack
 
-To learn more about Next.js, take a look at the following resources:
+- **Frontend**: React with Next.js
+- **Backend**: Node.js
+- **AI Models**: OpenAI GPT, Claude, and Llava for impression analysis and image matching
+- **Database**: File-based JSON storage
+- **Styling**: Tailwind CSS
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Setup Instructions
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+1. Clone the repository:
+   ```
+   git clone https://github.com/yourusername/psychic-investment-game.git
+   ```
 
-## Deploy on Vercel
+2. Install dependencies:
+   ```
+   cd psychic-investment-game
+   npm install
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. Set up environment variables:
+   Create a `.env` file in the root directory and add the following:
+   ```
+   OPENAI_API_KEY=your_openai_api_key
+   ANTHROPIC_API_KEY=your_anthropic_api_key
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+4. Add strategy images:
+   Place your strategy-related images in the `public/images` directory. Ensure each image clearly represents a specific investment strategy.
+
+5. Run the development server:
+   ```
+   npm run dev
+   ```
+
+6. Open your browser and navigate to `http://localhost:3000` to start playing!
+
+## Contributing
+
+We welcome contributions to improve the Psychic Investment Game! Please feel free to submit issues, feature requests, or pull requests.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Disclaimer
+
+This game is for entertainment purposes only. The investment strategies and outcomes in the game are simulated and do not reflect real-world financial markets or advice. Always consult with a qualified financial advisor before making any actual investment decisions.
+
+Enjoy the game and may your intuition guide you to successful predictions!
