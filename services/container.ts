@@ -3,12 +3,13 @@
 import { DBService } from "@/services/db.service";
 import { JudgeService } from "@/services/judge/judge.service";
 import { ImageService } from "@/services/image.service";
-import { InvestmentService } from "@/services/investment.service";
+import { InvestmentService } from "@/services/investment/investment.service";
 import { SessionService } from "@/services/session.service";
 import { ServiceName } from "@/types";
 import { OpenAIJudgeProvider } from "@/services/judge/openai.service";
 import { ClaudeJudgeProvider } from "@/services/judge/claude.service";
 import { LlavaJudgeProvider } from "@/services/judge/llava.service";
+import { BetfairInvestmentProvider } from "./investment/betfair.investment.provider";
 
 export class ServiceContainer {
     private static instance: ServiceContainer;
@@ -42,7 +43,11 @@ export class ServiceContainer {
         this.services.set(ServiceName.Image, new ImageService());
         this.services.set(
             ServiceName.Investment,
-            new InvestmentService(this.get(ServiceName.Database))
+            new InvestmentService(
+                new BetfairInvestmentProvider(this.get(ServiceName.Database), (error: any, authenticated: boolean) => {
+                    console.log("Authenticated with Betfair:", authenticated);
+                }      
+            ))
         );
         this.services.set(
             ServiceName.Session,

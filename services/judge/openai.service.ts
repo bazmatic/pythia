@@ -4,6 +4,7 @@ import fs from "fs";
 import OpenAI from "openai";
 import _ from "lodash";
 import path from "path";
+import { extractJson } from "@/utils";
 
 dotenv.config();
 
@@ -86,7 +87,8 @@ export class OpenAIJudgeProvider implements IJudgeProvider {
 
     private parseResponse(responseText: string): number {
         try {
-            const parsedJson = JSON.parse(responseText);
+            console.log(`Parsing response: ${responseText}`);
+            const parsedJson = extractJson(responseText);
             console.log(parsedJson);
             if (parsedJson.chosen_image === this.IMAGE_A) {
                 return 0;

@@ -1,8 +1,9 @@
-import { extractJson, IJudgeProvider } from "@/types";
+import { IJudgeProvider } from "@/types";
 import axios from "axios";
 import fs from "fs";
 import path from "path";
 import _ from "lodash";
+import { extractJson } from "@/utils";
 
 export class LlavaJudgeProvider implements IJudgeProvider {
     private readonly ollamaEndpoint: string;

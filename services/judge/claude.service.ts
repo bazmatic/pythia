@@ -2,8 +2,9 @@ import dotenv from "dotenv";
 import fs from "fs";
 import path from "path";
 import Anthropic from "@anthropic-ai/sdk";
-import { extractJson, IJudgeProvider } from "@/types";
+import { IJudgeProvider } from "@/types";
 import _ from "lodash";
+import { extractJson } from "@/utils";
 
 dotenv.config();
 

@@ -22,7 +22,7 @@
   }
 
   .image-container {
-    @apply flex justify-between mb-8 bg-gray-100 p-4 rounded-lg shadow-inner;
+    @apply flex  mb-8 bg-gray-100 p-4 rounded-lg shadow-inner;
   }
 
   .image-wrapper {
@@ -68,4 +68,14 @@
   img.chosen {
     @apply border-4 border-blue-400;
   }
+
+  img.successful-image {
+    @apply border-4 border-green-400;
+  }
+
+  h2 {
+    @apply text-2xl font-semibold mb-4 text-gray-700;
+  }
+
+  
 }

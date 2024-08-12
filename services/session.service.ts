@@ -1,8 +1,8 @@
 import { CollectionName, DBService } from "./db.service";
 import { JudgeService } from "@/services/judge/judge.service";
 import { ImageService } from "@/services/image.service";
-import { InvestmentService, StrategyReport } from "./investment.service";
-import { Session, SessionStatus } from "@/types";
+import { Investment, Session, SessionStatus } from "@/types";
+import { InvestmentService } from "./investment/investment.service";
 
 const IMAGE_COUNT = 2;
 
@@ -48,6 +48,7 @@ export class SessionService {
         sessionId: string,
         impressionText: string
     ): Promise<boolean> {
+        console.log("Processing session...");
         // Judge the impression text and return the chosen image index
         const session = await this.getSession(sessionId);
         const filePaths = session.images.map(imageName =>
@@ -58,23 +59,37 @@ export class SessionService {
             filePaths,
             impressionText
         );
+        console.log("Chosen image index: ", chosenImageIndex);
         await this.saveSession({
             ...session,
             chosenImageIdx: chosenImageIndex
         });
 
         // Apply the chosen image index to the investment service, and wait for resolution
-        const strategyReport: StrategyReport =
-            await this.investmentService.invest(sessionId, chosenImageIndex);
+
+        console.log("Investing...");
+        const investment: Investment = await this.investmentService.invest(sessionId, chosenImageIndex);
+        console.log(`Investment: ${JSON.stringify(investment)}`);
+        debugger;
 
         // Update the session with the correct target (the most successful strategy)
         const updatedSession = await this.getSession(sessionId);
+        const targetStrategyIdx = investment.strategies.reduce(
+            (best, strategy, idx) =>
+                (strategy?.result ?? 0) > (investment.strategies[best]?.result ?? 0) ? idx : best,
+            0
+        );
+        if (updatedSession.chosenImageIdx === targetStrategyIdx) {
+            console.log("***** Correct choice!");
+        } else {
+            console.log("***** Incorrect choice!");
+        }
         await this.saveSession({
             ...updatedSession,
-            targetImageIdx: strategyReport.targetStrategyIdx,
+            targetImageIdx: targetStrategyIdx,
             status: SessionStatus.Completed
         });
-        return strategyReport.targetStrategyIdx === chosenImageIndex;
+        return targetStrategyIdx === chosenImageIndex;
     }
 
     public async getSession(sessionId: string): Promise<Session> {

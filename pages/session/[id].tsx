@@ -198,20 +198,29 @@ const SessionPage: React.FC<SessionPageProps> = ({
             <div className="image-container">
                 <h2>Target image</h2>
                 <div className="image-wrapper">
-                    <img
-                        src={calculatedState?.targetImageSrc}
-                        alt="Target Image"
-                        className="session-image"
-                    />
                     {!calculatedState?.isCorrect && (
-                        <p className="result-text">
-                            You did not correctly identify the target image.
-                        </p>
+                        <>
+                            <img
+                                src={calculatedState?.targetImageSrc}
+                                alt="Target Image"
+                                className="session-image"
+                            />
+                            <p className="result-text">
+                                You did not correctly identify the target image.
+                            </p>
+                        </>
                     )}
                     {calculatedState?.isCorrect && (
-                        <p className="result-text">
-                            You correctly identified the target image.
-                        </p>
+                        <>
+                            <img
+                                src={calculatedState?.targetImageSrc}
+                                alt="Target Image"
+                                className="session-image successful-image"
+                            />
+                            <p className="result-text">
+                                You correctly identified the target image.
+                            </p>
+                        </>
                     )}
                 </div>
             </div>
