@@ -10,12 +10,11 @@ export class InvestmentService  {
 
     public async invest(
         sessionId: string,
-        strategyIdx: number
-    ): Promise<Investment> {
-        return this.investmentProvider.invest(sessionId, strategyIdx);
+    ): Promise<void> {
+        return this.investmentProvider.invest(sessionId);
     }
 
-    public async resolveInvestment(sessionId: string): Promise<Investment> {
+    public async resolveInvestment(sessionId: string): Promise<void> {
         return this.investmentProvider.resolveInvestment(sessionId);
     }
 }

@@ -46,6 +46,7 @@ export class ServiceContainer {
             new InvestmentService(
                 new BetfairInvestmentProvider(this.get(ServiceName.Database), (error: any, authenticated: boolean) => {
                     console.log("Authenticated with Betfair:", authenticated);
+
                 }      
             ))
         );
@@ -58,6 +59,14 @@ export class ServiceContainer {
                 this.get(ServiceName.Investment)
             )
         );
+        this.onCreateComplete();
+    }
+
+    private onCreateComplete() {
+        const sessionService = this.get<SessionService>(ServiceName.Session);
+        setTimeout(() => {
+            sessionService.poll();
+        }, 30000);
     }
 
     static getInstance(): ServiceContainer {

@@ -65,7 +65,7 @@ const SessionPage: React.FC<SessionPageProps> = ({
     const [showNonTargetImages, setShowNonTargetImages] = useState(false);
 
     useEffect(() => {
-        if (session?.status === SessionStatus.Completed) {
+        if (session?.status === SessionStatus.InvestmentResolved) {
             calculateSessionState(session);
         }
     }, []);
@@ -74,7 +74,8 @@ const SessionPage: React.FC<SessionPageProps> = ({
         let intervalId: NodeJS.Timeout;
 
         const pollSession = async () => {
-            if (session?.status === SessionStatus.Active) {
+            if (!session) return;
+            if (session?.status !== SessionStatus.InvestmentResolved) {
                 try {
                     const response = await fetch(`/api/session/${session.id}`);
                     if (!response.ok) {
@@ -83,7 +84,7 @@ const SessionPage: React.FC<SessionPageProps> = ({
                     const updatedSession = await response.json();
                     setSession(updatedSession);
 
-                    if (updatedSession.status === SessionStatus.Completed) {
+                    if (updatedSession.status === SessionStatus.InvestmentResolved) {
                         clearInterval(intervalId);
                         calculateSessionState(updatedSession);
                     }
@@ -95,7 +96,7 @@ const SessionPage: React.FC<SessionPageProps> = ({
             }
         };
 
-        if (session?.status === SessionStatus.Active) {
+        if (session?.status !== SessionStatus.InvestmentResolved) {
             intervalId = setInterval(pollSession, 5000); // Poll every 5 seconds
         }
 
@@ -279,11 +280,14 @@ const SessionPage: React.FC<SessionPageProps> = ({
 
     const renderSessionContent = () => {
         switch (session?.status) {
-            case SessionStatus.Pending:
+            case SessionStatus.New:
                 return renderPendingSession();
-            case SessionStatus.Active:
+            case SessionStatus.Unjudged:
+            case SessionStatus.Judged:
+            case SessionStatus.Investing:
+            case SessionStatus.Invested:
                 return renderActiveSession();
-            case SessionStatus.Completed:
+            case SessionStatus.InvestmentResolved:
                 return renderCompletedSession();
             default:
                 return null;

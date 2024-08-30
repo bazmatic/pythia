@@ -86,6 +86,18 @@ export class DBService {
     return this.loadCollection<T>(collectionName);
   }
 
+  public async query<T extends Identifiable>(collectionName: CollectionName, query: Partial<T>): Promise<T[]> {
+    const collectionItems = await this.loadCollection<T>(collectionName);
+    return collectionItems.filter((item) => {
+      for (const key in query) {
+        if (query[key] !== item[key]) {
+          return false;
+        }
+      }
+      return true;
+    });
+  }
+
   public async deleteItem(collectionName: CollectionName, id: string): Promise<void> {
     const collectionItems = await this.loadCollection<Identifiable>(collectionName);
     const updatedItems = collectionItems.filter(item => item.id !== id);

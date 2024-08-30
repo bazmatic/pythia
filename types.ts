@@ -11,9 +11,14 @@ export type StrategyReport = {
 };
 
 export enum SessionStatus {
-    Pending = "pending",
-    Active = "active",
-    Completed = "completed"
+    New = "new",
+    Unjudged = "unjudged",
+    Judged = "judged",
+    Investing = "investing",
+    Invested = "invested",
+    InvestmentResolved = "investmentResolved",
+    Assessed = "assessed",
+    ShownFeedback = "shownFeedback",
 }
 
 export type Session = {
@@ -22,6 +27,7 @@ export type Session = {
     impressionText?: string;
     chosenImageIdx?: number;
     targetImageIdx?: number;
+    data?: any;
     status: SessionStatus;
 };
 
@@ -34,9 +40,9 @@ export type Investment = {
 };
 
 export type StrategyInfo = {
-    investmentData: any;
-    chosen: boolean;
-    result?: number;
+    investmentData: any; // Detailed info particular to the investment provider
+    chosen: boolean; // The user chose this
+    result?: number; // How successful
 };
 
 
@@ -59,12 +65,11 @@ export interface IJudgeProvider {
 
 export interface IInvestmentProvider {
     invest(
-        sessionId: string,
-        strategyIdx: number
-    ): Promise<Investment>;
+        sessionId: string
+    ): Promise<void>;
 
     resolveInvestment(
         sessionId: string
-    ): Promise<Investment>;
+    ): Promise<void>;
 
 }
