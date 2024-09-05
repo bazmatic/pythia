@@ -1,3 +1,14 @@
+export const INVERSIFY_TOKENS = {
+    ClaudeJudgeProvider: Symbol.for("ClaudeJudgeProvider"),
+    Database: Symbol.for("Database"),
+    Judge: Symbol.for("Judge"),
+    JudgementProvider: Symbol.for("JudgementProvider"),
+    Image: Symbol.for("Image"),
+    Investment: Symbol.for("Investment"),
+    InvestmentProvider: Symbol.for("InvestmentProvider"),
+    Session: Symbol.for("Session")
+};
+
 export enum InvestmentStatus {
     Pending = "pending",
     Active = "active",
@@ -44,6 +55,11 @@ export type StrategyInfo = {
     chosen: boolean; // The user chose this
     result?: number; // How successful
 };
+
+export type PollFlag = {
+    id: string;
+    running: boolean;
+}
 
 
 export enum ServiceName {

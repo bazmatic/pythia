@@ -1,18 +1,33 @@
 import { CollectionName, DBService } from "./db.service";
 import { JudgeService } from "@/services/judge/judge.service";
 import { ImageService } from "@/services/image.service";
-import { Session, SessionStatus } from "@/types";
+import { INVERSIFY_TOKENS, Session, SessionStatus } from "@/types";
 import { InvestmentService } from "./investment/investment.service";
+import { inject, injectable } from "inversify";
 
 const IMAGE_COUNT = 2;
 
+@injectable()
 export class SessionService {
     constructor(
+        @inject(INVERSIFY_TOKENS.Database)
         private db: DBService,
+
+        @inject(INVERSIFY_TOKENS.Judge)
         private judgeService: JudgeService,
+
+        @inject(INVERSIFY_TOKENS.Image)
         private imageService: ImageService,
+
+        @inject(INVERSIFY_TOKENS.Investment)
         private investmentService: InvestmentService //private investmentService: InvestmentService
-    ) {}
+    ) {
+
+        this.poll().then(() => {
+            console.log("Polling...");
+        });
+
+    }
 
     public async createSession(): Promise<Session> {
         const sessionId = this.generateSessionId();
@@ -21,6 +36,7 @@ export class SessionService {
         const newSession: Session = {
             id: sessionId,
             images,
+            data: {},
             status: SessionStatus.New
         };
 
@@ -87,14 +103,11 @@ export class SessionService {
 
     public async assess(sessionId: string): Promise<void> {
         const session = await this.getSession(sessionId);
-        if (session.status !== SessionStatus.Invested) {
-            throw new Error(`Session not in ${SessionStatus.Invested} state`);
+        if (session.status !== SessionStatus.InvestmentResolved) {
+            throw new Error(`Session not in ${SessionStatus.InvestmentResolved} state`);
         }
         // Assess the investment and update the session status
         // Which strategy was most successful?
-        
-
-
         return this.saveSession({
             ...session,
             status: SessionStatus.Assessed
@@ -140,9 +153,6 @@ export class SessionService {
         }
     }
 
-    // private async handleInvestedSessions(): Promise<void> {
-    // }
-
     private async handleInvestmentResolvedSessions(): Promise<void> {
         const investedSessions = await this.query({ status: SessionStatus.InvestmentResolved });
         for (const session of investedSessions) {
@@ -150,9 +160,12 @@ export class SessionService {
         }
     }
 
-
     public async getSession(sessionId: string): Promise<Session> {
-        return this.db.getItem<Session>(CollectionName.Sessions, sessionId);
+        const result = await this.db.getItem<Session>(CollectionName.Sessions, sessionId);
+        if (!result) {
+            throw new Error(`Session with id ${sessionId} not found`);
+        }
+        return result;
     }
 
     public async getSessions(): Promise<Session[]> {
@@ -179,6 +192,7 @@ export class SessionService {
 
     public async poll(): Promise<void> {
         setInterval(async () => {
+            console.log("Processing sessions...");
             // Look for unjudged sessions
             this.handleUnjudgedSessions().then(async () => {
                 console.log("Handled unjudged sessions");
@@ -192,13 +206,7 @@ export class SessionService {
             // Look for sessions with a strategy not yet resolved
             this.handleInvestmentResolvedSessions().then(async () => {
                 console.log("Handled invested sessions");
-            });
-
-
-
-
-
-
-        }, 60000);
+            });       
+        }, 60000);   
     }
 }

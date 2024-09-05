@@ -1,7 +1,7 @@
 // pages/api/session/[sessionId].ts
 import { getService } from "@/services/container";
 import { SessionService } from "@/services/session.service";
-import { ServiceName, Session } from "@/types";
+import { INVERSIFY_TOKENS, Session } from "@/types";
 import { NextApiRequest, NextApiResponse } from "next";
 
 /**
@@ -27,7 +27,7 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    const sessionService = getService<SessionService>(ServiceName.Session);
+    const sessionService = getService<SessionService>(INVERSIFY_TOKENS.Session);
     if (req.method === "GET") {
         const sessionId = req.query.id;
         if (!sessionId || Array.isArray(sessionId)) {

@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getService } from '@/services/container';
 import { SessionService } from '@/services/session.service';
+import { INVERSIFY_TOKENS } from '@/types';
 
 /**
  * @swagger
@@ -19,7 +20,7 @@ import { SessionService } from '@/services/session.service';
  *                   type: string
  */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const sessionService = getService<SessionService>('session');
+  const sessionService = getService<SessionService>(INVERSIFY_TOKENS.Session);
   if (req.method === 'POST') {
     const session = await sessionService.createSession();
     res.status(200).json(session);

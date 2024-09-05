@@ -1,8 +1,10 @@
 // services/imageService.ts
 
 import fs from "fs";
+import { injectable } from "inversify";
 import path from "path";
 
+@injectable()
 export class ImageService {
     private imagePath: string;
 

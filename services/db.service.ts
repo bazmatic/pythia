@@ -1,22 +1,25 @@
 // services/db.ts
 
 import fs from 'fs/promises';
+import { injectable } from 'inversify';
 import path from 'path';
 
 export enum CollectionName {
   Sessions = 'sessions',
   Investments = 'investments',
+  Flags = 'flags',
 }
 
 interface Identifiable {
   id: string;
 }
 
+@injectable()
 export class DBService {
   private readonly dbPath: string;
 
-  constructor(dbPath?: string) {
-    this.dbPath = dbPath || path.join(process.cwd(), 'data');
+  constructor() {
+    this.dbPath = path.join(process.cwd(), 'data');
   }
 
   private async ensureDirectoryExists(): Promise<void> {
@@ -71,12 +74,13 @@ export class DBService {
     await this.writeCollection(collectionName, collectionItems);
   }
 
-  public async getItem<T extends Identifiable>(collectionName: CollectionName, id: string): Promise<T> {
+  public async getItem<T extends Identifiable>(collectionName: CollectionName, id: string): Promise<T|null> {
     const collectionItems = await this.loadCollection<T>(collectionName);
     const item = collectionItems.find((_item) => _item.id === id);
 
     if (!item) {
-      throw new Error(`Item with id ${id} not found in collection ${collectionName}`);
+      return null;
+      //throw new Error(`Item with id ${id} not found in collection ${collectionName}`);
     }
 
     return item;

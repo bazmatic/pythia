@@ -1,7 +1,9 @@
 import {
     IInvestmentProvider,
+    INVERSIFY_TOKENS,
     Investment,
     InvestmentStatus,
+    PollFlag,
     Session,
     SessionStatus,
     StrategyReport
@@ -10,10 +12,11 @@ import {
 //import file system functions
 import fs from "fs";
 
-import { CollectionName } from "../db.service";
+import { CollectionName, DBService } from "../db.service";
 import {
     authenticate,
     listClearedOrders,
+    listCurrentOrders,
     listMarketBook,
     listMarketCatalogue,
     placeOrders,
@@ -30,6 +33,7 @@ import {
 } from "betfair-api-ts/lib/types/bettingAPI/betting";
 // import { BetfairHistoricService } from "../betfair/betfair.historic.service";
 import { SessionService } from "../session.service";
+import { inject, injectable, LazyServiceIdentifier } from "inversify";
 
 type Wager = {
     raceId: string;
@@ -55,10 +59,16 @@ type BetfairInvestment = Investment & {
 
 const STRATEGIES = [StrategyType.BackFav, StrategyType.LayFav];
 
+@injectable()
 export class BetfairInvestmentProvider implements IInvestmentProvider {
+    private timer: NodeJS.Timeout | null = null;
     constructor(
-        private sessionService: SessionService,
-        callback: (error: any, authenticated: boolean) => void
+        // @inject(new LazyServiceIdentifier(() => INVERSIFY_TOKENS.Session))
+        // private sessionService: SessionService,
+
+        //callback: (error: any, authenticated: boolean) => void
+        @inject(INVERSIFY_TOKENS.Database)
+        private db: DBService,
     ) {
         const certificatePath = process.env.BETFAIR_CERT_PATH;
         const keyPath = process.env.BETFAIR_KEY_PATH;
@@ -81,11 +91,16 @@ export class BetfairInvestmentProvider implements IInvestmentProvider {
         })
             .then(client => {
                 this.authenticated = true;
-                callback(null, true);
+                if (this.timer) return;
+
+                this.poll().then(() => {
+                    console.log("Polling investments...");
+                });
+                //callback(null, true);
             })
             .catch(error => {
                 console.error("Failed to authenticate with Betfair:", error);
-                callback(error, false);
+                //callback(error, false);
             });
     }
 
@@ -155,30 +170,80 @@ export class BetfairInvestmentProvider implements IInvestmentProvider {
     }
 
     public async invest(sessionId: string): Promise<void> {
-        const session = await this.sessionService.getSession(sessionId);
+        const session = await this.db.getItem<Session>(CollectionName.Sessions, sessionId);
+        if (!session) {
+            throw new Error("Session not found");
+        }
         const strategyIdx = session.chosenImageIdx;
 
-        if (!strategyIdx || strategyIdx < 0 || strategyIdx >= STRATEGIES.length) {
-            throw new Error("Invalid strategy");
+        if (strategyIdx === undefined || strategyIdx === null || strategyIdx < 0 || strategyIdx >= STRATEGIES.length) {
+            throw new Error(`Invalid strategy index: ${strategyIdx}`);
         }
+
         console.log("Investing in strategy:", STRATEGIES[strategyIdx]);
+
 
         session.data.strategyIdx = strategyIdx;
         session.status = SessionStatus.Investing;
-        await this.sessionService.saveSession(session);
+        await this.db.saveItem<Session>(CollectionName.Sessions, session);
     }
 
-    public poll() {
-        setInterval(async () => {
-            // Look for sessions with a strategy not yet resolved
-            const sessions = await this.sessionService.query({
-                status: SessionStatus.Investing
-            });
-            if (sessions.length === 0) {
+    private  async isPolling(): Promise<boolean> {           
+        const pollFlag = await this.db.getItem<PollFlag>(CollectionName.Flags, BetfairInvestmentProvider.name);
+        return !!pollFlag?.running
+    }
+
+    private async poll() {
+        // const pollFlag = await this.db.getItem<PollFlag>(CollectionName.Flags, BetfairInvestmentProvider.name);
+        // if (pollFlag) {
+        //     console.log("Already polling");
+        //     return;
+        // }
+        console.log("Polling investments...");
+
+        this.timer = setInterval(async () => {
+            //const pollFlag = await this.db.getItem<PollFlag>(CollectionName.Flags, BetfairInvestmentProvider.name);
+            if (await this.isPolling()) {
+                console.log("Already running");
                 return;
             }
-            await this.executeInvestment(sessions[0]);      
+
+            await this.db.saveItem<PollFlag>(CollectionName.Flags, { id: BetfairInvestmentProvider.name, running: true });
+            console.log("Processing 'investing' investments...");
+            await this.handleInvestingSessions(); 
+            console.log("Processing 'invested' investments...");
+            await this.handleInvestedSessions();    
+            console.log("Processed investments");   
+            
+            await this.db.saveItem<PollFlag>(CollectionName.Flags, { id: BetfairInvestmentProvider.name, running: false });
+
         }, 60000);
+    }
+
+    private async handleInvestingSessions(): Promise<void> {
+        // Look for sessions with a strategy not yet resolved
+        const sessions = await this.db.query<Session>(CollectionName.Sessions, {
+            status: SessionStatus.Investing
+        });
+        if (sessions.length === 0) {
+            return;
+        }
+        for (const session of sessions) {
+            await this.executeInvestment(session);
+        }
+    }
+
+    private async handleInvestedSessions(): Promise<void> {
+        // Look for sessions with a strategy not yet resolved
+        const sessions = await this.db.query<Session>(CollectionName.Sessions, {
+            status: SessionStatus.Invested
+        });
+        if (sessions.length === 0) {
+            return;
+        }
+        for (const session of sessions) {
+            await this.resolveInvestment(session.id);
+        }
     }
 
     public async executeInvestment(session: Session): Promise<void> {
@@ -201,23 +266,32 @@ export class BetfairInvestmentProvider implements IInvestmentProvider {
             return;
         }
         session.status = SessionStatus.Invested;
-        await this.sessionService.saveSession(session);
+        session.data.customerRef = placeExecutionReport.customerRef;
+        session.data.marketId = market.marketId;
+        session.data.executionReport = placeExecutionReport;
+        await this.db.saveItem<Session>(CollectionName.Sessions, session);
     }
 
 
     public async resolveInvestment(sessionId: string): Promise<void> {
-        const session = await this.sessionService.getSession(sessionId);
+        const session = await this.db.getItem<Session>(CollectionName.Sessions, sessionId);
+        if (!session) {
+            throw new Error("Session not found");
+        }
         const investment = session.data as PlaceExecutionReport;
         if (!investment?.customerRef) {
             throw new Error("No customer reference in investment data");
         }
-        if (!session.chosenImageIdx) {
+        if (session.chosenImageIdx === undefined || session.chosenImageIdx === null) {
             throw new Error("No chosen image index in session");
         }
 
-        const clearedOrderSummaryReport: ClearedOrderSummaryReport = await listClearedOrders({
-            betStatus: "SETTLED",
-            customerOrderRefs: [investment.customerRef]
+        const clearedOrderSummaryReport: ClearedOrderSummaryReport = await
+            listClearedOrders({
+                betStatus: "SETTLED",
+                //marketIds: [investment.marketId ?? "none"]
+                //betIds: [investment.customerRef],
+                //customerOrderRefs: [investment.customerRef] 
         });
 
         if (!clearedOrderSummaryReport.clearedOrders) {
@@ -227,7 +301,7 @@ export class BetfairInvestmentProvider implements IInvestmentProvider {
         // Find the investment in the cleared orders
         const clearedOrder = clearedOrderSummaryReport.clearedOrders.find(
             order => {
-                return order.customerOrderRef === investment.customerRef && order.marketId === investment.marketId;
+                return order.marketId === investment.marketId;
             }             
         );
         if (!clearedOrder) {
@@ -240,7 +314,7 @@ export class BetfairInvestmentProvider implements IInvestmentProvider {
         const won = clearedOrder.betOutcome === "WIN";
         session.targetImageIdx = won ? session.chosenImageIdx : (session.chosenImageIdx + 1) % 2;
         session.status = SessionStatus.InvestmentResolved;
-        await this.sessionService.saveSession(session);
+        await this.db.saveItem<Session>(CollectionName.Sessions, session);
     }
 }
 

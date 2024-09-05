@@ -4,7 +4,7 @@ import { SessionService } from "@/services/session.service";
 import Button from "@/components/button";
 import Textarea from "@/components/textarea";
 import { getService } from "@/services/container";
-import { ServiceName, Session, SessionStatus } from "@/types";
+import { INVERSIFY_TOKENS, Session, SessionStatus } from "@/types";
 
 interface SessionPageProps {
     initialSession: Session | null;
@@ -23,7 +23,7 @@ interface CalculatedSessionState {
 export const getServerSideProps: GetServerSideProps<
     SessionPageProps
 > = async context => {
-    const sessionService = getService<SessionService>(ServiceName.Session);
+    const sessionService = getService<SessionService>(INVERSIFY_TOKENS.Session);
     const id = context.params?.id;
 
     if (typeof id !== "string") {
