@@ -5,9 +5,10 @@ import OpenAI from "openai";
 import _ from "lodash";
 import path from "path";
 import { extractJson } from "@/utils";
+import { injectable } from "inversify";
 
 dotenv.config();
-
+@injectable()
 export class OpenAIJudgeProvider implements IJudgeProvider {
     private openai: OpenAI;
     private readonly IMAGE_A = "image_1111";

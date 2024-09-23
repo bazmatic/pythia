@@ -5,9 +5,11 @@ import Anthropic from "@anthropic-ai/sdk";
 import { IJudgeProvider } from "@/types";
 import _ from "lodash";
 import { extractJson } from "@/utils";
+import { injectable } from "inversify";
 
 dotenv.config();
 
+@injectable()
 export class ClaudeJudgeProvider implements IJudgeProvider {
     private client: Anthropic;
     private readonly IMAGE_A = "image_1111";

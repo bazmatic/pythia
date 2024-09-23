@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import { GetServerSideProps } from "next";
 import { SessionService } from "@/services/session.service";
 import Button from "@/components/button";
@@ -97,7 +98,7 @@ const SessionPage: React.FC<SessionPageProps> = ({
         };
 
         if (session?.status !== SessionStatus.InvestmentResolved) {
-            intervalId = setInterval(pollSession, 5000); // Poll every 5 seconds
+            intervalId = setInterval(pollSession, 30000); // Poll every 30 seconds
         }
 
         return () => {
@@ -179,6 +180,7 @@ const SessionPage: React.FC<SessionPageProps> = ({
     const renderActiveSession = () => (
         <div className="result-container">
             <h2 className="result-title">Resolving</h2>
+            <h4>This session is in the '{session?.status}' phase</h4>
             <div className="loading-text">
                 Please wait. The session is being resolved...
             </div>
@@ -297,6 +299,7 @@ const SessionPage: React.FC<SessionPageProps> = ({
     if (error) {
         return (
             <div className="page-container">
+                <Link href="/" className="home-link">Home</Link>
                 <p className="error-text">{error}</p>
             </div>
         );
@@ -305,6 +308,7 @@ const SessionPage: React.FC<SessionPageProps> = ({
     if (!session) {
         return (
             <div className="page-container">
+                <Link href="/" className="home-link">Home</Link>
                 <p className="loading-text">Loading...</p>
             </div>
         );
@@ -312,22 +316,12 @@ const SessionPage: React.FC<SessionPageProps> = ({
 
     return (
         <div className="page-container">
+            <Link href="/" className="home-link">Home</Link>
             <h1 className="page-title">{session.id}</h1>
 
             {renderSessionContent()}
         </div>
     );
 };
-
-// function sessionStatusToExplanation(status: SessionStatus): string {
-//     switch (status) {
-//         case SessionStatus.Pending:
-//             return "Provide your impression of the image that will soon be shown.";
-//         case SessionStatus.Active:
-//             return "Processing. Please wait for the results.";
-//         case SessionStatus.Completed:
-//             return "Your session has been completed. See the results below.";
-//     }
-// }
 
 export default SessionPage;

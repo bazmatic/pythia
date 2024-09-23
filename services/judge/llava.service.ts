@@ -4,7 +4,9 @@ import fs from "fs";
 import path from "path";
 import _ from "lodash";
 import { extractJson } from "@/utils";
+import { injectable } from "inversify";
 
+@injectable()
 export class LlavaJudgeProvider implements IJudgeProvider {
     private readonly ollamaEndpoint: string;
     private readonly IMAGE_A = "llava_image_1111";

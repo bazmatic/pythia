@@ -84,6 +84,10 @@ export interface IInvestmentProvider {
         sessionId: string
     ): Promise<void>;
 
+    executeInvestment(
+        sessionId: string
+    ): Promise<void>;
+
     resolveInvestment(
         sessionId: string
     ): Promise<void>;

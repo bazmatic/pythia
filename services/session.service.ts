@@ -1,7 +1,7 @@
 import { CollectionName, DBService } from "./db.service";
 import { JudgeService } from "@/services/judge/judge.service";
 import { ImageService } from "@/services/image.service";
-import { INVERSIFY_TOKENS, Session, SessionStatus } from "@/types";
+import { INVERSIFY_TOKENS, PollFlag, Session, SessionStatus } from "@/types";
 import { InvestmentService } from "./investment/investment.service";
 import { inject, injectable } from "inversify";
 
@@ -21,17 +21,13 @@ export class SessionService {
 
         @inject(INVERSIFY_TOKENS.Investment)
         private investmentService: InvestmentService //private investmentService: InvestmentService
-    ) {
-
-        this.poll().then(() => {
-            console.log("Polling...");
-        });
-
-    }
+    ) {}
 
     public async createSession(): Promise<Session> {
         const sessionId = this.generateSessionId();
-        const images = await this.imageService.getRandomImageNameList(IMAGE_COUNT);
+        const images = await this.imageService.getRandomImageNameList(
+            IMAGE_COUNT
+        );
 
         const newSession: Session = {
             id: sessionId,
@@ -41,6 +37,11 @@ export class SessionService {
         };
 
         this.db.saveItem<Session>(CollectionName.Sessions, newSession);
+        // this.processSession(sessionId).then(() => {
+        //     console.log("Processed session");
+        // }).catch(e => {
+        //     console.error(e);
+        // });
         return newSession;
     }
 
@@ -57,21 +58,23 @@ export class SessionService {
             impressionText,
             status: SessionStatus.Unjudged
         });
-        this.judgeSession(sessionId, impressionText).catch(async e => {
+        this.judgeSession(sessionId).catch(async e => {
             console.error(e);
         });
         return;
     }
 
     public async judgeSession(
-        sessionId: string,
-        impressionText: string
+        sessionId: string
+        //impressionText: string
     ): Promise<void> {
-
         // Judge the impression text and return the chosen image index
         const session = await this.getSession(sessionId);
         if (session.status !== SessionStatus.Unjudged) {
             throw new Error(`Session not in ${SessionStatus.Unjudged} state`);
+        }
+        if (!session.impressionText) {
+            throw new Error("Impression text not found");
         }
         console.log("Judging session...");
         const filePaths = session.images.map(imageName =>
@@ -80,7 +83,7 @@ export class SessionService {
 
         const chosenImageIndex = await this.judgeService.judge(
             filePaths,
-            impressionText
+            session.impressionText
         );
         console.log("Chosen image index: ", chosenImageIndex);
         await this.saveSession({
@@ -90,9 +93,7 @@ export class SessionService {
         });
     }
 
-    public async invest(
-        sessionId: string,
-    ): Promise<void> {
+    public async invest(sessionId: string): Promise<void> {
         const session = await this.getSession(sessionId);
         if (session.status !== SessionStatus.Judged) {
             throw new Error(`Session not in ${SessionStatus.Judged} state`);
@@ -101,10 +102,21 @@ export class SessionService {
         return this.investmentService.invest(sessionId);
     }
 
+    public async executeInvestment(sessionId: string): Promise<void> {
+        const session = await this.getSession(sessionId);
+        if (session.status !== SessionStatus.Investing) {
+            throw new Error(`Session not in ${SessionStatus.Investing} state`);
+        }
+        // Execute the investment and update the session status
+        return this.investmentService.executeInvestment(sessionId);
+    }
+
     public async assess(sessionId: string): Promise<void> {
         const session = await this.getSession(sessionId);
         if (session.status !== SessionStatus.InvestmentResolved) {
-            throw new Error(`Session not in ${SessionStatus.InvestmentResolved} state`);
+            throw new Error(
+                `Session not in ${SessionStatus.InvestmentResolved} state`
+            );
         }
         // Assess the investment and update the session status
         // Which strategy was most successful?
@@ -126,7 +138,9 @@ export class SessionService {
     public async shownFeedback(sessionId: string): Promise<void> {
         const session = await this.getSession(sessionId);
         if (session.status !== SessionStatus.InvestmentResolved) {
-            throw new Error(`Session not in ${SessionStatus.InvestmentResolved} state`);
+            throw new Error(
+                `Session not in ${SessionStatus.InvestmentResolved} state`
+            );
         }
         // Feedback has been shown to the user
         await this.saveSession({
@@ -135,37 +149,44 @@ export class SessionService {
         });
     }
 
-    private async handleUnjudgedSessions(): Promise<void> {
-        const unjudgedSessions = await this.query({ status: SessionStatus.Unjudged });
-        for (const session of unjudgedSessions) {
-            const impressionText = session.impressionText;
-            if (!impressionText) {
-                throw new Error("Impression text not found");
-            }
-            await this.judgeSession(session.id, impressionText);
-        }
-    }
-
-    private async handleJudgedSessions(): Promise<void> {
-        const judgedSessions = await this.query({ status: SessionStatus.Judged });
-        for (const session of judgedSessions) {
-            await this.invest(session.id);
-        }
-    }
-
-    private async handleInvestmentResolvedSessions(): Promise<void> {
-        const investedSessions = await this.query({ status: SessionStatus.InvestmentResolved });
-        for (const session of investedSessions) {
-            await this.assess(session.id);
-        }
-    }
-
     public async getSession(sessionId: string): Promise<Session> {
-        const result = await this.db.getItem<Session>(CollectionName.Sessions, sessionId);
+        const result = await this.db.getItem<Session>(
+            CollectionName.Sessions,
+            sessionId
+        );
         if (!result) {
             throw new Error(`Session with id ${sessionId} not found`);
         }
         return result;
+    }
+
+    public async processSession(sessionId: string): Promise<void> {
+        const session = await this.getSession(sessionId);
+        switch (session.status) {
+            case SessionStatus.Unjudged:
+                await this.judgeSession(sessionId);
+                break;
+            case SessionStatus.Judged:
+                await this.invest(sessionId);
+                break;
+            case SessionStatus.Investing:
+                await this.executeInvestment(sessionId);
+                break;
+            case SessionStatus.Invested:
+                await this.resolveInvestment(sessionId);
+                break;
+            case SessionStatus.InvestmentResolved:
+                await this.assess(sessionId);
+                break;
+            case SessionStatus.Assessed:
+                await this.shownFeedback(sessionId);
+                break;
+            case SessionStatus.ShownFeedback:
+                break;
+
+            default:
+                console.log(`Session status ${session.status}`);
+        }
     }
 
     public async getSessions(): Promise<Session[]> {
@@ -181,32 +202,41 @@ export class SessionService {
     }
 
     private generateSessionId(): string {
-        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        const characters =
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890123456789012345678901234567890123456789";
         const length = 10;
-        let result = '';
+        let result = "";
         for (let i = 0; i < length; i++) {
-            result += characters.charAt(Math.floor(Math.random() * characters.length));
+            result += characters.charAt(
+                Math.floor(Math.random() * characters.length)
+            );
         }
         return result;
     }
 
-    public async poll(): Promise<void> {
-        setInterval(async () => {
-            console.log("Processing sessions...");
-            // Look for unjudged sessions
-            this.handleUnjudgedSessions().then(async () => {
-                console.log("Handled unjudged sessions");
-            });
+    // private  async isProcessing(): Promise<boolean> {
+    //     const pollFlag = await this.db.getItem<PollFlag>(CollectionName.Flags, SessionService.name);
+    //     return !!pollFlag?.running
+    // }
 
-            // Handle judged sessions
-            this.handleJudgedSessions().then(async () => {
-                console.log("Handled judged sessions");
-            });
+    // public async poll(): Promise<void> {
 
-            // Look for sessions with a strategy not yet resolved
-            this.handleInvestmentResolvedSessions().then(async () => {
-                console.log("Handled invested sessions");
-            });       
-        }, 60000);   
-    }
+    //     setInterval(async () => {
+    //         console.log("Processing sessions...");
+    //         // Look for unjudged sessions
+    //         this.handleUnjudgedSessions().then(async () => {
+    //             console.log("Handled unjudged sessions");
+    //         });
+
+    //         // Handle judged sessions
+    //         this.handleJudgedSessions().then(async () => {
+    //             console.log("Handled judged sessions");
+    //         });
+
+    //         // Look for sessions with a strategy not yet resolved
+    //         this.handleInvestmentResolvedSessions().then(async () => {
+    //             console.log("Handled invested sessions");
+    //         });
+    //     }, 60000);
+    // }
 }

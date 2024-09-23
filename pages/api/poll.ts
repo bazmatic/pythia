@@ -23,10 +23,11 @@ export default function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const sessionService: SessionService = getService<SessionService>(INVERSIFY_TOKENS.Session);
-  sessionService.poll().then(() => {
-    console.log("Polling...");
-  });
+  // const sessionService: SessionService = getService<SessionService>(INVERSIFY_TOKENS.Session);
+  // sessionService.poll().then(() => {
+  //   console.log("Polling sessions...");
+  // });
+  // getService<InvestmentService>(INVERSIFY_TOKENS.Investment);
 
   res.status(200).json({ message: "Polling..." });
 }

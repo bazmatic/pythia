@@ -35,6 +35,9 @@ export default async function handler(
         }
 
         const session: Session = await sessionService.getSession(sessionId);
+        sessionService.processSession(sessionId).then(() => {
+            console.log("Processed session");
+        });
         if (!session) {
             res.status(404).json({ error: "Session not found" });
         }

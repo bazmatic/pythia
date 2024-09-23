@@ -1,9 +1,14 @@
 //import { uploadImagesAndAnalyze } from "./claude.service";
-import { IJudgeProvider } from "@/types";
-
+import { INVERSIFY_TOKENS, type IJudgeProvider } from "@/types";
+import { inject, injectable } from "inversify";
+@injectable()
 export class JudgeService {
     private judgeCount: number;
-    constructor(private judgeProvider: IJudgeProvider) {
+    constructor(
+        @inject(INVERSIFY_TOKENS.JudgementProvider)
+        private judgeProvider: IJudgeProvider 
+    )
+    {
         this.judgeCount = process.env.JUDGE_COUNT ? parseInt(process.env.JUDGE_COUNT) : 1;
     }
 
