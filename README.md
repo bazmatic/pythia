@@ -6,26 +6,13 @@ Welcome to Pythia, the Psychic Investment Game that combines intuitive impressio
 
 This game challenges users to provide psychic impressions that guide investment decisions. Here's how it works:
 
-1. The system randomly selects two images, each associated with a different investment strategy.
-2. Users are asked to focus and obtain psychic impressions about an image they haven't seen yet.
-3. They provide these impressions to the system.
-4. The system interprets these impressions as a description of one of the randomly selected images.
-5. Based on which image the system determines the impressions most closely match, the corresponding investment strategy is chosen.
-6. The system simulates the outcomes of both investment strategies.
-7. Only the image associated with the most successful strategy is revealed to the user.
-8. If the user's impressions align with the revealed image, it indicates a successful prediction and potential financial gain.
-
-## How It Works
-
-- The system has a set of images, each representing a specific investment strategy (e.g., a snake might represent a bearish market, while a mountain could represent a bullish trend).
 - At the start of each game, two images are randomly selected, each tied to a different investment choice.
 - Users focus on getting impressions about an unseen image, not knowing which images have been selected.
-- User impressions are analyzed and interpreted as a description of one of the two selected images.
+- User impressions are analyzed and interpreted as a description of one of the two selected images, using an AI language model.
 - The investment strategy associated with the image that best matches the user's impressions is applied.
 - The system simulates the outcomes of both strategies.
 - Only the image corresponding to the more successful strategy is shown to the user. The other image remains hidden to prevent any unintended psychic connections with the "incorrect" image.
-- Success is measured by how well the user's impressions match the revealed image, indicating they "sensed" the more successful strategy.
-- After the game, users have the option to view the "non-target" image(s) that were not initially shown, satisfying curiosity without affecting the game's psychic aspect.
+- Success is rewarded with a financial gain.
 
 ## Features
 
