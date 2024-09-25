@@ -65,48 +65,17 @@ const SessionPage: React.FC<SessionPageProps> = ({
     const [calculatedState, setCalculatedState] =
         useState<CalculatedSessionState | null>(null);
     const [showNonTargetImages, setShowNonTargetImages] = useState(false);
+    const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
 
     useEffect(() => {
-        if (session?.status === SessionStatus.InvestmentResolved) {
-            calculateSessionState(session);
+        if (session && session.status !== SessionStatus.ShownFeedback) {
+            const id = setInterval(pollSession, 30000); // Poll every 30 seconds
+            setIntervalId(id);
+
+            return () => {
+                if (id) clearInterval(id);
+            };
         }
-    }, []);
-
-    useEffect(() => {
-        let intervalId: NodeJS.Timeout;
-
-        const pollSession = async () => {
-            if (!session) return;
-            if (session?.status !== SessionStatus.InvestmentResolved) {
-                try {
-                    const response = await fetch(`/api/session/${session.id}`);
-                    if (!response.ok) {
-                        throw new Error("Failed to fetch session");
-                    }
-                    const updatedSession = await response.json();
-                    setSession(updatedSession);
-
-                    if (updatedSession.status === SessionStatus.InvestmentResolved) {
-                        clearInterval(intervalId);
-                        calculateSessionState(updatedSession);
-                    }
-                } catch (error) {
-                    console.error("Error polling session:", error);
-                    setError("Failed to update session status");
-                    clearInterval(intervalId);
-                }
-            }
-        };
-
-        if (session?.status !== SessionStatus.InvestmentResolved) {
-            intervalId = setInterval(pollSession, 30000); // Poll every 30 seconds
-        }
-
-        return () => {
-            if (intervalId) {
-                clearInterval(intervalId);
-            }
-        };
     }, [session]);
 
     useEffect(() => {
@@ -119,6 +88,29 @@ const SessionPage: React.FC<SessionPageProps> = ({
             document.getElementsByTagName('head')[0].appendChild(link);
         }
     }, [session?.status]);
+
+    const pollSession = async () => {
+        if (!session) return;
+        if (session.status !== SessionStatus.InvestmentResolved) {
+            try {
+                const response = await fetch(`/api/session/${session.id}`);
+                if (!response.ok) {
+                    throw new Error("Failed to fetch session");
+                }
+                const updatedSession = await response.json();
+                setSession(updatedSession);
+
+                if (updatedSession.status === SessionStatus.ShownFeedback) {
+                    if (intervalId) clearInterval(intervalId);
+                }
+                calculateSessionState(updatedSession);
+            } catch (error) {
+                console.error("Error polling session:", error);
+                setError("Failed to update session status");
+                if (intervalId) clearInterval(intervalId);
+            }
+        }
+    };
 
     const calculateSessionState = (completedSession: Session) => {
         if (
@@ -302,6 +294,7 @@ const SessionPage: React.FC<SessionPageProps> = ({
             case SessionStatus.Invested:
                 return renderActiveSession();
             case SessionStatus.InvestmentResolved:
+            case SessionStatus.ShownFeedback:
                 return renderCompletedSession();
             default:
                 return null;

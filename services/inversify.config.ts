@@ -1,5 +1,4 @@
 import { Container } from "inversify";
-import { JsonDbService } from "@/services/db/json.db.service";
 import { JudgeService } from "@/services/judge/judge.service";
 import { ImageService } from "@/services/image.service";
 import { InvestmentService } from "@/services/investment/investment.service";
