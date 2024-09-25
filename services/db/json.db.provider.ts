@@ -7,7 +7,7 @@ import path from "path";
 
 
 @injectable()
-export class JsonDbService implements IDbService {
+export class JsonDbProvider implements IDbService {
     private readonly dbPath: string;
 
     constructor() {
@@ -136,6 +136,6 @@ export class JsonDbService implements IDbService {
 }
 
 // Create a single instance to be used across the application
-const db = new JsonDbService();
+const db = new JsonDbProvider();
 
 export default db;
