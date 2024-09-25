@@ -1,4 +1,6 @@
 import {
+    CollectionName,
+    IDbService,
     IInvestmentProvider,
     INVERSIFY_TOKENS,
     Investment,
@@ -9,7 +11,6 @@ import {
 //import file system functions
 import fs from "fs";
 
-import { CollectionName, DBService } from "../db.service";
 import {
     authenticate,
     listClearedOrders,
@@ -57,7 +58,7 @@ export class BetfairInvestmentProvider implements IInvestmentProvider {
     private timer: NodeJS.Timeout | null = null;
     constructor(
         @inject(INVERSIFY_TOKENS.Database)
-        private db: DBService,
+        private db: IDbService,
     ) {
         const certificatePath = process.env.BETFAIR_CERT_PATH;
         const keyPath = process.env.BETFAIR_KEY_PATH;

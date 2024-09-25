@@ -192,7 +192,7 @@ const SessionPage: React.FC<SessionPageProps> = ({
     const renderActiveSession = () => (
         <div className="result-container">
             <h2 className="result-title">Resolving</h2>
-            <h4>This session is in the '{session?.status}' phase</h4>
+            <h4>This session is in the &apos;{session?.status}&apos; phase</h4>
             <div className="loading-text">
                 Please wait. The session is being resolved...
             </div>

@@ -29,7 +29,7 @@ export enum SessionStatus {
     Invested = "invested",
     InvestmentResolved = "investmentResolved",
     Assessed = "assessed",
-    ShownFeedback = "shownFeedback",
+    ShownFeedback = "shownFeedback"
 }
 
 export type Session = {
@@ -46,7 +46,7 @@ export type Investment = {
     id: string;
     provider: string;
     chosenStrategyIdx: number;
-    strategies: StrategyInfo[],
+    strategies: StrategyInfo[];
     status: InvestmentStatus;
 };
 
@@ -59,8 +59,7 @@ export type StrategyInfo = {
 export type PollFlag = {
     id: string;
     running: boolean;
-}
-
+};
 
 export enum ServiceName {
     Database = "database",
@@ -80,16 +79,38 @@ export interface IJudgeProvider {
 }
 
 export interface IInvestmentProvider {
-    invest(
-        sessionId: string
-    ): Promise<void>;
+    invest(sessionId: string): Promise<void>;
+    executeInvestment(sessionId: string): Promise<void>;
+    resolveInvestment(sessionId: string): Promise<void>;
+}
 
-    executeInvestment(
-        sessionId: string
-    ): Promise<void>;
+export interface Identifiable {
+    id: string;
+}
 
-    resolveInvestment(
-        sessionId: string
-    ): Promise<void>;
+export enum CollectionName {
+    Sessions = "sessions",
+    Investments = "investments",
+    Flags = "flags"
+}
 
+export interface IDbService {
+    getItem<T extends Identifiable>(collectionName: CollectionName, id: string): Promise<T | null>;
+    getAllItems<T extends Identifiable>(collectionName: CollectionName): Promise<T[]>;
+    query<T extends Identifiable>(collectionName: CollectionName, query: Partial<T>): Promise<T[]>;
+    deleteItem(collectionName: CollectionName, id: string): Promise<void>;
+    saveItem<T extends Identifiable>(collectionName: CollectionName, item: T): Promise<void>;   
+  }
+
+  export interface ISessionService {
+    createSession(): Promise<Session>;
+    activateSession(sessionId: string, impressionText: string): Promise<void>;
+    judgeSession(sessionId: string): Promise<void>;
+    invest(sessionId: string): Promise<void>;
+    executeInvestment(sessionId: string): Promise<void>;
+    assess(sessionId: string): Promise<void>;
+    resolveInvestment(sessionId: string): Promise<void>;
+    shownFeedback(sessionId: string): Promise<void>;
+    getSession(sessionId: string): Promise<Session>;
+    getSessions(): Promise<Session[]>;
 }

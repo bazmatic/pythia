@@ -1,4 +1,4 @@
-import { IJudgeProvider } from "@/types";
+
 import dotenv from "dotenv";
 import fs from "fs";
 import OpenAI from "openai";
@@ -6,6 +6,7 @@ import _ from "lodash";
 import path from "path";
 import { extractJson } from "@/utils";
 import { injectable } from "inversify";
+import { IJudgeProvider } from "@/types";
 
 dotenv.config();
 @injectable()

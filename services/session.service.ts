@@ -1,17 +1,17 @@
-import { CollectionName, DBService } from "./db.service";
+
 import { JudgeService } from "@/services/judge/judge.service";
 import { ImageService } from "@/services/image.service";
-import { INVERSIFY_TOKENS, PollFlag, Session, SessionStatus } from "@/types";
+import { CollectionName, IDbService, INVERSIFY_TOKENS, ISessionService, PollFlag, Session, SessionStatus } from "@/types";
 import { InvestmentService } from "./investment/investment.service";
 import { inject, injectable } from "inversify";
 
 const IMAGE_COUNT = 2;
 
 @injectable()
-export class SessionService {
+export class SessionService implements ISessionService {
     constructor(
         @inject(INVERSIFY_TOKENS.Database)
-        private db: DBService,
+        private db: IDbService,
 
         @inject(INVERSIFY_TOKENS.Judge)
         private judgeService: JudgeService,
@@ -37,11 +37,7 @@ export class SessionService {
         };
 
         this.db.saveItem<Session>(CollectionName.Sessions, newSession);
-        // this.processSession(sessionId).then(() => {
-        //     console.log("Processed session");
-        // }).catch(e => {
-        //     console.error(e);
-        // });
+
         return newSession;
     }
 
