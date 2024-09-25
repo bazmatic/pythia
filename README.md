@@ -1,3 +1,5 @@
+<img width="403" alt="pythia" src="https://github.com/user-attachments/assets/43615fb7-8e11-4f1a-8fc4-c7cec6b96e16">
+
 # Pythia
 
 Welcome to Pythia, the Psychic Investment Game that combines intuitive impressions with financial investments!
