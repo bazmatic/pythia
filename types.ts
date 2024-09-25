@@ -28,7 +28,7 @@ export enum SessionStatus {
     Investing = "investing",
     Invested = "invested",
     InvestmentResolved = "investmentResolved",
-    Assessed = "assessed",
+    //Assessed = "assessed",
     ShownFeedback = "shownFeedback"
 }
 
@@ -108,7 +108,6 @@ export interface IDbService {
     judgeSession(sessionId: string): Promise<void>;
     invest(sessionId: string): Promise<void>;
     executeInvestment(sessionId: string): Promise<void>;
-    assess(sessionId: string): Promise<void>;
     resolveInvestment(sessionId: string): Promise<void>;
     shownFeedback(sessionId: string): Promise<void>;
     getSession(sessionId: string): Promise<Session>;

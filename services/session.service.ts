@@ -107,21 +107,6 @@ export class SessionService implements ISessionService {
         return this.investmentService.executeInvestment(sessionId);
     }
 
-    public async assess(sessionId: string): Promise<void> {
-        const session = await this.getSession(sessionId);
-        if (session.status !== SessionStatus.InvestmentResolved) {
-            throw new Error(
-                `Session not in ${SessionStatus.InvestmentResolved} state`
-            );
-        }
-        // Assess the investment and update the session status
-        // Which strategy was most successful?
-        return this.saveSession({
-            ...session,
-            status: SessionStatus.Assessed
-        });
-    }
-
     public async resolveInvestment(sessionId: string): Promise<void> {
         const session = await this.getSession(sessionId);
         if (session.status !== SessionStatus.Invested) {
@@ -172,9 +157,6 @@ export class SessionService implements ISessionService {
                 await this.resolveInvestment(sessionId);
                 break;
             case SessionStatus.InvestmentResolved:
-                await this.assess(sessionId);
-                break;
-            case SessionStatus.Assessed:
                 await this.shownFeedback(sessionId);
                 break;
             case SessionStatus.ShownFeedback:
@@ -209,30 +191,4 @@ export class SessionService implements ISessionService {
         }
         return result;
     }
-
-    // private  async isProcessing(): Promise<boolean> {
-    //     const pollFlag = await this.db.getItem<PollFlag>(CollectionName.Flags, SessionService.name);
-    //     return !!pollFlag?.running
-    // }
-
-    // public async poll(): Promise<void> {
-
-    //     setInterval(async () => {
-    //         console.log("Processing sessions...");
-    //         // Look for unjudged sessions
-    //         this.handleUnjudgedSessions().then(async () => {
-    //             console.log("Handled unjudged sessions");
-    //         });
-
-    //         // Handle judged sessions
-    //         this.handleJudgedSessions().then(async () => {
-    //             console.log("Handled judged sessions");
-    //         });
-
-    //         // Look for sessions with a strategy not yet resolved
-    //         this.handleInvestmentResolvedSessions().then(async () => {
-    //             console.log("Handled invested sessions");
-    //         });
-    //     }, 60000);
-    // }
 }
