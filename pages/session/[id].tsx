@@ -6,6 +6,7 @@ import Button from "@/components/button";
 import Textarea from "@/components/textarea";
 import { getService } from "@/services/container";
 import { INVERSIFY_TOKENS, Session, SessionStatus } from "@/types";
+import Head from "next/head";
 
 interface SessionPageProps {
     initialSession: Session | null;
@@ -107,6 +108,17 @@ const SessionPage: React.FC<SessionPageProps> = ({
             }
         };
     }, [session]);
+
+    useEffect(() => {
+        if (session?.status === SessionStatus.InvestmentResolved) {
+            // Change favicon when session is resolved
+            const link: HTMLLinkElement = document.querySelector("link[rel~='icon']") || document.createElement('link');
+            link.type = 'image/x-icon';
+            link.rel = 'shortcut icon';
+            link.href = '/favicon-resolved.ico'; // Make sure this file exists in your public folder
+            document.getElementsByTagName('head')[0].appendChild(link);
+        }
+    }, [session?.status]);
 
     const calculateSessionState = (completedSession: Session) => {
         if (
@@ -316,6 +328,10 @@ const SessionPage: React.FC<SessionPageProps> = ({
 
     return (
         <div className="page-container">
+            <Head>
+                <title>{session ? `Session ${session.id}` : 'Session'}</title>
+                <link rel="icon" href="/favicon.ico" />
+            </Head>
             <Link href="/" className="home-link">Home</Link>
             <h1 className="page-title">{session.id}</h1>
 
