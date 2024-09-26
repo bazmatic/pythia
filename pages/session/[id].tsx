@@ -7,6 +7,7 @@ import Textarea from "@/components/textarea";
 import { getService } from "@/services/container";
 import { INVERSIFY_TOKENS, Session, SessionStatus } from "@/types";
 import Head from "next/head";
+import Layout from "@/components/Layout";
 
 interface SessionPageProps {
     initialSession: Session | null;
@@ -102,7 +103,7 @@ const SessionPage: React.FC<SessionPageProps> = ({
 
     const pollSession = useCallback(async () => {
         if (!session) return;
-        
+
         try {
             const response = await fetch(`/api/session/${session.id}`);
             if (!response.ok) {
@@ -188,7 +189,7 @@ const SessionPage: React.FC<SessionPageProps> = ({
             <Textarea
                 value={impressionText}
                 onChange={e => setImpressionText(e.target.value)}
-                placeholder="Enter your impression of the image"
+                placeholder="Enter your impression of the image represented by the reference above"
                 className="input-textarea mb-4"
             />
             <Button className="pythia-button w-full" onClick={activateSession}>
@@ -318,45 +319,46 @@ const SessionPage: React.FC<SessionPageProps> = ({
     };
 
     const updateFavicon = (status?: string) => {
-        if (typeof document !== 'undefined') {
-            const link = document.querySelector("link[rel*='icon']") as HTMLLinkElement || document.createElement('link');
-            link.type = 'image/x-icon';
-            link.rel = 'shortcut icon';
+        if (typeof document !== "undefined") {
+            const link =
+                (document.querySelector(
+                    "link[rel*='icon']"
+                ) as HTMLLinkElement) || document.createElement("link");
+            link.type = "image/x-icon";
+            link.rel = "shortcut icon";
             link.href = `/favicon-${status}.ico`;
             document.head.appendChild(link);
         }
     };
 
     if (error) {
-        updateFavicon('error');
+        updateFavicon("error");
         return (
-            <div className="page-container">
-                <Link href="/" className="home-link">Home</Link>
+            <Layout>
                 <p className="error-text">{error}</p>
-            </div>
+            </Layout>
         );
     }
 
     if (!session) {
         return (
-            <div className="page-container">
-                <Link href="/" className="home-link">Home</Link>
+            <Layout>
                 <p className="loading-text">Loading...</p>
-            </div>
+            </Layout>
         );
     }
 
     return (
-        <div className="page-container">
+        <Layout>
             <Head>
-                <title>{session ? `Session ${session.id}` : 'Session'}</title>
+                <title>{session ? `Session ${session.id}` : "Session"}</title>
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <Link href="/" className="home-link">Home</Link>
-            <h1 className="page-title">{session.id}</h1>
-
-            {renderSessionContent()}
-        </div>
+            <div className="page-container">
+                <h1 className="page-title">{session.id}</h1>
+                {renderSessionContent()}
+            </div>
+        </Layout>
     );
 };
 

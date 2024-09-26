@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply bg-gradient-to-br from-gray-100 to-gray-200 min-h-screen;
+    @apply bg-gradient-to-br from-gray-100 to-gray-200 min-h-screen font-serif;
   }
 }
 
@@ -14,7 +14,7 @@
   }
 
   .page-title {
-    @apply text-4xl font-bold mb-8 text-center text-gray-800 pb-4;
+    @apply text-4xl font-bold mb-8 text-center text-gray-800 pb-4 font-serif;
   }
 
   .session-info {
@@ -36,10 +36,6 @@
   .impression-text {
     @apply p-4 bg-blue-50 rounded-lg shadow-inner text-gray-700 italic mb-6;
   }
-/* 
-  .result-container {
-    @apply bg-gray-50 p-6 rounded-lg shadow-md;
-  } */
 
   .result-title {
     @apply text-2xl font-semibold mb-4 text-gray-700;
@@ -50,8 +46,7 @@
   }
 
   .input-textarea {
-    @apply h-80 w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400 focus:border-transparent resize-none;
-
+    @apply h-80 w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-gray-400 focus:border-transparent resize-none text-lg;
   }
 
   .loading-text {
@@ -75,8 +70,10 @@
   }
 
   .pythia-button {
-    @apply px-6 py-3 w-64 text-lg font-semibold text-white bg-gradient-to-br from-gray-300 to-gray-400 rounded-lg shadow-md hover:from-gray-400 hover:to-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75 transition-all duration-200 backdrop-filter backdrop-blur-sm;
+    @apply px-6 py-3 w-64 text-lg font-semibold text-white bg-gradient-to-br from-gray-300 to-gray-500 rounded-lg shadow-md hover:from-gray-400 hover:to-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75 transition-all duration-200 backdrop-filter backdrop-blur-sm;
   }
 
-  
+  .home-link {
+    @apply ml-8 text-gray-600 hover:text-gray-800 text-lg font-semibold transition-colors duration-200 border-b-2 border-transparent hover:border-gray-400 inline-block py-1;
+  }
 }
