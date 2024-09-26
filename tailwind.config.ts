@@ -21,6 +21,9 @@ const config: Config = {
           '800': '#1F2937',
         },
       },
+      fontFamily: {
+        serif: ['Palatino', 'Georgia', 'serif'],
+      },
     },
   },
   plugins: [],

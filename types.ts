@@ -6,7 +6,8 @@ export const INVERSIFY_TOKENS = {
     Image: Symbol.for("Image"),
     Investment: Symbol.for("Investment"),
     InvestmentProvider: Symbol.for("InvestmentProvider"),
-    Session: Symbol.for("Session")
+    Session: Symbol.for("Session"),
+    Stats: Symbol.for("Stats")
 };
 
 export enum InvestmentStatus {
@@ -39,6 +40,13 @@ export type Session = {
     targetImageIdx?: number;
     data?: any;
     status: SessionStatus;
+};
+
+export type SessionStats = {
+    totalSessions: number;
+    wins: number;
+    losses: number;
+    winPercentage: number;
 };
 
 export type Investment = {

@@ -7,6 +7,7 @@ import { BetfairInvestmentProvider } from "./investment/betfair.investment.provi
 import { IDbService, IInvestmentProvider, IJudgeProvider, INVERSIFY_TOKENS, ISessionService } from "@/types";
 import { ClaudeJudgeProvider } from "./judge/providers/claude.judge.provider";
 import { SupabaseDbProvider } from "./db/supabase.db.provider";
+import { StatsService } from "./stats.service";
 // import getDecorators from "inversify-inject-decorators";
 
 const container = new Container();
@@ -19,7 +20,7 @@ container.bind<ISessionService>(INVERSIFY_TOKENS.Session).to(SessionService).inS
 
 container.bind<IJudgeProvider>(INVERSIFY_TOKENS.JudgementProvider).to(ClaudeJudgeProvider).inSingletonScope();
 container.bind<IDbService>(INVERSIFY_TOKENS.Database).to(SupabaseDbProvider).inSingletonScope();
-
+container.bind<StatsService>(INVERSIFY_TOKENS.Stats).to(StatsService).inSingletonScope();
 //const { lazyInject } = getDecorators(container);
 
 export { container };

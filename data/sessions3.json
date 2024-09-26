@@ -1,0 +1,1569 @@
+[
+  {
+    "id": "Dlm2T7k11j",
+    "images": [
+      "photo-1557720667-093b45dde7b9.jpg",
+      "photo-1628182488460-0d244f7440f2.jpg"
+    ],
+    "data": {
+      "strategyIdx": 1,
+      "customerRef": "bet_1725523985986",
+      "marketId": "1.232600162",
+      "executionReport": {
+        "customerRef": "bet_1725523985986",
+        "status": "SUCCESS",
+        "marketId": "1.232600162",
+        "instructionReports": [
+          {
+            "status": "SUCCESS",
+            "instruction": {
+              "selectionId": 66993484,
+              "limitOrder": {
+                "size": 1,
+                "price": 2.52,
+                "timeInForce": "FILL_OR_KILL"
+              },
+              "orderType": "LIMIT",
+              "side": "LAY"
+            },
+            "betId": "360088439520",
+            "placedDate": "2024-09-05T08:13:06.000Z",
+            "averagePriceMatched": 2.5,
+            "sizeMatched": 1,
+            "orderStatus": "EXECUTION_COMPLETE"
+          }
+        ]
+      }
+    },
+    "status": "assessed",
+    "impressionText": "Many small dark marks against a lighter background.\nSomething rough, textured, brown.\nNatural setting, green is present",
+    "chosenImageIdx": 1,
+    "targetImageIdx": 0
+  },
+  {
+    "id": "e10yi1GdU5",
+    "images": [
+      "photo-1636143135393-2f68f6d360da.jpg",
+      "photo-1635983936376-154277d90673.jpg"
+    ],
+    "data": {
+      "strategyIdx": 1,
+      "customerRef": "bet_1725524590303",
+      "marketId": "1.232631243",
+      "executionReport": {
+        "customerRef": "bet_1725524590303",
+        "status": "SUCCESS",
+        "marketId": "1.232631243",
+        "instructionReports": [
+          {
+            "status": "SUCCESS",
+            "instruction": {
+              "selectionId": 73371588,
+              "limitOrder": {
+                "size": 1,
+                "price": 3.35,
+                "timeInForce": "FILL_OR_KILL"
+              },
+              "orderType": "LIMIT",
+              "side": "LAY"
+            },
+            "betId": "360088877231",
+            "placedDate": "2024-09-05T08:23:10.000Z",
+            "averagePriceMatched": 3.35,
+            "sizeMatched": 1,
+            "orderStatus": "EXECUTION_COMPLETE"
+          }
+        ]
+      }
+    },
+    "status": "assessed",
+    "impressionText": "Pale filaments, curving against a dark background",
+    "chosenImageIdx": 1,
+    "targetImageIdx": 0
+  },
+  {
+    "id": "APWIgtNE8O",
+    "images": [
+      "photo-1524758631624-e2822e304c36 (1).jpg",
+      "photo-1631478409245-d8f0e2c7d680.jpg"
+    ],
+    "data": {
+      "strategyIdx": 0,
+      "customerRef": "bet_1725533450300",
+      "marketId": "1.232632587",
+      "executionReport": {
+        "customerRef": "bet_1725533450300",
+        "status": "SUCCESS",
+        "marketId": "1.232632587",
+        "instructionReports": [
+          {
+            "status": "SUCCESS",
+            "instruction": {
+              "selectionId": 73395490,
+              "limitOrder": {
+                "size": 1,
+                "price": 2.02,
+                "timeInForce": "FILL_OR_KILL"
+              },
+              "orderType": "LIMIT",
+              "side": "BACK"
+            },
+            "betId": "360098377068",
+            "placedDate": "2024-09-05T10:50:50.000Z",
+            "averagePriceMatched": 2.08,
+            "sizeMatched": 1,
+            "orderStatus": "EXECUTION_COMPLETE"
+          }
+        ]
+      }
+    },
+    "status": "assessed",
+    "impressionText": "Dark, radial lines, black and bushy. Earthy smell. Spiky.",
+    "chosenImageIdx": 0,
+    "targetImageIdx": 1
+  },
+  {
+    "id": "jIAkh3NDA8",
+    "images": [
+      "photo-1638051894614-a60031fc6962.jpg",
+      "photo-1636522337224-587680b3ca77.jpg"
+    ],
+    "data": {
+      "strategyIdx": 0,
+      "customerRef": "bet_1725536838239",
+      "marketId": "1.232637904",
+      "executionReport": {
+        "customerRef": "bet_1725536838239",
+        "status": "SUCCESS",
+        "marketId": "1.232637904",
+        "instructionReports": [
+          {
+            "status": "SUCCESS",
+            "instruction": {
+              "selectionId": 63825626,
+              "limitOrder": {
+                "size": 1,
+                "price": 2.88,
+                "timeInForce": "FILL_OR_KILL"
+              },
+              "orderType": "LIMIT",
+              "side": "BACK"
+            },
+            "betId": "360102648302",
+            "placedDate": "2024-09-05T11:47:18.000Z",
+            "averagePriceMatched": 3.4,
+            "sizeMatched": 1,
+            "orderStatus": "EXECUTION_COMPLETE"
+          }
+        ]
+      }
+    },
+    "status": "assessed",
+    "impressionText": "Smooth, green shiny",
+    "chosenImageIdx": 0,
+    "targetImageIdx": 1
+  },
+  {
+    "id": "YuxBwANq4k",
+    "images": [
+      "photo-1635979122332-93e6d4c60c23.jpg",
+      "photo-1634422110169-f260f670c3e8.jpg"
+    ],
+    "data": {},
+    "status": "new"
+  },
+  {
+    "id": "023UY7nk5p",
+    "images": [
+      "photo-1635593701844-c54cec733034.jpg",
+      "photo-1636151191432-f2f290a57fd4.jpg"
+    ],
+    "data": {
+      "strategyIdx": 1,
+      "customerRef": "bet_1725541297772",
+      "marketId": "1.232603483",
+      "executionReport": {
+        "customerRef": "bet_1725541297772",
+        "status": "SUCCESS",
+        "marketId": "1.232603483",
+        "instructionReports": [
+          {
+            "status": "SUCCESS",
+            "instruction": {
+              "selectionId": 50721608,
+              "limitOrder": {
+                "size": 1,
+                "price": 3.65,
+                "timeInForce": "FILL_OR_KILL"
+              },
+              "orderType": "LIMIT",
+              "side": "LAY"
+            },
+            "betId": "360107454398",
+            "placedDate": "2024-09-05T13:01:38.000Z",
+            "averagePriceMatched": 3.6,
+            "sizeMatched": 1,
+            "orderStatus": "EXECUTION_COMPLETE"
+          }
+        ]
+      }
+    },
+    "status": "assessed",
+    "impressionText": "Curved cog-like structure, orange or brown",
+    "chosenImageIdx": 1,
+    "targetImageIdx": 0
+  },
+  {
+    "id": "P0FPP95IH2",
+    "images": [
+      "photo-1639050154816-bced01e66bfc.jpg",
+      "photo-1636140095196-6cf5df0f7fe3.jpg"
+    ],
+    "data": {
+      "strategyIdx": 1,
+      "customerRef": "bet_1725543106460",
+      "marketId": "1.232637933",
+      "executionReport": {
+        "customerRef": "bet_1725543106460",
+        "status": "SUCCESS",
+        "marketId": "1.232637933",
+        "instructionReports": [
+          {
+            "status": "SUCCESS",
+            "instruction": {
+              "selectionId": 62034749,
+              "limitOrder": {
+                "size": 1,
+                "price": 2.14,
+                "timeInForce": "FILL_OR_KILL"
+              },
+              "orderType": "LIMIT",
+              "side": "LAY"
+            },
+            "betId": "360109224812",
+            "placedDate": "2024-09-05T13:31:46.000Z",
+            "averagePriceMatched": 1.82,
+            "sizeMatched": 1,
+            "orderStatus": "EXECUTION_COMPLETE"
+          }
+        ]
+      }
+    },
+    "status": "assessed",
+    "impressionText": "Angular, grey and white, man-made object. Crisp, precise angles.\n",
+    "chosenImageIdx": 1,
+    "targetImageIdx": 0
+  },
+  {
+    "id": "6U68065t1s",
+    "images": [
+      "photo-1638991933262-742d053687e6.jpg",
+      "photo-1634568006374-f7eea32e4b52.jpg"
+    ],
+    "data": {
+      "strategyIdx": 0,
+      "customerRef": "bet_1725572182765",
+      "marketId": "1.232655541",
+      "executionReport": {
+        "customerRef": "bet_1725572182765",
+        "status": "SUCCESS",
+        "marketId": "1.232655541",
+        "instructionReports": [
+          {
+            "status": "SUCCESS",
+            "instruction": {
+              "selectionId": 46719200,
+              "limitOrder": {
+                "size": 1,
+                "price": 3.6,
+                "timeInForce": "FILL_OR_KILL"
+              },
+              "orderType": "LIMIT",
+              "side": "BACK"
+            },
+            "betId": "360146862148",
+            "placedDate": "2024-09-05T21:36:23.000Z",
+            "averagePriceMatched": 3.65,
+            "sizeMatched": 1,
+            "orderStatus": "EXECUTION_COMPLETE"
+          }
+        ]
+      }
+    },
+    "status": "assessed",
+    "impressionText": "A box-like structure, with vertical and horizontal lines. A tall figure, maybe human, maybe a structure? A road or a river divides them.",
+    "chosenImageIdx": 0,
+    "targetImageIdx": 1
+  },
+  {
+    "id": "6j14i71qod",
+    "images": [
+      "photo-1636725691774-e9c7cfb150ab.jpg",
+      "photo-1628255591287-2147e76fe3f0.jpg"
+    ],
+    "data": {
+      "strategyIdx": 1,
+      "customerRef": "bet_1725574017676",
+      "marketId": "1.232655595",
+      "executionReport": {
+        "customerRef": "bet_1725574017676",
+        "status": "SUCCESS",
+        "marketId": "1.232655595",
+        "instructionReports": [
+          {
+            "status": "SUCCESS",
+            "instruction": {
+              "selectionId": 40626697,
+              "limitOrder": {
+                "size": 1,
+                "price": 2,
+                "timeInForce": "FILL_OR_KILL"
+              },
+              "orderType": "LIMIT",
+              "side": "LAY"
+            },
+            "betId": "360147826652",
+            "placedDate": "2024-09-05T22:06:57.000Z",
+            "averagePriceMatched": 1.75,
+            "sizeMatched": 1,
+            "orderStatus": "EXECUTION_COMPLETE"
+          }
+        ]
+      }
+    },
+    "status": "assessed",
+    "impressionText": "Round area, dark around the outside. In the centre, green colours and one more more pale boxy or rocky shapes.",
+    "chosenImageIdx": 1,
+    "targetImageIdx": 0
+  },
+  {
+    "id": "KbL1S8vMuq",
+    "images": [
+      "photo-1633114073758-c4be9aeb15ac.jpg",
+      "photo-1433162653888-a571db5ccccf.jpg"
+    ],
+    "data": {
+      "strategyIdx": 0,
+      "customerRef": "bet_1725621431492",
+      "marketId": "1.232664043",
+      "executionReport": {
+        "customerRef": "bet_1725621431492",
+        "status": "SUCCESS",
+        "marketId": "1.232664043",
+        "instructionReports": [
+          {
+            "status": "SUCCESS",
+            "instruction": {
+              "selectionId": 66241451,
+              "limitOrder": {
+                "size": 1,
+                "price": 1.98,
+                "timeInForce": "FILL_OR_KILL"
+              },
+              "orderType": "LIMIT",
+              "side": "BACK"
+            },
+            "betId": "360181710641",
+            "placedDate": "2024-09-06T11:17:11.000Z",
+            "averagePriceMatched": 2.04,
+            "sizeMatched": 1,
+            "orderStatus": "EXECUTION_COMPLETE"
+          }
+        ]
+      }
+    },
+    "status": "assessed",
+    "impressionText": "\nOrange, smooth, organic shapes",
+    "chosenImageIdx": 0,
+    "targetImageIdx": 1
+  },
+  {
+    "id": "3PpN1h312L",
+    "images": [
+      "photo-1636139565467-fa3e429261ad.jpg",
+      "photo-1635831505716-fa6861a8e8c3.jpg"
+    ],
+    "data": {
+      "strategyIdx": 0,
+      "customerRef": "bet_1725710257776",
+      "marketId": "1.232692992",
+      "executionReport": {
+        "customerRef": "bet_1725710257776",
+        "status": "SUCCESS",
+        "marketId": "1.232692992",
+        "instructionReports": [
+          {
+            "status": "SUCCESS",
+            "instruction": {
+              "selectionId": 3568069,
+              "limitOrder": {
+                "size": 1,
+                "price": 2.84,
+                "timeInForce": "FILL_OR_KILL"
+              },
+              "orderType": "LIMIT",
+              "side": "BACK"
+            },
+            "betId": "360294444191",
+            "placedDate": "2024-09-07T11:57:38.000Z",
+            "averagePriceMatched": 2.9,
+            "sizeMatched": 1,
+            "orderStatus": "EXECUTION_COMPLETE"
+          }
+        ]
+      }
+    },
+    "status": "assessed",
+    "impressionText": "Cloth or fabric stretched over a structure, possibly blue, yellow? Horizontal line",
+    "chosenImageIdx": 0,
+    "targetImageIdx": 1
+  },
+  {
+    "id": "6zb7744h91",
+    "images": [
+      "photo-1524639099061-f8beec2b7538.jpg",
+      "photo-1637274503062-bceca456c9bd.jpg"
+    ],
+    "data": {
+      "strategyIdx": 0,
+      "customerRef": "bet_1725711123152",
+      "marketId": "1.232676169",
+      "executionReport": {
+        "customerRef": "bet_1725711123152",
+        "status": "SUCCESS",
+        "marketId": "1.232676169",
+        "instructionReports": [
+          {
+            "status": "SUCCESS",
+            "instruction": {
+              "selectionId": 45610530,
+              "limitOrder": {
+                "size": 1,
+                "price": 4.7,
+                "timeInForce": "FILL_OR_KILL"
+              },
+              "orderType": "LIMIT",
+              "side": "BACK"
+            },
+            "betId": "360296025216",
+            "placedDate": "2024-09-07T12:12:03.000Z",
+            "averagePriceMatched": 4.7,
+            "sizeMatched": 1,
+            "orderStatus": "EXECUTION_COMPLETE"
+          }
+        ]
+      }
+    },
+    "status": "assessed",
+    "impressionText": "Brown, uneven, rough outlines, shiny objects, broad green, curved sharp things, furry",
+    "chosenImageIdx": 0,
+    "targetImageIdx": 1
+  },
+  {
+    "id": "6NTVNA7j5B",
+    "images": [
+      "photo-1635504979606-b3e2fb1b07f2.jpg",
+      "photo-1638051894614-a60031fc6962.jpg"
+    ],
+    "data": {
+      "strategyIdx": 0,
+      "customerRef": "bet_1725713680852",
+      "marketId": "1.232705463",
+      "executionReport": {
+        "customerRef": "bet_1725713680852",
+        "status": "SUCCESS",
+        "marketId": "1.232705463",
+        "instructionReports": [
+          {
+            "status": "SUCCESS",
+            "instruction": {
+              "selectionId": 8129120,
+              "limitOrder": {
+                "size": 1,
+                "price": 3.25,
+                "timeInForce": "FILL_OR_KILL"
+              },
+              "orderType": "LIMIT",
+              "side": "BACK"
+            },
+            "betId": "360301011472",
+            "placedDate": "2024-09-07T12:54:41.000Z",
+            "averagePriceMatched": 3.3,
+            "sizeMatched": 1,
+            "orderStatus": "EXECUTION_COMPLETE"
+          }
+        ]
+      }
+    },
+    "status": "assessed",
+    "impressionText": "White, sparkly, warm. Orange. Distant or small blocky angular objects",
+    "chosenImageIdx": 0,
+    "targetImageIdx": 1
+  },
+  {
+    "id": "B301lr1LZT",
+    "images": [
+      "photo-1637452313272-9f5855b5f2bc.jpg",
+      "photo-1628300588354-2d76485c8364.jpg"
+    ],
+    "data": {
+      "strategyIdx": 1,
+      "customerRef": "bet_1725714804041",
+      "marketId": "1.232678205",
+      "executionReport": {
+        "customerRef": "bet_1725714804041",
+        "status": "SUCCESS",
+        "marketId": "1.232678205",
+        "instructionReports": [
+          {
+            "status": "SUCCESS",
+            "instruction": {
+              "selectionId": 72693345,
+              "limitOrder": {
+                "size": 1,
+                "price": 4.4,
+                "timeInForce": "FILL_OR_KILL"
+              },
+              "orderType": "LIMIT",
+              "side": "LAY"
+            },
+            "betId": "360303178530",
+            "placedDate": "2024-09-07T13:13:24.000Z",
+            "averagePriceMatched": 3.9,
+            "sizeMatched": 1,
+            "orderStatus": "EXECUTION_COMPLETE"
+          }
+        ]
+      }
+    },
+    "status": "assessed",
+    "impressionText": "Curved slope, box structure, cross pattern, cloth or fabric, people talking",
+    "chosenImageIdx": 1,
+    "targetImageIdx": 0
+  },
+  {
+    "id": "774W8muI9P",
+    "images": [
+      "photo-1552679978-f908a45fb2d8.jpg",
+      "photo-1637266702921-a2eae66c7f9d.jpg"
+    ],
+    "data": {
+      "strategyIdx": 0,
+      "customerRef": "bet_1725715853038",
+      "marketId": "1.232700529",
+      "executionReport": {
+        "customerRef": "bet_1725715853038",
+        "status": "SUCCESS",
+        "marketId": "1.232700529",
+        "instructionReports": [
+          {
+            "status": "SUCCESS",
+            "instruction": {
+              "selectionId": 38746033,
+              "limitOrder": {
+                "size": 1,
+                "price": 5.1,
+                "timeInForce": "FILL_OR_KILL"
+              },
+              "orderType": "LIMIT",
+              "side": "BACK"
+            },
+            "betId": "360305216307",
+            "placedDate": "2024-09-07T13:30:53.000Z",
+            "averagePriceMatched": 5.3,
+            "sizeMatched": 1,
+            "orderStatus": "EXECUTION_COMPLETE"
+          }
+        ]
+      }
+    },
+    "status": "assessed",
+    "impressionText": "Blue and white. salty. bright. shiny object",
+    "chosenImageIdx": 0,
+    "targetImageIdx": 1
+  },
+  {
+    "id": "322H811cBi",
+    "images": [
+      "photo-1636588118142-775d528a61a7.jpg",
+      "photo-1637361891315-2e5e11096078.jpg"
+    ],
+    "data": {
+      "strategyIdx": 0,
+      "customerRef": "bet_1725716737158",
+      "marketId": "1.232678210",
+      "executionReport": {
+        "customerRef": "bet_1725716737158",
+        "status": "SUCCESS",
+        "marketId": "1.232678210",
+        "instructionReports": [
+          {
+            "status": "SUCCESS",
+            "instruction": {
+              "selectionId": 1515650,
+              "limitOrder": {
+                "size": 1,
+                "price": 2.08,
+                "timeInForce": "FILL_OR_KILL"
+              },
+              "orderType": "LIMIT",
+              "side": "BACK"
+            },
+            "betId": "360307302464",
+            "placedDate": "2024-09-07T13:45:37.000Z",
+            "averagePriceMatched": 2.24,
+            "sizeMatched": 1,
+            "orderStatus": "EXECUTION_COMPLETE"
+          }
+        ]
+      }
+    },
+    "status": "assessed",
+    "impressionText": "Round, orange, textured,  mottled, white triangular shape",
+    "chosenImageIdx": 0,
+    "targetImageIdx": 1
+  },
+  {
+    "id": "37h971pq68",
+    "images": [
+      "photo-1504297050568-910d24c426d3.jpg",
+      "photo-1636151191432-f2f290a57fd4.jpg"
+    ],
+    "data": {
+      "strategyIdx": 1,
+      "customerRef": "bet_1725969851613",
+      "marketId": "1.232821589",
+      "executionReport": {
+        "customerRef": "bet_1725969851613",
+        "status": "SUCCESS",
+        "marketId": "1.232821589",
+        "instructionReports": [
+          {
+            "status": "SUCCESS",
+            "instruction": {
+              "selectionId": 40865244,
+              "limitOrder": {
+                "size": 1,
+                "price": 2.42,
+                "timeInForce": "FILL_OR_KILL"
+              },
+              "orderType": "LIMIT",
+              "side": "LAY"
+            },
+            "betId": "360595002935",
+            "placedDate": "2024-09-10T12:04:11.000Z",
+            "averagePriceMatched": 2.4,
+            "sizeMatched": 1,
+            "orderStatus": "EXECUTION_COMPLETE"
+          }
+        ]
+      }
+    },
+    "status": "assessed",
+    "impressionText": "Sprinning, spiralling, tube. stinging, whipping.  Dark, white lines.",
+    "chosenImageIdx": 1,
+    "targetImageIdx": 1
+  },
+  {
+    "id": "hgqG74SX3R",
+    "images": [
+      "photo-1635593702027-9259302009e4.jpg",
+      "photo-1639046380152-8603868f2e6a.jpg"
+    ],
+    "data": {
+      "strategyIdx": 1,
+      "customerRef": "bet_1725970996460",
+      "marketId": "1.232839781",
+      "executionReport": {
+        "customerRef": "bet_1725970996460",
+        "status": "SUCCESS",
+        "marketId": "1.232839781",
+        "instructionReports": [
+          {
+            "status": "SUCCESS",
+            "instruction": {
+              "selectionId": 66615187,
+              "limitOrder": {
+                "size": 1,
+                "price": 2.6,
+                "timeInForce": "FILL_OR_KILL"
+              },
+              "orderType": "LIMIT",
+              "side": "LAY"
+            },
+            "betId": "360596723092",
+            "placedDate": "2024-09-10T12:23:16.000Z",
+            "averagePriceMatched": 2.6,
+            "sizeMatched": 1,
+            "orderStatus": "EXECUTION_COMPLETE"
+          }
+        ]
+      }
+    },
+    "status": "assessed",
+    "impressionText": "Small white objects in a row on the horizon",
+    "chosenImageIdx": 1,
+    "targetImageIdx": 1
+  },
+  {
+    "id": "23v4rK616T",
+    "images": [
+      "photo-1637268852311-00c8259636bc.jpg",
+      "photo-1637464947514-e2dfc95c5f86.jpg"
+    ],
+    "data": {
+      "strategyIdx": 1,
+      "customerRef": "bet_1725973076537",
+      "marketId": "1.232781561",
+      "executionReport": {
+        "customerRef": "bet_1725973076537",
+        "status": "SUCCESS",
+        "marketId": "1.232781561",
+        "instructionReports": [
+          {
+            "status": "SUCCESS",
+            "instruction": {
+              "selectionId": 71629719,
+              "limitOrder": {
+                "size": 1,
+                "price": 1.21,
+                "timeInForce": "FILL_OR_KILL"
+              },
+              "orderType": "LIMIT",
+              "side": "LAY"
+            },
+            "betId": "360599538059",
+            "placedDate": "2024-09-10T12:57:56.000Z",
+            "averagePriceMatched": 1.21,
+            "sizeMatched": 1,
+            "orderStatus": "EXECUTION_COMPLETE"
+          }
+        ]
+      }
+    },
+    "status": "assessed",
+    "impressionText": "Dark square with circle inside it. Arching shapes behind. Dark, hanging.",
+    "chosenImageIdx": 1,
+    "targetImageIdx": 0
+  },
+  {
+    "id": "KBDYZg34f3",
+    "images": [
+      "photo-1638136166572-77e9b849cee9.jpg",
+      "photo-1633114127824-14b3207d7d74.jpg"
+    ],
+    "data": {
+      "strategyIdx": 0,
+      "customerRef": "bet_1726059902832",
+      "marketId": "1.232861919",
+      "executionReport": {
+        "customerRef": "bet_1726059902832",
+        "status": "SUCCESS",
+        "marketId": "1.232861919",
+        "instructionReports": [
+          {
+            "status": "SUCCESS",
+            "instruction": {
+              "selectionId": 48952285,
+              "limitOrder": {
+                "size": 1,
+                "price": 3.3,
+                "timeInForce": "FILL_OR_KILL"
+              },
+              "orderType": "LIMIT",
+              "side": "BACK"
+            },
+            "betId": "360695013955",
+            "placedDate": "2024-09-11T13:05:03.000Z",
+            "averagePriceMatched": 3.85,
+            "sizeMatched": 1,
+            "orderStatus": "EXECUTION_COMPLETE"
+          }
+        ]
+      }
+    },
+    "status": "assessed",
+    "impressionText": "Sandy-coloured fibrous swirl shape, pale, parallel lines, curving",
+    "chosenImageIdx": 0,
+    "targetImageIdx": 1
+  },
+  {
+    "id": "965S84II5h",
+    "images": [
+      "photo-1635913231119-7148f7c6ad8c.jpg",
+      "photo-1622818171279-fe0b6a336835.jpg"
+    ],
+    "data": {
+      "strategyIdx": 1,
+      "customerRef": "bet_1726062205273",
+      "marketId": "1.232861921",
+      "executionReport": {
+        "customerRef": "bet_1726062205273",
+        "status": "SUCCESS",
+        "marketId": "1.232861921",
+        "instructionReports": [
+          {
+            "status": "SUCCESS",
+            "instruction": {
+              "selectionId": 72880871,
+              "limitOrder": {
+                "size": 1,
+                "price": 3.45,
+                "timeInForce": "FILL_OR_KILL"
+              },
+              "orderType": "LIMIT",
+              "side": "LAY"
+            },
+            "betId": "360697158097",
+            "placedDate": "2024-09-11T13:43:25.000Z",
+            "averagePriceMatched": 3.15,
+            "sizeMatched": 1,
+            "orderStatus": "EXECUTION_COMPLETE"
+          }
+        ]
+      }
+    },
+    "status": "assessed",
+    "impressionText": "Roughly triangular shape with a small circular object at the top. Possibly a pale green colour.",
+    "chosenImageIdx": 1,
+    "targetImageIdx": 0
+  },
+  {
+    "id": "wLY5L1BJCH",
+    "images": [
+      "photo-1635951994645-a051b055cd92.jpg",
+      "photo-1635922454383-3138bb8ebae7.jpg"
+    ],
+    "data": {
+      "strategyIdx": 1,
+      "customerRef": "bet_1726230647820",
+      "marketId": "1.232926956",
+      "executionReport": {
+        "customerRef": "bet_1726230647820",
+        "status": "SUCCESS",
+        "marketId": "1.232926956",
+        "instructionReports": [
+          {
+            "status": "SUCCESS",
+            "instruction": {
+              "selectionId": 43555769,
+              "limitOrder": {
+                "size": 1,
+                "price": 2.14,
+                "timeInForce": "FILL_OR_KILL"
+              },
+              "orderType": "LIMIT",
+              "side": "LAY"
+            },
+            "betId": "360854257390",
+            "placedDate": "2024-09-13T12:30:48.000Z",
+            "averagePriceMatched": 1.97,
+            "sizeMatched": 1,
+            "orderStatus": "EXECUTION_COMPLETE"
+          }
+        ]
+      }
+    },
+    "status": "assessed",
+    "impressionText": "pale curly fur-like texture, triangular gap, metal loops",
+    "chosenImageIdx": 1,
+    "targetImageIdx": 0
+  },
+  {
+    "id": "krzABz5gWa",
+    "images": [
+      "photo-1547979682-ee3acc7a3f13.jpg",
+      "photo-1636886519725-6a048800b5b4.jpg"
+    ],
+    "data": {
+      "strategyIdx": 0,
+      "customerRef": "bet_1726232100060",
+      "marketId": "1.232901875",
+      "executionReport": {
+        "customerRef": "bet_1726232100060",
+        "status": "SUCCESS",
+        "marketId": "1.232901875",
+        "instructionReports": [
+          {
+            "status": "SUCCESS",
+            "instruction": {
+              "selectionId": 72211811,
+              "limitOrder": {
+                "size": 1,
+                "price": 1.69,
+                "timeInForce": "FILL_OR_KILL"
+              },
+              "orderType": "LIMIT",
+              "side": "BACK"
+            },
+            "betId": "360856363780",
+            "placedDate": "2024-09-13T12:55:00.000Z",
+            "averagePriceMatched": 1.69,
+            "sizeMatched": 1,
+            "orderStatus": "EXECUTION_COMPLETE"
+          }
+        ]
+      }
+    },
+    "status": "assessed",
+    "impressionText": "Blue, rounded, curved shape. Rough texture nearby. Animal with long legs, outside.",
+    "chosenImageIdx": 0,
+    "targetImageIdx": 1
+  },
+  {
+    "id": "86Ieu41P64",
+    "images": [
+      "photo-1635593701844-c54cec733034.jpg",
+      "photo-1558005137-d9619a5c539f.jpg"
+    ],
+    "data": {
+      "strategyIdx": 0,
+      "customerRef": "bet_1726233570219",
+      "marketId": "1.232950799",
+      "executionReport": {
+        "customerRef": "bet_1726233570219",
+        "status": "SUCCESS",
+        "marketId": "1.232950799",
+        "instructionReports": [
+          {
+            "status": "SUCCESS",
+            "instruction": {
+              "selectionId": 66034751,
+              "limitOrder": {
+                "size": 1,
+                "price": 3.55,
+                "timeInForce": "FILL_OR_KILL"
+              },
+              "orderType": "LIMIT",
+              "side": "BACK"
+            },
+            "betId": "360858493508",
+            "placedDate": "2024-09-13T13:19:30.000Z",
+            "averagePriceMatched": 3.6,
+            "sizeMatched": 1,
+            "orderStatus": "EXECUTION_COMPLETE"
+          }
+        ]
+      }
+    },
+    "status": "assessed",
+    "impressionText": "Dark, fringe, round shape with white highlights. Rough texture .Sooty smell.",
+    "chosenImageIdx": 0,
+    "targetImageIdx": 1
+  },
+  {
+    "id": "6j37r0e0Ty",
+    "images": [
+      "photo-1637361891315-2e5e11096078.jpg",
+      "photo-1553272725-086100aecf5e.jpg"
+    ],
+    "data": {
+      "strategyIdx": 1,
+      "customerRef": "bet_1726234688212",
+      "marketId": "1.232941895",
+      "executionReport": {
+        "customerRef": "bet_1726234688212",
+        "status": "SUCCESS",
+        "marketId": "1.232941895",
+        "instructionReports": [
+          {
+            "status": "SUCCESS",
+            "instruction": {
+              "selectionId": 58408168,
+              "limitOrder": {
+                "size": 1,
+                "price": 3.05,
+                "timeInForce": "FILL_OR_KILL"
+              },
+              "orderType": "LIMIT",
+              "side": "LAY"
+            },
+            "betId": "360860129522",
+            "placedDate": "2024-09-13T13:38:08.000Z",
+            "averagePriceMatched": 3.05,
+            "sizeMatched": 1,
+            "orderStatus": "EXECUTION_COMPLETE"
+          }
+        ]
+      }
+    },
+    "status": "assessed",
+    "impressionText": "Building or artificial structure. Angle. Pink or tan-coloured object or limb.",
+    "chosenImageIdx": 1,
+    "targetImageIdx": 1
+  },
+  {
+    "id": "t72Y9ce876",
+    "images": [
+      "photo-1620567838034-f32ee85818aa.jpg",
+      "photo-1636445609244-0534808125ff.jpg"
+    ],
+    "data": {
+      "strategyIdx": 0,
+      "customerRef": "bet_1726235299177",
+      "marketId": "1.232926944",
+      "executionReport": {
+        "customerRef": "bet_1726235299177",
+        "status": "SUCCESS",
+        "marketId": "1.232926944",
+        "instructionReports": [
+          {
+            "status": "SUCCESS",
+            "instruction": {
+              "selectionId": 71621121,
+              "limitOrder": {
+                "size": 1,
+                "price": 1.24,
+                "timeInForce": "FILL_OR_KILL"
+              },
+              "orderType": "LIMIT",
+              "side": "BACK"
+            },
+            "betId": "360860959247",
+            "placedDate": "2024-09-13T13:48:19.000Z",
+            "averagePriceMatched": 1.27,
+            "sizeMatched": 1,
+            "orderStatus": "EXECUTION_COMPLETE"
+          }
+        ]
+      }
+    },
+    "status": "assessed",
+    "impressionText": "Circular orange or brown object, textured",
+    "chosenImageIdx": 0,
+    "targetImageIdx": 0
+  },
+  {
+    "id": "124MD6761v",
+    "images": [
+      "photo-1636038236932-42d8ce006707.jpg",
+      "photo-1639046380152-8603868f2e6a.jpg"
+    ],
+    "data": {
+      "strategyIdx": 0,
+      "customerRef": "bet_1726285148232",
+      "marketId": "1.232893985",
+      "executionReport": {
+        "customerRef": "bet_1726285148232",
+        "status": "SUCCESS",
+        "marketId": "1.232893985",
+        "instructionReports": [
+          {
+            "status": "SUCCESS",
+            "instruction": {
+              "selectionId": 71342200,
+              "limitOrder": {
+                "size": 1,
+                "price": 5.2,
+                "timeInForce": "FILL_OR_KILL"
+              },
+              "orderType": "LIMIT",
+              "side": "BACK"
+            },
+            "betId": "360942140018",
+            "placedDate": "2024-09-14T03:39:08.000Z",
+            "averagePriceMatched": 5.2,
+            "sizeMatched": 1,
+            "orderStatus": "EXECUTION_COMPLETE"
+          }
+        ]
+      }
+    },
+    "status": "assessed",
+    "impressionText": "Grays, whites and blacks. Curving shape, shiny",
+    "chosenImageIdx": 0,
+    "targetImageIdx": 1
+  },
+  {
+    "id": "aXq06r47D0",
+    "images": [
+      "photo-1635500574974-114cb4f49759.jpg",
+      "photo-1544726368-8f4b5475a7e4.jpg"
+    ],
+    "data": {
+      "strategyIdx": 1,
+      "customerRef": "bet_1726397069015",
+      "marketId": "1.232989281",
+      "executionReport": {
+        "customerRef": "bet_1726397069015",
+        "status": "SUCCESS",
+        "marketId": "1.232989281",
+        "instructionReports": [
+          {
+            "status": "SUCCESS",
+            "instruction": {
+              "selectionId": 73808874,
+              "limitOrder": {
+                "size": 1,
+                "price": 4.4,
+                "timeInForce": "FILL_OR_KILL"
+              },
+              "orderType": "LIMIT",
+              "side": "LAY"
+            },
+            "betId": "361161861853",
+            "placedDate": "2024-09-15T10:44:29.000Z",
+            "averagePriceMatched": 4.4,
+            "sizeMatched": 1,
+            "orderStatus": "EXECUTION_COMPLETE"
+          }
+        ]
+      }
+    },
+    "status": "assessed",
+    "impressionText": "Small blue-gray faceted  objects, black background",
+    "chosenImageIdx": 1,
+    "targetImageIdx": 0
+  },
+  {
+    "id": "S21wcLbsMc",
+    "images": [
+      "photo-1545063914-a1a6ec821c88.jpg",
+      "photo-1633083016072-3fcfec72cc68.jpg"
+    ],
+    "data": {
+      "strategyIdx": 0,
+      "customerRef": "bet_1726401307730",
+      "marketId": "1.232979893",
+      "executionReport": {
+        "customerRef": "bet_1726401307730",
+        "status": "SUCCESS",
+        "marketId": "1.232979893",
+        "instructionReports": [
+          {
+            "status": "SUCCESS",
+            "instruction": {
+              "selectionId": 39171660,
+              "limitOrder": {
+                "size": 1,
+                "price": 1.8,
+                "timeInForce": "FILL_OR_KILL"
+              },
+              "orderType": "LIMIT",
+              "side": "BACK"
+            },
+            "betId": "361173366788",
+            "placedDate": "2024-09-15T11:55:07.000Z",
+            "averagePriceMatched": 1.82,
+            "sizeMatched": 1,
+            "orderStatus": "EXECUTION_COMPLETE"
+          }
+        ]
+      }
+    },
+    "status": "assessed",
+    "impressionText": "Brown, rounded\nRed and green concentric rings\nRough texture\nSquare, faceted\nReflective, shiny, wet appearance",
+    "chosenImageIdx": 0,
+    "targetImageIdx": 1
+  },
+  {
+    "id": "0bq24rlXzf",
+    "images": [
+      "photo-1636118155446-e9ec9187aa1f.jpg",
+      "photo-1635286721033-e11cf9e632c4.jpg"
+    ],
+    "data": {
+      "strategyIdx": 1,
+      "customerRef": "bet_1726753126395",
+      "marketId": "1.233154957",
+      "executionReport": {
+        "customerRef": "bet_1726753126395",
+        "status": "SUCCESS",
+        "marketId": "1.233154957",
+        "instructionReports": [
+          {
+            "status": "SUCCESS",
+            "instruction": {
+              "selectionId": 57631813,
+              "limitOrder": {
+                "size": 1,
+                "price": 3.8,
+                "timeInForce": "FILL_OR_KILL"
+              },
+              "orderType": "LIMIT",
+              "side": "LAY"
+            },
+            "betId": "361588741735",
+            "placedDate": "2024-09-19T13:38:46.000Z",
+            "averagePriceMatched": 3.8,
+            "sizeMatched": 1,
+            "orderStatus": "EXECUTION_COMPLETE"
+          }
+        ]
+      }
+    },
+    "status": "assessed",
+    "impressionText": "Pale brown, furry. Triangle. Animal head shape.",
+    "chosenImageIdx": 1,
+    "targetImageIdx": 1
+  },
+  {
+    "id": "jUNzd1PQhm",
+    "images": [
+      "photo-1637274503062-bceca456c9bd.jpg",
+      "photo-1636054348217-4ec0f1a5c27e.jpg"
+    ],
+    "data": {
+      "strategyIdx": 0,
+      "customerRef": "bet_1726754377751",
+      "marketId": "1.233195830",
+      "executionReport": {
+        "customerRef": "bet_1726754377751",
+        "status": "SUCCESS",
+        "marketId": "1.233195830",
+        "instructionReports": [
+          {
+            "status": "SUCCESS",
+            "instruction": {
+              "selectionId": 50686998,
+              "limitOrder": {
+                "size": 1,
+                "price": 3.75,
+                "timeInForce": "FILL_OR_KILL"
+              },
+              "orderType": "LIMIT",
+              "side": "BACK"
+            },
+            "betId": "361590285244",
+            "placedDate": "2024-09-19T13:59:38.000Z",
+            "averagePriceMatched": 4.1,
+            "sizeMatched": 1,
+            "orderStatus": "EXECUTION_COMPLETE"
+          }
+        ]
+      }
+    },
+    "status": "assessed",
+    "impressionText": "Dark, bluish light. Circular structure, lumpy like made of round blobs. Gray object, wide at the bottom and narrow at the top.",
+    "chosenImageIdx": 0,
+    "targetImageIdx": 0
+  },
+  {
+    "id": "B337e97i45",
+    "images": [
+      "photo-1512351735230-a07ebdf5b5e1.jpg",
+      "photo-1635079959001-69736953f90f.jpg"
+    ],
+    "data": {
+      "strategyIdx": 1,
+      "customerRef": "bet_1726755302648",
+      "marketId": "1.233154776",
+      "executionReport": {
+        "customerRef": "bet_1726755302648",
+        "status": "SUCCESS",
+        "marketId": "1.233154776",
+        "instructionReports": [
+          {
+            "status": "SUCCESS",
+            "instruction": {
+              "selectionId": 62485916,
+              "limitOrder": {
+                "size": 1,
+                "price": 3.1,
+                "timeInForce": "FILL_OR_KILL"
+              },
+              "orderType": "LIMIT",
+              "side": "LAY"
+            },
+            "betId": "361591465571",
+            "placedDate": "2024-09-19T14:15:02.000Z",
+            "averagePriceMatched": 3.1,
+            "sizeMatched": 1,
+            "orderStatus": "EXECUTION_COMPLETE"
+          }
+        ]
+      }
+    },
+    "status": "assessed",
+    "impressionText": "White structures, strung together, flower-like. Dark space enclosing them. Granular surface",
+    "chosenImageIdx": 1,
+    "targetImageIdx": 1
+  },
+  {
+    "id": "0zm8018ES3",
+    "images": [
+      "54e9d54a4a55b10ff3d8992cc12c30771037dbf85254794e702673d6904b_640.jpg",
+      "photo-1593642634367-d91a135587b5.jpg"
+    ],
+    "data": {
+      "strategyIdx": 1,
+      "customerRef": "bet_1727048431410",
+      "marketId": "1.233348237",
+      "executionReport": {
+        "customerRef": "bet_1727048431410",
+        "status": "SUCCESS",
+        "marketId": "1.233348237",
+        "instructionReports": [
+          {
+            "status": "SUCCESS",
+            "instruction": {
+              "selectionId": 40538757,
+              "limitOrder": {
+                "size": 1,
+                "price": 2.5,
+                "timeInForce": "FILL_OR_KILL"
+              },
+              "orderType": "LIMIT",
+              "side": "LAY"
+            },
+            "betId": "362086731378",
+            "placedDate": "2024-09-22T23:40:31.000Z",
+            "averagePriceMatched": 2.18,
+            "sizeMatched": 1,
+            "orderStatus": "EXECUTION_COMPLETE"
+          }
+        ]
+      }
+    },
+    "status": "assessed",
+    "impressionText": "Circular or curved shape, Corrugations. Boxes or cross shapes. Yellow, golden colours. Green. Folds. A person is present.",
+    "chosenImageIdx": 1,
+    "targetImageIdx": 1
+  },
+  {
+    "id": "85r5ooS72M",
+    "images": [
+      "photo-1616891722751-88755e4b44aa.jpg",
+      "photo-1515592559813-3f7dff97e185.jpg"
+    ],
+    "data": {
+      "strategyIdx": 0,
+      "customerRef": "bet_1727051128201",
+      "marketId": "1.233348251",
+      "executionReport": {
+        "customerRef": "bet_1727051128201",
+        "status": "SUCCESS",
+        "marketId": "1.233348251",
+        "instructionReports": [
+          {
+            "status": "SUCCESS",
+            "instruction": {
+              "selectionId": 74099637,
+              "limitOrder": {
+                "size": 1,
+                "price": 3.85,
+                "timeInForce": "FILL_OR_KILL"
+              },
+              "orderType": "LIMIT",
+              "side": "BACK"
+            },
+            "betId": "362088883276",
+            "placedDate": "2024-09-23T00:25:28.000Z",
+            "averagePriceMatched": 3.9,
+            "sizeMatched": 1,
+            "orderStatus": "EXECUTION_COMPLETE"
+          }
+        ]
+      }
+    },
+    "status": "assessed",
+    "impressionText": "Dark woolly shape. \nSymmetrical round shape with radial spokes, pale color.\nOpen space, bright light.\nA person is present.\nA hill or peaked structure.\nHot.\n",
+    "chosenImageIdx": 0,
+    "targetImageIdx": 1
+  },
+  {
+    "id": "61p3x60iVb",
+    "images": [
+      "photo-1636482095080-4033a0cd51de.jpg",
+      "photo-1637966497982-48285a5dab54.jpg"
+    ],
+    "data": {
+      "strategyIdx": 1,
+      "customerRef": "bet_1727053678237",
+      "marketId": "1.233348251",
+      "executionReport": {
+        "customerRef": "bet_1727053678237",
+        "status": "SUCCESS",
+        "marketId": "1.233348251",
+        "instructionReports": [
+          {
+            "status": "SUCCESS",
+            "instruction": {
+              "selectionId": 41479085,
+              "limitOrder": {
+                "size": 1,
+                "price": 3.75,
+                "timeInForce": "FILL_OR_KILL"
+              },
+              "orderType": "LIMIT",
+              "side": "LAY"
+            },
+            "betId": "362090431662",
+            "placedDate": "2024-09-23T01:07:58.000Z",
+            "averagePriceMatched": 3.7489999999999997,
+            "sizeMatched": 1,
+            "orderStatus": "EXECUTION_COMPLETE"
+          }
+        ]
+      }
+    },
+    "status": "assessed",
+    "impressionText": "Horizontal dark line or shape.\nSmooth surface\nA person is present.\nCircular green shape.\nGolden light diaphanous stuff.\n",
+    "chosenImageIdx": 1,
+    "targetImageIdx": 0
+  },
+  {
+    "id": "6Nc3t8Ei82",
+    "images": [
+      "photo-1638978443174-246d17bfb608.jpg",
+      "photo-1635945404768-1c28da9fed7b.jpg"
+    ],
+    "data": {
+      "strategyIdx": 0,
+      "customerRef": "bet_1727078804560",
+      "marketId": "1.233367701",
+      "executionReport": {
+        "customerRef": "bet_1727078804560",
+        "status": "SUCCESS",
+        "marketId": "1.233367701",
+        "instructionReports": [
+          {
+            "status": "SUCCESS",
+            "instruction": {
+              "selectionId": 27302365,
+              "limitOrder": {
+                "size": 1,
+                "price": 2.94,
+                "timeInForce": "FILL_OR_KILL"
+              },
+              "orderType": "LIMIT",
+              "side": "BACK"
+            },
+            "betId": "362106711340",
+            "placedDate": "2024-09-23T08:06:44.000Z",
+            "averagePriceMatched": 3.25,
+            "sizeMatched": 1,
+            "orderStatus": "EXECUTION_COMPLETE"
+          }
+        ]
+      }
+    },
+    "status": "assessed",
+    "impressionText": "Dark mound shape\nRound shape with concentric pattern\nAngular structure, X shape from above like a pyramid or a box\nYoung energy, a childish vibe",
+    "chosenImageIdx": 0,
+    "targetImageIdx": 1
+  },
+  {
+    "id": "M3WTIr5S9Y",
+    "images": [
+      "photo-1633113093730-47449a1a9c6e.jpg",
+      "photo-1636105146585-65a51b472c7e.jpg"
+    ],
+    "data": {
+      "strategyIdx": 0,
+      "customerRef": "bet_1727214263043",
+      "marketId": "1.233468270",
+      "executionReport": {
+        "customerRef": "bet_1727214263043",
+        "status": "SUCCESS",
+        "marketId": "1.233468270",
+        "instructionReports": [
+          {
+            "status": "SUCCESS",
+            "instruction": {
+              "selectionId": 40097306,
+              "limitOrder": {
+                "size": 1,
+                "price": 4.9,
+                "timeInForce": "FILL_OR_KILL"
+              },
+              "orderType": "LIMIT",
+              "side": "BACK"
+            },
+            "betId": "362271477331",
+            "placedDate": "2024-09-24T21:44:23.000Z",
+            "averagePriceMatched": 5.4,
+            "sizeMatched": 1,
+            "orderStatus": "EXECUTION_COMPLETE"
+          }
+        ]
+      }
+    },
+    "status": "assessed",
+    "impressionText": "A square with smaller white boxy shapes within it.\nA line with boxy shapes along it like crenellation or a city skyline.\nA living creature may be present.\nOrange colour is present.",
+    "chosenImageIdx": 0,
+    "targetImageIdx": 1
+  },
+  {
+    "id": "992m3l4IVB",
+    "images": [
+      "photo-1638111963063-9dc8f1afa9b9.jpg",
+      "photo-1471086569966-db3eebc25a59.jpg"
+    ],
+    "data": {
+      "strategyIdx": 1,
+      "customerRef": "bet_1727219151744",
+      "marketId": "1.233468298",
+      "executionReport": {
+        "customerRef": "bet_1727219151744",
+        "status": "SUCCESS",
+        "marketId": "1.233468298",
+        "instructionReports": [
+          {
+            "status": "SUCCESS",
+            "instruction": {
+              "selectionId": 71846976,
+              "limitOrder": {
+                "size": 1,
+                "price": 5.3,
+                "timeInForce": "FILL_OR_KILL"
+              },
+              "orderType": "LIMIT",
+              "side": "LAY"
+            },
+            "betId": "362273907173",
+            "placedDate": "2024-09-24T23:05:52.000Z",
+            "averagePriceMatched": 3.5385000000000004,
+            "sizeMatched": 1,
+            "orderStatus": "EXECUTION_COMPLETE"
+          }
+        ]
+      }
+    },
+    "status": "assessed",
+    "impressionText": "992m3l4IVB\nCurved bright brassy loop\nFrom above, it might look green, with zigzag along the side\nWhite and black\nPeak shape",
+    "chosenImageIdx": 1,
+    "targetImageIdx": 0
+  },
+  {
+    "id": "1Ad0xc0M86",
+    "images": [
+      "photo-1635458900336-f8737794ce4e.jpg",
+      "photo-1635990237898-5a2229089456.jpg"
+    ],
+    "data": {
+      "strategyIdx": 0,
+      "customerRef": "bet_1727253350618",
+      "marketId": "1.233484671",
+      "executionReport": {
+        "customerRef": "bet_1727253350618",
+        "status": "SUCCESS",
+        "marketId": "1.233484671",
+        "instructionReports": [
+          {
+            "status": "SUCCESS",
+            "instruction": {
+              "selectionId": 40674670,
+              "limitOrder": {
+                "size": 1,
+                "price": 3.85,
+                "timeInForce": "FILL_OR_KILL"
+              },
+              "orderType": "LIMIT",
+              "side": "BACK"
+            },
+            "betId": "362298270031",
+            "placedDate": "2024-09-25T08:35:50.000Z",
+            "averagePriceMatched": 4.5,
+            "sizeMatched": 1,
+            "orderStatus": "EXECUTION_COMPLETE"
+          }
+        ]
+      }
+    },
+    "status": "assessed",
+    "impressionText": "Orange colour. \nGreen bushy.\nSemicircle shape.\nHairy.",
+    "chosenImageIdx": 0,
+    "targetImageIdx": 1
+  }
+]

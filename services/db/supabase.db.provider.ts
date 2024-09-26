@@ -68,8 +68,7 @@ export class SupabaseDbProvider implements IDbService {
         }
 
         return data.map((item) => ({
-            id: item.id,
-            ...item
+            ...item.data
         })) as T[];
     }
 
