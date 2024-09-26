@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { GetServerSideProps } from "next";
 import { SessionService } from "@/services/session.service";
@@ -60,59 +60,76 @@ const SessionPage: React.FC<SessionPageProps> = ({
     error: initialError
 }) => {
     const [session, setSession] = useState<Session | null>(initialSession);
-    const [error, setError] = useState<string | undefined>(initialError);
+    const [error, setError] = useState<string | null>(initialError ?? null);
     const [impressionText, setImpressionText] = useState("");
     const [calculatedState, setCalculatedState] =
         useState<CalculatedSessionState | null>(null);
     const [showNonTargetImages, setShowNonTargetImages] = useState(false);
     const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
 
+    // Update this useEffect to start polling immediately
     useEffect(() => {
-        if (session && session.status !== SessionStatus.ShownFeedback) {
-            const id = setInterval(pollSession, 30000); // Poll every 30 seconds
-            setIntervalId(id);
+        let id: NodeJS.Timeout | null = null;
 
-            return () => {
-                if (id) clearInterval(id);
-            };
+        const startPolling = () => {
+            if (session && session.status !== SessionStatus.ShownFeedback) {
+                id = setInterval(pollSession, 5000); // Poll every 5 seconds
+                setIntervalId(id);
+            }
+        };
+
+        startPolling();
+
+        // Cleanup interval on component unmount or when session changes
+        return () => {
+            if (id) clearInterval(id);
+        };
+    }, [session]);
+
+    // This will update the favicon based on the session status
+    useEffect(() => {
+        updateFavicon(session?.status);
+        if (session) {
+            calculateSessionState(session);
         }
     }, [session]);
 
     useEffect(() => {
-        if (session?.status === SessionStatus.InvestmentResolved) {
-            // Change favicon when session is resolved
-            const link: HTMLLinkElement = document.querySelector("link[rel~='icon']") || document.createElement('link');
-            link.type = 'image/x-icon';
-            link.rel = 'shortcut icon';
-            link.href = '/favicon-resolved.ico'; // Make sure this file exists in your public folder
-            document.getElementsByTagName('head')[0].appendChild(link);
+        if (session) {
+            calculateSessionState(session);
         }
-    }, [session?.status]);
+    }, [session]);
 
-    const pollSession = async () => {
+    const pollSession = useCallback(async () => {
         if (!session) return;
-        if (session.status !== SessionStatus.InvestmentResolved) {
-            try {
-                const response = await fetch(`/api/session/${session.id}`);
-                if (!response.ok) {
-                    throw new Error("Failed to fetch session");
-                }
-                const updatedSession = await response.json();
-                setSession(updatedSession);
+        
+        try {
+            const response = await fetch(`/api/session/${session.id}`);
+            if (!response.ok) {
+                throw new Error("Failed to fetch session");
+            }
+            const updatedSession = await response.json();
+            setSession(updatedSession);
 
-                if (updatedSession.status === SessionStatus.ShownFeedback) {
-                    if (intervalId) clearInterval(intervalId);
+            if (updatedSession.status === SessionStatus.ShownFeedback) {
+                // Stop polling if session is fully completed
+                if (intervalId) {
+                    clearInterval(intervalId);
+                    setIntervalId(null);
                 }
-                calculateSessionState(updatedSession);
-            } catch (error) {
-                console.error("Error polling session:", error);
-                setError("Failed to update session status");
-                if (intervalId) clearInterval(intervalId);
+            }
+        } catch (error) {
+            console.error("Error polling session:", error);
+            setError("Failed to update session status");
+            if (intervalId) {
+                clearInterval(intervalId);
+                setIntervalId(null);
             }
         }
-    };
+    }, [session, intervalId]);
 
     const calculateSessionState = (completedSession: Session) => {
+        debugger;
         if (
             completedSession.chosenImageIdx === undefined ||
             completedSession.targetImageIdx === undefined
@@ -175,8 +192,8 @@ const SessionPage: React.FC<SessionPageProps> = ({
                 placeholder="Enter your impression of the image"
                 className="input-textarea mb-4"
             />
-            <Button onClick={activateSession} className="submit-button">
-                Submit Impression
+            <Button className="pythia-button w-full" onClick={activateSession}>
+                Submit
             </Button>
         </div>
     );
@@ -301,7 +318,18 @@ const SessionPage: React.FC<SessionPageProps> = ({
         }
     };
 
+    const updateFavicon = (status?: string) => {
+        if (typeof document !== 'undefined') {
+            const link = document.querySelector("link[rel*='icon']") as HTMLLinkElement || document.createElement('link');
+            link.type = 'image/x-icon';
+            link.rel = 'shortcut icon';
+            link.href = `/favicon-${status}.ico`;
+            document.head.appendChild(link);
+        }
+    };
+
     if (error) {
+        updateFavicon('error');
         return (
             <div className="page-container">
                 <Link href="/" className="home-link">Home</Link>

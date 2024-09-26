@@ -27,9 +27,8 @@ export enum SessionStatus {
     Judged = "judged",
     Investing = "investing",
     Invested = "invested",
-    InvestmentResolved = "investmentResolved",
-    //Assessed = "assessed",
-    ShownFeedback = "shownFeedback"
+    InvestmentResolved = "resolved",
+    ShownFeedback = "shown"
 }
 
 export type Session = {

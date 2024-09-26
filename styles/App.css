@@ -78,5 +78,9 @@
     @apply text-2xl font-semibold mb-4 text-gray-700;
   }
 
+  .pythia-button {
+    @apply px-6 py-3 w-64 text-lg font-semibold text-white bg-gradient-to-br from-gray-300 to-gray-400 rounded-lg shadow-md hover:from-gray-400 hover:to-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75 transition-all duration-200 backdrop-filter backdrop-blur-sm;
+  }
+
   
 }

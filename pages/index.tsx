@@ -8,6 +8,7 @@ const MainPage = () => {
     try {
       const response = await fetch('/api/create', { method: 'POST' });
       const data = await response.json();
+      await new Promise(resolve => setTimeout(resolve, 1000));
       router.push(`/session/${data.id}`);
     } catch (error) {
       console.error('Error creating new session:', error);
@@ -15,13 +16,16 @@ const MainPage = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <h1 className="text-4xl font-bold mb-8">Welcome to the Psychic Investment Game</h1>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-white">
+      <img src="/pythia.png" alt="Pythia" className="w-1/3 h-auto mx-auto mb-8" />
       <p className="text-lg mb-8">
-        Enter your impressions of the image you will be shown.
+       Prepare yourself.
       </p>
-      <button onClick={createNewSession} className="px-6 py-3 text-lg">
-        Create New Session
+      <button 
+        onClick={createNewSession} 
+        className="pythia-button"
+      >
+        Start
       </button>
     </div>
   );

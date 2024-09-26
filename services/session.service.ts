@@ -178,13 +178,14 @@ export class SessionService implements ISessionService {
     public async query(query: Partial<Session>): Promise<Session[]> {
         return this.db.query<Session>(CollectionName.Sessions, query);
     }
-
     private generateSessionId(): string {
-        const characters =
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890123456789012345678901234567890123456789";
-        const length = 10;
+        const characters = "0123456789";
+        const length = 12;
         let result = "";
         for (let i = 0; i < length; i++) {
+            if (i > 0 && i % 4 === 0) {
+                result += "-";
+            }
             result += characters.charAt(
                 Math.floor(Math.random() * characters.length)
             );

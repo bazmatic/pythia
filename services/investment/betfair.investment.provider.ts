@@ -92,7 +92,7 @@ export class BetfairInvestmentProvider implements IInvestmentProvider {
     private async getNextRace(): Promise<MarketCatalogue> {
         const HORSE_RACING = "7";
         const now = new Date();
-        const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+        const until = new Date(now.getTime() + (2 * 60 * 60 * 1000)); // 2 hours from now
 
         const marketCatalogues: MarketCatalogue[] = await listMarketCatalogue({
             filter: {
@@ -100,7 +100,7 @@ export class BetfairInvestmentProvider implements IInvestmentProvider {
                 bspOnly: true,
                 marketStartTime: {
                     from: now.toISOString(),
-                    to: tomorrow.toISOString()
+                    to: until.toISOString()
                 },
                 marketTypeCodes: ["WIN"]
             },
@@ -201,7 +201,6 @@ export class BetfairInvestmentProvider implements IInvestmentProvider {
         await this.db.saveItem<Session>(CollectionName.Sessions, session);
     }
 
-
     public async resolveInvestment(sessionId: string): Promise<void> {
         const session = await this.db.getItem<Session>(CollectionName.Sessions, sessionId);
         if (!session) {
@@ -219,9 +218,9 @@ export class BetfairInvestmentProvider implements IInvestmentProvider {
         const clearedOrderSummaryReport: ClearedOrderSummaryReport = await
             listClearedOrders({
                 betStatus: "SETTLED",
-                // Only return the orders settled within 25 hours of now
+                // Only return the orders settled within 24 hours of now
                 settledDateRange: {
-                    from: new Date(Date.now() - 25 * 60 * 60 * 1000).toISOString(),
+                    from: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
                     to: new Date().toISOString()
                 }
         });
@@ -241,20 +240,19 @@ export class BetfairInvestmentProvider implements IInvestmentProvider {
             console.log("No cleared order yet");
             return;
         }
-        console.log("Cleared order:", clearedOrder);
 
-        // If we won, then update the session 'targetImageIdx' to the chosen image index
-        // If we lost, then update the session 'targetImageIdx' to the other image index
         const won = clearedOrder.betOutcome === "WON";
-        if (won) {
-            
-            session.targetImageIdx = session.chosenImageIdx;
-            console.log("Won. Setting target to chosen", session.chosenImageIdx);
-        } else {
-            
-            session.targetImageIdx = (session.chosenImageIdx + 1) % 2;
-            console.log("Lost. Setting target to other:", session.targetImageIdx)
-        }
+        console.log(won ? "Won!" : "Lost.");
+
+        // if (won) {           
+        //     session.targetImageIdx = session.chosenImageIdx;
+        //     console.log("Won. Setting target to chosen", session.chosenImageIdx);
+        // } else {      
+        //     session.targetImageIdx = (session.chosenImageIdx + 1) % 2; // 0 -> 1, 1 -> 0
+        //     console.log("Lost. Setting target to other:", session.targetImageIdx)
+        // }
+
+        // If we won, then update the session 'targetImageIdx' to the chosen image index, otherwise set it to the other image index
         session.targetImageIdx = won ? session.chosenImageIdx : (session.chosenImageIdx + 1) % 2;
         session.status = SessionStatus.InvestmentResolved;
         await this.db.saveItem<Session>(CollectionName.Sessions, session);

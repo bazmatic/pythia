@@ -1,4 +1,4 @@
-import '@/styles/globals.css';
+import '@/styles/App.css';
 //import 'reflect-metadata';
 import { AppProps } from 'next/app';
 
