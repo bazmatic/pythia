@@ -185,7 +185,6 @@ const SessionPage: React.FC<SessionPageProps> = ({
 
     const renderPendingSession = () => (
         <div className="result-container">
-            <h2 className="result-title">Impression</h2>
             <Textarea
                 value={impressionText}
                 onChange={e => setImpressionText(e.target.value)}
