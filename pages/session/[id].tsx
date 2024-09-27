@@ -73,7 +73,7 @@ const SessionPage: React.FC<SessionPageProps> = ({
         let id: NodeJS.Timeout | null = null;
 
         const startPolling = () => {
-            if (session && session.status !== SessionStatus.ShownFeedback) {
+            if (session && session.status !== SessionStatus.ShownFeedback && session.status !== SessionStatus.New) {
                 id = setInterval(pollSession, 5000); // Poll every 5 seconds
                 setIntervalId(id);
             }
@@ -185,17 +185,19 @@ const SessionPage: React.FC<SessionPageProps> = ({
     };
 
     const renderPendingSession = () => (
-        <div className="result-container">
-            <Textarea
-                value={impressionText}
-                onChange={e => setImpressionText(e.target.value)}
-                placeholder="Enter your impression of the image represented by the reference above"
-                className="input-textarea mb-4"
-            />
+        <>
+            <div className="result-container">
+                <Textarea
+                    value={impressionText}
+                    onChange={e => setImpressionText(e.target.value)}
+                    placeholder="Enter your impression of the image represented by the reference above"
+                    className="input-textarea mb-4"
+                />
+            </div>
             <Button className="pythia-button w-full" onClick={activateSession}>
                 Submit
             </Button>
-        </div>
+        </>
     );
 
     const renderActiveSession = () => (
