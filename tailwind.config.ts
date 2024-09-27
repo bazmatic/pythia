@@ -24,8 +24,15 @@ const config: Config = {
       fontFamily: {
         serif: ['Palatino', 'Georgia', 'serif'],
       },
+      transitionProperty: {
+        'opacity': 'opacity',
+      },
+      transitionDuration: {
+        '1000': '1000ms',
+      },
     },
   },
   plugins: [],
 };
+
 export default config;

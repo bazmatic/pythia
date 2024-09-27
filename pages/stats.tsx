@@ -26,30 +26,12 @@ const StatsPage = ({ stats }: StatsPageProps) => {
       <Head>
         <title>Pythia Stats</title>
       </Head>
-      <div className="page-container">
-        <h1 className="page-title">Pythia Stats</h1>
-        <div className="session-info">
-          <h2>Overall Performance</h2>
-          <div className="grid grid-cols-2 gap-4 mt-4">
-            <div className="bg-white p-4 rounded-lg shadow-md">
-              <p className="text-lg font-semibold text-gray-700">Total Sessions</p>
-              <p className="text-3xl font-bold text-gray-800">{stats.totalSessions}</p>
-            </div>
-            <div className="bg-white p-4 rounded-lg shadow-md">
-              <p className="text-lg font-semibold text-gray-700">Win Percentage</p>
-              <p className="text-3xl font-bold text-gray-800">{stats.winPercentage}%</p>
-            </div>
-            <div className="bg-white p-4 rounded-lg shadow-md">
-              <p className="text-lg font-semibold text-gray-700">Wins</p>
-              <p className="text-3xl font-bold text-green-600">{stats.wins}</p>
-            </div>
-            <div className="bg-white p-4 rounded-lg shadow-md">
-              <p className="text-lg font-semibold text-gray-700">Losses</p>
-              <p className="text-3xl font-bold text-red-600">{stats.losses}</p>
-            </div>
-          </div>
-        </div>
-      </div>
+      
+      <h1>Stats</h1>
+      <p>Total Sessions: {stats.totalSessions}</p>
+      <p>Wins: {stats.wins}</p>
+      <p>Losses: {stats.losses}</p>
+      <p>Win Percentage: {stats.winPercentage}%</p>
     </Layout>
   );
 };
