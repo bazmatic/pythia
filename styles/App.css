@@ -4,13 +4,14 @@
 
 @layer base {
   body {
-    @apply bg-gradient-to-br from-gray-100 to-gray-200 min-h-screen font-serif;
+    /* @apply bg-gradient-to-br from-gray-100 to-gray-200 min-h-screen font-serif; */
+    @apply bg-white min-h-screen font-serif
   }
 }
 
 @layer components {
   .page-container {
-    @apply max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg my-10;
+    @apply max-w-4xl mx-auto p-6 bg-white  rounded-lg my-10;
   }
 
   .page-title {

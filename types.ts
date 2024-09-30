@@ -40,6 +40,7 @@ export type Session = {
     targetImageIdx?: number;
     data?: any;
     status: SessionStatus;
+    created_at?: number;
 };
 
 export type SessionStats = {

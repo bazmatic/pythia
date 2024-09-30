@@ -12,7 +12,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <Link href="/" className="home-link">
           <span className="home-text">Home</span>
         </Link>
-        <Link href="/stats" className="home-link">History</Link>
+        <Link href="/stats" className="home-link">Stats</Link>
+        <Link href="/history" className="home-link">History</Link>
       </header>
       <main>
         {children}

@@ -168,7 +168,11 @@ export class SessionService implements ISessionService {
     }
 
     public async getSessions(): Promise<Session[]> {
-        return this.db.getAllItems<Session>(CollectionName.Sessions);
+        const result = await this.db.getAllItems<Session>(CollectionName.Sessions);
+
+        return result.sort((a, b) => {
+            return (a.created_at ?? 0) - (b.created_at ?? 0)
+        });
     }
 
     public async saveSession(session: Session): Promise<void> {

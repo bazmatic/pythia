@@ -68,7 +68,8 @@ export class SupabaseDbProvider implements IDbService {
         }
 
         return data.map((item) => ({
-            ...item.data
+            ...item.data,
+            created_at: item.created_at ? new Date(item.created_at).getTime() : undefined
         })) as T[];
     }
 
