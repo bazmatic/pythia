@@ -171,7 +171,7 @@ export class SessionService implements ISessionService {
         const result = await this.db.getAllItems<Session>(CollectionName.Sessions);
 
         return result.sort((a, b) => {
-            return (a.created_at ?? 0) - (b.created_at ?? 0)
+            return (b.created_at ?? 0) - (a.created_at ?? 0)
         });
     }
 
