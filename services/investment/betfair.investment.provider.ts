@@ -42,14 +42,6 @@ enum StrategyType {
 }
 
 // Extend Investment to BetfairInvestment so we can type investmentData
-type BetfairInvestment = Investment & {
-    _result?: any; // For testing
-    strategies?: {
-        chosen: boolean;
-        investmentData: Wager;
-        result?: number;
-    }[];
-};
 
 const STRATEGIES = [StrategyType.BackFav, StrategyType.LayFav];
 
