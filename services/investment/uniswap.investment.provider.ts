@@ -85,12 +85,12 @@ export class UniswapInvestmentProvider implements IInvestmentProvider {
         const uniswapProvider = new UniswapProvider(privateKey, rpcUrl); //, UNISWAP_ROUTER_ADDRESSES.Arbitrum, ChainId);
         const strategyIdx = session.data.strategyIdx;
         const strategy = STRATEGIES[strategyIdx];
-        const pool = await uniswapProvider.getUsdcWethPool();
+        //const pool = await uniswapProvider.getUsdcWethPool();
 
         let swapResult: SwapResult;
         if (strategy === StrategyType.BuyEth) {
             swapResult = await uniswapProvider.buyWeth("0.0005", 0.5);
-            console.log(pool);
+            //console.log(pool);
         } else if (strategy === StrategyType.SellEth) {
             swapResult = await uniswapProvider.sellWeth("0.0005", 0.5);
         } else {
@@ -139,15 +139,15 @@ export class UniswapInvestmentProvider implements IInvestmentProvider {
 
         // Get current price from the pool
         const currentPrice = await uniswapProvider.getWethPrice();
-        const executionPrice = parseFloat(executionReport.pricePerToken);
+        const executionPrice = executionReport.pricePerToken;
 
         let won = false;
         if (strategy === StrategyType.BuyEth) {
             // If we bought ETH, we win if the price went up
-            won = currentPrice > executionPrice;
+            won = currentPrice.gt(executionPrice);
         } else if (strategy === StrategyType.SellEth) {
             // If we sold ETH, we win if the price went down
-            won = currentPrice < executionPrice;
+            won = currentPrice.lt(executionPrice);
         }
 
         // Update session with results

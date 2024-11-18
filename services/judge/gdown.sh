@@ -1,7 +1,10 @@
 pip3 install gdown
 
-echo "Flux Baz"
-gdown 1KNonJPs4e0O83qT2z_ZdmX4TXsIIe9Bn
+# echo "Flux Baz"
+# gdown 1KNonJPs4e0O83qT2z_ZdmX4TXsIIe9Bn
+
+echo "Baz FLuz 2"
+gdown 1iABCPKALLvwjHWikT4oBm5ZLsz-GEZFC
 
 echo "scg-anatomy-female"
 gdown 1VLXVxNU9CEyhGTPED-xuXOVnUNvwVBvU
@@ -30,11 +33,6 @@ gdown 19OUXCjdctDzNakTwpSKlpMpWk_cIyYES
 echo "Petite body"
 gdown 1XYmO3lJ7dbyzbHur0DDlJK9axZF3cstc
 
-echo "Tags"
-gdown 1bQJFv82bYvvhTE0Sa5joB3HgmUEbpiGP
-mkdir ./ComfyUI/tags
-mv tags.txt ./ComfyUI/tags/
-
 echo "Female anatomy poses"
 gdown 1fSMWG6jm49vWFfgw6C3BH47JM6o-rAbl
 
@@ -47,11 +45,33 @@ gdown 1fbuJKjRjWmUo7OlgrTD0Rn7Ee5irmtuF
 echo "Realism"
 gdown 1SrJGokUSVtki_P18Y0-0ldTWkA4hMljf   
 
-echo "Reface video"
-gdown 1ZoHq74wslgATYBoNEuOWs00_fX0iGFAe
+#echo "Reface video"
+#gdown 1ZoHq74wslgATYBoNEuOWs00_fX0iGFAe
 
-echo "Fluxtastic"
-gdown 1gHLbqCrIsenoXK1FB1IhQhqaZBmoeS
+# echo "Fluxtastic"
+# gdown 1gHLbqCrIsenoXK1FB1IhQhqaZBmoeS
+
+
+echo "Nude woman front"
+gdown 1Ynk--RaUhnAIdug5XT-yMm-9PhmkZWyu
+
+echo "T woman"
+gdown 1sxx_JfhMejD-WG-kiaoX0o-uQuNFBCb2
+
+echo "Panty drop"
+gdown 1Sq-IzaxZkdcajRtWhqsL-Q3N00j2mpY4
+
+echo "Perfect skin"
+gdown 1siXxG9kOolzDgg-05-hU6MvrsBp4p8gY
+
+echo "Detailer"
+gdown 1mqsVKqirKPd3S3Cvqd2tEdV7NM8Pr4FX
+
+
+echo "Tags"
+gdown 1bQJFv82bYvvhTE0Sa5joB3HgmUEbpiGP
+mkdir ./ComfyUI/tags
+mv tags.txt ./ComfyUI/tags/
 
 mv *.safetensors ./ComfyUI/models/loras
 
