@@ -103,8 +103,25 @@ export class SessionService implements ISessionService {
         if (session.status !== SessionStatus.Investing) {
             throw new Error(`Session not in ${SessionStatus.Investing} state`);
         }
+        //Set status to investing in progress
+        await this.saveSession({
+            ...session,
+            status: SessionStatus.InvestingInProgress
+        });
         // Execute the investment and update the session status
-        return this.investmentService.executeInvestment(sessionId);
+        try {
+            await this.investmentService.executeInvestment(sessionId);
+            await this.saveSession({
+                ...session,
+                status: SessionStatus.Invested
+            });
+        } catch (error) {
+            await this.saveSession({
+                ...session,
+                status: SessionStatus.Investing
+            });
+            console.error(error);
+        }
     }
 
     public async resolveInvestment(sessionId: string): Promise<void> {
@@ -152,6 +169,8 @@ export class SessionService implements ISessionService {
                 break;
             case SessionStatus.Investing:
                 await this.executeInvestment(sessionId);
+                break;
+            case SessionStatus.InvestingInProgress:
                 break;
             case SessionStatus.Invested:
                 await this.resolveInvestment(sessionId);

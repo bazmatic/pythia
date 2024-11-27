@@ -8,28 +8,11 @@ import {
 } from "@/types";
 import { inject, injectable, LazyServiceIdentifier } from "inversify";
 import { SwapResult, UniswapProvider } from "../chain/uniswap.provider";
-import { ChainId, Token } from "@uniswap/sdk-core";
 
 enum StrategyType {
     BuyEth = "BuyEth",
     SellEth = "SellEth"
 }
-
-// export const USDC_TOKEN_ARBITRUM = new Token(
-//   ChainId.ARBITRUM_ONE,
-//   '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-//   6,
-//   'USDC',
-//   'USD Coin'
-// )
-
-// export const WETH_TOKEN_ARBITRUM = new Token(
-//   ChainId.ARBITRUM_ONE,
-//   '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
-//   18,
-//   'WETH',
-//   'Wrapped Ether'
-// )
 
 const STRATEGIES = [StrategyType.BuyEth, StrategyType.SellEth];
 
@@ -74,6 +57,7 @@ export class UniswapInvestmentProvider implements IInvestmentProvider {
         if (!session) {
             throw new Error("Session not found");
         }
+
         const privateKey = process.env.UNISWAP_PRIVATE_KEY;
         if (!privateKey) {
             throw new Error("UNISWAP_PRIVATE_KEY is not set");
@@ -89,10 +73,9 @@ export class UniswapInvestmentProvider implements IInvestmentProvider {
 
         let swapResult: SwapResult;
         if (strategy === StrategyType.BuyEth) {
-            swapResult = await uniswapProvider.buyWeth("0.0005", 0.5);
-            //console.log(pool);
+            swapResult = await uniswapProvider.buyWeth(1.0, 0.5);
         } else if (strategy === StrategyType.SellEth) {
-            swapResult = await uniswapProvider.sellWeth("0.0005", 0.5);
+            swapResult = await uniswapProvider.sellWeth(0.0002, 0.5);
         } else {
             throw new Error(`Invalid strategy: ${strategy}`);
         }
@@ -100,7 +83,7 @@ export class UniswapInvestmentProvider implements IInvestmentProvider {
             console.warn("Failed to place bet");
             return;
         }
-        session.status = SessionStatus.Invested;
+        //session.status = SessionStatus.Invested;
         session.data.executionReport = swapResult;
         await this.db.saveItem<Session>(CollectionName.Sessions, session);
     }

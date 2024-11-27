@@ -27,6 +27,7 @@ export enum SessionStatus {
     Unjudged = "unjudged",
     Judged = "judged",
     Investing = "investing",
+    InvestingInProgress = "investing_in_progress",
     Invested = "invested",
     InvestmentResolved = "resolved",
     ShownFeedback = "shown"

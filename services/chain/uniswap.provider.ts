@@ -5,7 +5,7 @@ import { FACTORY_ADDRESS } from '@uniswap/v3-sdk';
 import IUniswapV3Pool from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json';
 import ISwapRouter from '@uniswap/v3-periphery/artifacts/contracts/interfaces/ISwapRouter.sol/ISwapRouter.json';
 // import Quoter from '@uniswap/v3-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json'
-import Quoter from '@uniswap/v3-periphery/artifacts/contracts/lens/QuoterV2.sol/QuoterV2.json'
+import Quoter from '@uniswap/v3-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json'
 import { BigUnit, BigUnitFactory } from 'bigunit';
 
 
@@ -18,35 +18,18 @@ type UniswapConfig = {
   factoryAddress: string;
 }
 
+
 const WethFactory = new BigUnitFactory(18, "WETH");
 const UsdcFactory = new BigUnitFactory(6, "USDC");
 
 const Configs: Record<number, UniswapConfig> = {
-  [ChainId.ARBITRUM_ONE]: {
-    chainId: ChainId.ARBITRUM_ONE,
-    routerAddress: "0xE592427A0AEce92De3Edee1F18E0157C05861564",
-    quoterContractAddress: "0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6",
-    wethToken: new Token(
-      ChainId.ARBITRUM_ONE,
-      "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
-      18,
-      'WETH'
-    ),
-    usdcToken: new Token(
-      ChainId.ARBITRUM_ONE,
-      "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
-      6,
-      'USDC'
-    ),
-    factoryAddress: "0x1F98431c8aD98523631AE4a59f267346ea31F984",
-  },
-  [ChainId.SEPOLIA ]: {
+  [ChainId.SEPOLIA]: {
     chainId: ChainId.SEPOLIA,
     routerAddress: "0xE592427A0AEce92De3Edee1F18E0157C05861564",
     quoterContractAddress: "0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6",
     wethToken: new Token(
       ChainId.SEPOLIA,
-      "0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14",
+      "0xfff9976782d46cc05630d1f6ebab18b2324d6b14",
       18,
       'WETH'
     ),
@@ -57,6 +40,24 @@ const Configs: Record<number, UniswapConfig> = {
       'USDC'
     ),
     factoryAddress: "0x0227628f3F023bb0B980b67D528571c95c6DaC1c",
+  },
+  [ChainId.MAINNET]: {
+    chainId: ChainId.MAINNET,
+    factoryAddress: "0x1F98431c8aD98523631AE4a59f267346ea31F984",
+    quoterContractAddress: "0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6",
+    routerAddress: "0xE592427A0AEce92De3Edee1F18E0157C05861564",
+    wethToken: new Token(
+      ChainId.MAINNET,
+      "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+      18,
+      'WETH'
+    ),
+    usdcToken: new Token(
+      ChainId.MAINNET,
+      "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      6,
+      'USDC'
+    ),
   }
 }
 
@@ -68,7 +69,7 @@ export interface SwapResult {
 }
 
 export class UniswapProvider {
-  private provider: ethers.JsonRpcProvider;
+  private provider: ethers.providers.JsonRpcProvider;
   private wallet: ethers.Wallet;
   private router: ethers.Contract;
   private chainId: number;
@@ -81,12 +82,12 @@ export class UniswapProvider {
     privateKey: string,
     rpcUrl: string,
   ) {
-    this.chainId = ChainId.SEPOLIA;
+    this.chainId = ChainId.MAINNET;
     this.uniswapRouterAddress = Configs[this.chainId].routerAddress;
     const quoterContractAddress = Configs[this.chainId].quoterContractAddress;
     this.wethToken = Configs[this.chainId].wethToken;
     this.usdcToken = Configs[this.chainId].usdcToken;
-    this.provider = new ethers.JsonRpcProvider(rpcUrl);
+    this.provider = new ethers.providers.JsonRpcProvider(rpcUrl);
     this.wallet = new ethers.Wallet(privateKey, this.provider);
     
     this.router = new ethers.Contract(
@@ -94,6 +95,8 @@ export class UniswapProvider {
       ISwapRouter.abi,
       this.wallet
     );
+
+    console.log(`Quoter contract address: ${quoterContractAddress}`);
 
     this.quoterContract = new ethers.Contract(
       quoterContractAddress,
@@ -104,31 +107,23 @@ export class UniswapProvider {
 
   async getWethPrice(): Promise<BigUnit> {
     try {
-      // const poolAddress = computePoolAddress({
-      //   factoryAddress: Configs[this.chainId].factoryAddress,
-      //   tokenA: this.wethToken,
-      //   tokenB: this.usdcToken,
-      //   fee: 3000 // 0.3% fee tier
-      // });
+      const params = {
+        tokenIn: this.wethToken.address,
+        tokenOut: this.usdcToken.address,
+        fee: 3000,
+        amountIn: WethFactory.fromNumber(0.001).toValueString(),
+        sqrtPriceLimitX96: 0
+      };
 
-      // const poolContract = new ethers.Contract(
-      //   poolAddress,
-      //   IUniswapV3Pool.abi,
-      //   this.provider
-      // );
-
-      // Get a quote for 0.01 WETH
-      const quotedAmountOut = await this.quoterContract.quoteExactInputSingle(
-        this.wethToken.address,
-        this.usdcToken.address,
-        3000,
-        ethers.parseUnits("0.001", 18),
-        0
+      const quotedAmountOut = await this.quoterContract.callStatic.quoteExactInputSingle(
+        params.tokenIn,
+        params.tokenOut,
+        params.fee,
+        params.amountIn,
+        params.sqrtPriceLimitX96
       );
 
-      return UsdcFactory.fromBigInt(BigInt(quotedAmountOut));
-
-
+      return UsdcFactory.fromBigInt(BigInt(quotedAmountOut.toString()));
     } catch (error) {
       console.error('Failed to get WETH price:', error);
       throw new Error(`Failed to get WETH price: ${error instanceof Error ? error.message : error}`);
@@ -138,58 +133,67 @@ export class UniswapProvider {
   async swap(
     tokenIn: Token,
     tokenOut: Token,
-    amountIn: string,
+    amountIn: number,
     slippageTolerance: number = 0.5
   ): Promise<SwapResult> {
     try {
-      // Get pool instance
-      // const poolAddress = computePoolAddress({
-      //   factoryAddress: Configs[this.chainId].factoryAddress,
-      //   tokenA: tokenIn,
-      //   tokenB: tokenOut,
-      //   fee: 3000
-      // });
+      const buAmountIn = BigUnit.fromNumber(amountIn, tokenIn.decimals);
+      
+      // Get pool constants first and handle potential errors
+      let poolConstants;
+      try {
+        poolConstants = await this.getPoolConstants();
+      } catch (error) {
+        console.error('Failed to get pool constants:', error);
+        throw new Error('Pool may not exist or is not accessible');
+      }
 
-      // const poolContract = new ethers.Contract(
-      //   poolAddress,
-      //   IUniswapV3Pool.abi,
-      //   this.provider
-      // );
+      // Log more details about the quote attempt
+      console.log(`
+        Attempting quote with:
+        tokenIn: ${tokenIn.address} (${tokenIn.symbol})
+        tokenOut: ${tokenOut.address} (${tokenOut.symbol})
+        fee: ${poolConstants.fee}
+        amountIn: ${buAmountIn.toValueString()}
+        decimalsIn: ${tokenIn.decimals}
+        decimalsOut: ${tokenOut.decimals}
+      `);
 
-      // Convert amount to proper decimals
-      const buAmountIn = BigUnit.fromDecimalString(amountIn, tokenIn.decimals);
+      // Get quote using QuoterV3
+      const quotedAmountOut = await this.quoterContract.callStatic.quoteExactInputSingle(
+        tokenIn.address,
+        tokenOut.address,
+        poolConstants.fee,
+        buAmountIn.toValueString(),
+        0
+      );
+  
+      console.log(`Raw quoted amount out: ${quotedAmountOut.toString()}`);
 
-      const poolConstants = await this.getPoolConstants();
+      const buAmountOut = BigUnit.fromValueString(
+        quotedAmountOut.toString(),
+        tokenOut.decimals
+      );
+      const buAmountOutMin = buAmountOut.mul(1 - slippageTolerance / 100);
 
-      // Prepare transaction parameters with slippage tolerance
-      const params = {
+      // Prepare swap parameters
+      const swapParams = {
         tokenIn: tokenIn.address,
         tokenOut: tokenOut.address,
         fee: poolConstants.fee,
+        recipient: this.wallet.address,
+        deadline: Math.floor(Date.now() / 1000) + 60 * 20,
         amountIn: buAmountIn.toBigInt(),
-        //amountOutMinimum: buAmountOut.mul(1 - slippageTolerance / 100).toBigInt(), // Apply slippage tolerance
-        sqrtPriceLimitX96: 0 // No price limit
+        amountOutMinimum: buAmountOutMin.toBigInt(),
+        sqrtPriceLimitX96: 0
       };
 
-      // Get quote using the quoter contract
-      const quotedAmountOut = await this.quoterContract.quoteExactInputSingle.staticCall(params);
-      //   tokenIn.address,
-      //   tokenOut.address,
-      //   poolConstants.fee.toString(),
-      //   buAmountIn.toValueString(),
-      //   0
-      // );
-
-      // The result is already decoded when using callStatic
-      const buAmountOut = BigUnit.fromValueString(quotedAmountOut.toString(), tokenOut.decimals);
-
-
-
-      // Execute the swap
-      const tx = await this.router.exactInputSingle(params);
+      console.log(`Swapping ${amountIn} ${tokenIn.symbol} to ${tokenOut.symbol}`);
+      const tx = await this.router.exactInputSingle(swapParams);
+      console.log(`Transaction hash: ${tx.hash}`);
       const receipt = await tx.wait();
 
-      // Calculate price per token
+      console.log(`Transaction receipt: ${receipt}`);
       const pricePerToken = buAmountIn.div(buAmountOut).asPrecision(buAmountIn.precision);
 
       return {
@@ -209,37 +213,58 @@ export class UniswapProvider {
     token1: string
     fee: number
   }> {
-    const currentPoolAddress = computePoolAddress({
+    // First compute the pool address
+    const poolAddress = computePoolAddress({
       factoryAddress: Configs[this.chainId].factoryAddress,
       tokenA: this.usdcToken,
       tokenB: this.wethToken,
       fee: 3000,
-    })
-  
+    });
+
+    console.log(`Computed pool address: ${poolAddress}`);
+
+    // Verify the pool exists by checking its code
+    const code = await this.provider.getCode(poolAddress);
+    if (code === '0x') {
+      throw new Error(`Pool does not exist at ${poolAddress}`);
+    }
+
     const poolContract = new ethers.Contract(
-      currentPoolAddress,
+      poolAddress,
       IUniswapV3Pool.abi,
       this.provider
-    )
-    const [token0, token1, fee] = await Promise.all([
-      poolContract.token0(),
-      poolContract.token1(),
-      poolContract.fee(),
-    ])
+    );
 
-    return {
-      token0,
-      token1,
-      fee,
+    try {
+      const [token0, token1, fee] = await Promise.all([
+        poolContract.token0(),
+        poolContract.token1(),
+        poolContract.fee(),
+      ]);
+
+      console.log(`Pool constants:
+        token0: ${token0}
+        token1: ${token1}
+        fee: ${fee}
+      `);
+
+      return {
+        token0,
+        token1,
+        fee,
+      };
+    } catch (error) {
+      console.error('Failed to fetch pool constants:', error);
+      throw new Error('Failed to fetch pool constants');
     }
   }
   
 
-  async buyWeth(amount: string, slippageTolerance: number = 0.5): Promise<SwapResult> {  
+  async buyWeth(amount: number, slippageTolerance: number = 0.5): Promise<SwapResult> {  
     return this.swap(this.usdcToken, this.wethToken, amount, slippageTolerance);
   }
 
-  async sellWeth(amount: string, slippageTolerance: number = 0.5): Promise<SwapResult> {
+  async sellWeth(amount: number, slippageTolerance: number = 0.5): Promise<SwapResult> {
     return this.swap(this.wethToken, this.usdcToken, amount, slippageTolerance);
   }
 }

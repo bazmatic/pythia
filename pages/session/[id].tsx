@@ -310,6 +310,7 @@ const SessionPage: React.FC<SessionPageProps> = ({
             case SessionStatus.Unjudged:
             case SessionStatus.Judged:
             case SessionStatus.Investing:
+            case SessionStatus.InvestingInProgress:
             case SessionStatus.Invested:
                 return renderActiveSession();
             case SessionStatus.InvestmentResolved:
