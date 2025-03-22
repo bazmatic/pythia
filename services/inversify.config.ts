@@ -6,7 +6,7 @@ import { SessionService } from "@/services/session.service";
 import { BetfairInvestmentProvider } from "./investment/betfair.investment.provider";
 import { IDbService, IInvestmentProvider, IJudgeProvider, INVERSIFY_TOKENS, ISessionService } from "@/types";
 import { ClaudeJudgeProvider } from "./judge/providers/claude.judge.provider";
-import { SupabaseDbProvider } from "./db/supabase.db.provider";
+import { PostgresDbProvider } from "./db/postgres.db.provider";
 import { StatsService } from "./stats.service";
 // import getDecorators from "inversify-inject-decorators";
 
@@ -14,12 +14,11 @@ const container = new Container();
 
 container.bind<ImageService>(INVERSIFY_TOKENS.Image).to(ImageService).inSingletonScope();
 container.bind<JudgeService>(INVERSIFY_TOKENS.Judge).to(JudgeService).inSingletonScope();
-container.bind<IInvestmentProvider>(INVERSIFY_TOKENS.InvestmentProvider).to(BetfairInvestmentProvider).inSingletonScope();
 container.bind<InvestmentService>(INVERSIFY_TOKENS.Investment).to(InvestmentService).inSingletonScope();
-container.bind<ISessionService>(INVERSIFY_TOKENS.Session).to(SessionService).inSingletonScope();
-
+container.bind<SessionService>(INVERSIFY_TOKENS.Session).to(SessionService).inSingletonScope();
+container.bind<IInvestmentProvider>(INVERSIFY_TOKENS.InvestmentProvider).to(BetfairInvestmentProvider).inSingletonScope();
 container.bind<IJudgeProvider>(INVERSIFY_TOKENS.JudgementProvider).to(ClaudeJudgeProvider).inSingletonScope();
-container.bind<IDbService>(INVERSIFY_TOKENS.Database).to(SupabaseDbProvider).inSingletonScope();
+container.bind<IDbService>(INVERSIFY_TOKENS.Database).to(PostgresDbProvider).inSingletonScope();
 container.bind<StatsService>(INVERSIFY_TOKENS.Stats).to(StatsService).inSingletonScope();
 //const { lazyInject } = getDecorators(container);
 
