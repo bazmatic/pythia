@@ -1,13 +1,12 @@
-import { ethers } from 'ethers';
-import { Token, TradeType, CurrencyAmount, Percent, ChainId } from '@uniswap/sdk-core';
-import { Pool, Route, SwapQuoter, SwapRouter, Trade, computePoolAddress } from '@uniswap/v3-sdk';
-import { FACTORY_ADDRESS } from '@uniswap/v3-sdk';
+import { ChainId, Token } from '@uniswap/sdk-core';
 import IUniswapV3Pool from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json';
 import ISwapRouter from '@uniswap/v3-periphery/artifacts/contracts/interfaces/ISwapRouter.sol/ISwapRouter.json';
-// import Quoter from '@uniswap/v3-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json'
-import Quoter from '@uniswap/v3-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json'
+import { computePoolAddress } from '@uniswap/v3-sdk';
+import { ethers } from 'ethers';
+import Quoter from '@uniswap/v3-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json';
 import { BigUnit, BigUnitFactory } from 'bigunit';
 
+const SELECTED_CHAIN_ID = ChainId.BASE;
 
 type UniswapConfig = {
   chainId: number;
@@ -41,6 +40,24 @@ const Configs: Record<number, UniswapConfig> = {
     ),
     factoryAddress: "0x0227628f3F023bb0B980b67D528571c95c6DaC1c",
   },
+  [ChainId.ARBITRUM_ONE]: {
+    chainId: ChainId.ARBITRUM_ONE,
+    factoryAddress: "0x1F98431c8aD98523631AE4a59f267346ea31F984",
+    routerAddress: "0xE592427A0AEce92De3Edee1F18E0157C05861564",
+    quoterContractAddress: "0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6",
+    wethToken: new Token(
+      ChainId.ARBITRUM_ONE,
+      "0x82aF49447D8a07e3bd95BD0d56f352415771fAeA",
+      18,
+      'WETH'
+    ),
+    usdcToken: new Token(
+      ChainId.ARBITRUM_ONE,
+      "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8",
+      6,
+      'USDC'
+    ),
+  },
   [ChainId.MAINNET]: {
     chainId: ChainId.MAINNET,
     factoryAddress: "0x1F98431c8aD98523631AE4a59f267346ea31F984",
@@ -55,6 +72,24 @@ const Configs: Record<number, UniswapConfig> = {
     usdcToken: new Token(
       ChainId.MAINNET,
       "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      6,
+      'USDC'
+    ),
+  },
+  [ChainId.BASE]: {
+    chainId: ChainId.BASE,
+    factoryAddress: "0x33128a8fC17869897dcE68Ed026d694621f6FDfD",
+    routerAddress: "0x2626664c2603336E57B271c5C0b26F421741e481",
+    quoterContractAddress: "0x3d4e44Eb1374240CE5F1B871ab261CD16335B76a",
+    wethToken: new Token(
+      ChainId.BASE,
+      "0x4200000000000000000000000000000000000006",
+      18,
+      'WETH'
+    ),
+    usdcToken: new Token(
+      ChainId.BASE,
+      "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
       6,
       'USDC'
     ),
@@ -82,7 +117,7 @@ export class UniswapProvider {
     privateKey: string,
     rpcUrl: string,
   ) {
-    this.chainId = ChainId.MAINNET;
+    this.chainId = SELECTED_CHAIN_ID;
     this.uniswapRouterAddress = Configs[this.chainId].routerAddress;
     const quoterContractAddress = Configs[this.chainId].quoterContractAddress;
     this.wethToken = Configs[this.chainId].wethToken;
