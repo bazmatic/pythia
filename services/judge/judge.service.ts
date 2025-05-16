@@ -9,7 +9,7 @@ export class JudgeService {
         private judgeProvider: IJudgeProvider 
     )
     {
-        this.judgeCount = process.env.JUDGE_COUNT ? parseInt(process.env.JUDGE_COUNT) : 1;
+        this.judgeCount = process.env.JUDGE_COUNT ? parseInt(process.env.JUDGE_COUNT) : 3;
     }
 
     // Given a list of image paths, return the index of the image that best matches the impression text
@@ -40,7 +40,7 @@ export class JudgeService {
                 acc[val]++;
                 return acc;
             },
-            [0, 0, 0]
+            Array.from({ length: this.judgeCount }, () => 0)
         );
         return frequencies.indexOf(Math.max(...frequencies));
     }

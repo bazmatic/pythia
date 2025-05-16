@@ -8,6 +8,7 @@ import { getService } from "@/services/container";
 import { INVERSIFY_TOKENS, Session, SessionStatus } from "@/types";
 import Head from "next/head";
 import Layout from "@/components/Layout";
+import ImpressionEntry from "@/components/ImpressionEntry";
 
 interface SessionPageProps {
     initialSession: Session | null;
@@ -185,19 +186,11 @@ const SessionPage: React.FC<SessionPageProps> = ({
     };
 
     const renderPendingSession = () => (
-        <>
-            <div className="result-container">
-                <Textarea
-                    value={impressionText}
-                    onChange={e => setImpressionText(e.target.value)}
-                    placeholder="Enter your impression of the image represented by the reference above"
-                    className="input-textarea mb-4"
-                />
-            </div>
-            <Button className="pythia-button w-full" onClick={activateSession}>
-                Submit
-            </Button>
-        </>
+        <ImpressionEntry
+            impressionText={impressionText}
+            onImpressionChange={setImpressionText}
+            onSubmit={activateSession}
+        />
     );
 
     const renderActiveSession = () => (
