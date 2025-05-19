@@ -144,31 +144,35 @@ export class BetfairInvestmentProvider implements IInvestmentProvider {
         };
     }
 
-    public async invest(sessionId: string): Promise<void> {
+    // public async invest(sessionId: string): Promise<void> {
+    //     const session = await this.db.getItem<Session>(CollectionName.Sessions, sessionId);
+    //     if (!session?.data) {
+    //         throw new Error("Session not found");
+    //     }
+        
+    //     const strategyIdx = session.chosenImageIdx;
+
+    //     if (strategyIdx === undefined || strategyIdx === null || strategyIdx < 0 || strategyIdx >= STRATEGIES.length) {
+    //         throw new Error(`Invalid strategy index: ${strategyIdx}`);
+    //     }
+
+    //     console.log("Investing in strategy:", STRATEGIES[strategyIdx]);
+
+
+    //     session.data.strategyIdx = strategyIdx;
+
+    // }
+
+    public async executeInvestment(sessionId: string): Promise<any> {
         const session = await this.db.getItem<Session>(CollectionName.Sessions, sessionId);
         if (!session) {
             throw new Error("Session not found");
+        }
+        if (!session.chosenImageIdx) {
+            throw new Error("No investment strategy chosen");
         }
         const strategyIdx = session.chosenImageIdx;
 
-        if (strategyIdx === undefined || strategyIdx === null || strategyIdx < 0 || strategyIdx >= STRATEGIES.length) {
-            throw new Error(`Invalid strategy index: ${strategyIdx}`);
-        }
-
-        console.log("Investing in strategy:", STRATEGIES[strategyIdx]);
-
-
-        session.data.strategyIdx = strategyIdx;
-        session.status = SessionStatus.Investing;
-        await this.db.saveItem<Session>(CollectionName.Sessions, session);
-    }
-
-    public async executeInvestment(sessionId: string): Promise<void> {
-        const session = await this.db.getItem<Session>(CollectionName.Sessions, sessionId);
-        if (!session) {
-            throw new Error("Session not found");
-        }
-        const strategyIdx = session.data.strategyIdx;
         const market = await this.getNextRace();
         const options = await this.getOptions(market.marketId);
         if (strategyIdx < 0 || strategyIdx >= STRATEGIES.length) {
@@ -187,18 +191,20 @@ export class BetfairInvestmentProvider implements IInvestmentProvider {
             return;
         }
         session.status = SessionStatus.Invested;
-        session.data.customerRef = placeExecutionReport.customerRef;
-        session.data.marketId = market.marketId;
-        session.data.executionReport = placeExecutionReport;
-        await this.db.saveItem<Session>(CollectionName.Sessions, session);
+        return {
+            customerRef: placeExecutionReport.customerRef,
+            marketId: placeExecutionReport.marketId,
+            status: placeExecutionReport.status,
+            instructionReports: placeExecutionReport.instructionReports
+        };
     }
 
-    public async resolveInvestment(sessionId: string): Promise<void> {
+    public async resolveInvestment(sessionId: string): Promise<number | undefined> {
         const session = await this.db.getItem<Session>(CollectionName.Sessions, sessionId);
         if (!session) {
             throw new Error("Session not found");
         }
-        const investment = session.data as PlaceExecutionReport;
+        const investment = session.executionReport as PlaceExecutionReport;
         if (!investment?.customerRef) {
             throw new Error("No customer reference in investment data");
         }
@@ -236,18 +242,10 @@ export class BetfairInvestmentProvider implements IInvestmentProvider {
         const won = clearedOrder.betOutcome === "WON";
         console.log(won ? "Won!" : "Lost.");
 
-        // if (won) {           
-        //     session.targetImageIdx = session.chosenImageIdx;
-        //     console.log("Won. Setting target to chosen", session.chosenImageIdx);
-        // } else {      
-        //     session.targetImageIdx = (session.chosenImageIdx + 1) % 2; // 0 -> 1, 1 -> 0
-        //     console.log("Lost. Setting target to other:", session.targetImageIdx)
-        // }
 
         // If we won, then update the session 'targetImageIdx' to the chosen image index, otherwise set it to the other image index
-        session.targetImageIdx = won ? session.chosenImageIdx : (session.chosenImageIdx + 1) % 2;
-        session.status = SessionStatus.InvestmentResolved;
-        await this.db.saveItem<Session>(CollectionName.Sessions, session);
+        const targetImageIdx = won ? session.chosenImageIdx : (session.chosenImageIdx + 1) % 2;
+        return targetImageIdx;
     }
 }
 

@@ -29,6 +29,7 @@ export enum SessionStatus {
     Investing = "investing",
     InvestingInProgress = "investing_in_progress",
     Invested = "invested",
+    InvestmentResolving = "investment_resolving",
     InvestmentResolved = "resolved",
     ShownFeedback = "shown"
 }
@@ -39,10 +40,15 @@ export type Session = {
     impressionText?: string;
     chosenImageIdx?: number;
     targetImageIdx?: number;
-    data?: any;
+    executionReport?: any;
     status: SessionStatus;
     created_at?: number;
 };
+
+export type SessionData = {
+    investmentStrategyIdx?: number;
+    executionReport?: any;
+}
 
 export type SessionStats = {
     totalSessions: number;
@@ -88,9 +94,9 @@ export interface IJudgeProvider {
 }
 
 export interface IInvestmentProvider {
-    invest(sessionId: string): Promise<void>;
-    executeInvestment(sessionId: string): Promise<void>;
-    resolveInvestment(sessionId: string): Promise<void>;
+    //invest(sessionId: string): Promise<number>;
+    executeInvestment(sessionId: string): Promise<any | undefined>;
+    resolveInvestment(sessionId: string): Promise<number | undefined>;
 }
 
 export interface Identifiable {
@@ -99,8 +105,7 @@ export interface Identifiable {
 
 export enum CollectionName {
     Sessions = "sessions",
-    Investments = "investments",
-    Flags = "flags"
+    Investments = "investments"
 }
 
 export interface IDbService {
@@ -115,7 +120,7 @@ export interface IDbService {
     createSession(): Promise<Session>;
     activateSession(sessionId: string, impressionText: string): Promise<void>;
     judgeSession(sessionId: string): Promise<void>;
-    invest(sessionId: string): Promise<void>;
+    //invest(sessionId: string): Promise<void>;
     executeInvestment(sessionId: string): Promise<void>;
     resolveInvestment(sessionId: string): Promise<void>;
     shownFeedback(sessionId: string): Promise<void>;

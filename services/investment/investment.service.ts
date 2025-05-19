@@ -12,17 +12,18 @@ export class InvestmentService  {
     ) {
     }
 
-    public async invest(
-        sessionId: string,
-    ): Promise<void> {
-        return this.investmentProvider.invest(sessionId);
-    }
+    // public async invest(
+    //     sessionId: string,
+    // ): Promise<number> {
+    //     return this.investmentProvider.invest(sessionId);
+    // }
 
-    public async resolveInvestment(sessionId: string): Promise<void> {
+    public async resolveInvestment(sessionId: string): Promise<number | undefined> {
         return this.investmentProvider.resolveInvestment(sessionId);
     }
 
     public async executeInvestment(sessionId: string): Promise<void> {
+        // Set the status to InvestingInProgress
         await this.investmentProvider.executeInvestment(sessionId);
     }
 }

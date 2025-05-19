@@ -18,7 +18,7 @@ container.bind<JudgeService>(INVERSIFY_TOKENS.Judge).to(JudgeService).inSingleto
 container.bind<IInvestmentProvider>(INVERSIFY_TOKENS.InvestmentProvider).to(UniswapInvestmentProvider).inSingletonScope();
 container.bind<InvestmentService>(INVERSIFY_TOKENS.Investment).to(InvestmentService).inSingletonScope();
 container.bind<SessionService>(INVERSIFY_TOKENS.Session).to(SessionService).inSingletonScope();
-container.bind<IInvestmentProvider>(INVERSIFY_TOKENS.InvestmentProvider).to(BetfairInvestmentProvider).inSingletonScope();
+//container.bind<IInvestmentProvider>(INVERSIFY_TOKENS.InvestmentProvider).to(BetfairInvestmentProvider).inSingletonScope();
 container.bind<IJudgeProvider>(INVERSIFY_TOKENS.JudgementProvider).to(ClaudeJudgeProvider).inSingletonScope();
 container.bind<IDbService>(INVERSIFY_TOKENS.Database).to(PostgresDbProvider).inSingletonScope();
 container.bind<StatsService>(INVERSIFY_TOKENS.Stats).to(StatsService).inSingletonScope();

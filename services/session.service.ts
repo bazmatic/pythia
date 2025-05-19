@@ -32,7 +32,6 @@ export class SessionService implements ISessionService {
         const newSession: Session = {
             id: sessionId,
             images,
-            data: {},
             status: SessionStatus.New
         };
 
@@ -89,19 +88,34 @@ export class SessionService implements ISessionService {
         });
     }
 
-    public async invest(sessionId: string): Promise<void> {
-        const session = await this.getSession(sessionId);
-        if (session.status !== SessionStatus.Judged) {
-            throw new Error(`Session not in ${SessionStatus.Judged} state`);
-        }
-        // Apply the chosen image index to the investment service, and wait for resolution
-        return this.investmentService.invest(sessionId);
-    }
+    // public async invest(sessionId: string): Promise<void> {
+    //     const session = await this.getSession(sessionId);
+    //     if (session.status !== SessionStatus.Judged) {
+    //         console.warn(`Session not in ${SessionStatus.Judged} state`);
+    //         return;
+    //     }
+    //     // Apply the chosen image index to the investment service, and wait for resolution
+    //     // Set status to DecidingInvestment
+    //     await this.saveSession({
+    //         ...session,
+    //         status: SessionStatus.DecidingInvestment
+    //     });
+    //     const investmentStrategyIdx = await this.investmentService.invest(sessionId);
+    //     session.status = SessionStatus.Investing;
+    //     await this.saveSession({
+    //         ...session,
+    //         data: {
+    //             investmentStrategyIdx
+    //         }
+    //     });
+
+    // }
 
     public async executeInvestment(sessionId: string): Promise<void> {
         const session = await this.getSession(sessionId);
         if (session.status !== SessionStatus.Investing) {
-            throw new Error(`Session not in ${SessionStatus.Investing} state`);
+            console.warn(`Session not in ${SessionStatus.Investing} state. State: ${session.status}`);
+            return;
         }
         //Set status to investing in progress
         await this.saveSession({
@@ -110,9 +124,11 @@ export class SessionService implements ISessionService {
         });
         // Execute the investment and update the session status
         try {
-            await this.investmentService.executeInvestment(sessionId);
+            console.log("Executing investment...");
+            const executionReport = await this.investmentService.executeInvestment(sessionId);
             await this.saveSession({
                 ...session,
+                executionReport,
                 status: SessionStatus.Invested
             });
         } catch (error) {
@@ -127,10 +143,21 @@ export class SessionService implements ISessionService {
     public async resolveInvestment(sessionId: string): Promise<void> {
         const session = await this.getSession(sessionId);
         if (session.status !== SessionStatus.Invested) {
-            throw new Error(`Session not in ${SessionStatus.Invested} state`);
+            console.warn(`Session not in ${SessionStatus.Invested} state. State: ${session.status}`);
+            return;
         }
         // Resolve the investment and update the session status
-        return this.investmentService.resolveInvestment(sessionId);
+        const targetImageIdx = await this.investmentService.resolveInvestment(sessionId);
+        if (targetImageIdx === undefined) {
+            console.warn(`Investment not resolved for session ${sessionId}`);
+            return;
+        }
+        //const won = targetImageIdx === session.chosenImageIdx;
+        await this.saveSession({
+            ...session,
+            status: SessionStatus.InvestmentResolved,
+            targetImageIdx,
+        });
     }
 
     public async shownFeedback(sessionId: string): Promise<void> {
@@ -165,9 +192,6 @@ export class SessionService implements ISessionService {
                 await this.judgeSession(sessionId);
                 break;
             case SessionStatus.Judged:
-                await this.invest(sessionId);
-                break;
-            case SessionStatus.Investing:
                 await this.executeInvestment(sessionId);
                 break;
             case SessionStatus.InvestingInProgress:

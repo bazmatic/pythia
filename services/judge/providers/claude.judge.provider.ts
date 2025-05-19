@@ -83,7 +83,7 @@ export class ClaudeJudgeProvider implements IJudgeProvider {
         const response = await this.client.messages.create({
             max_tokens: 1024,
             messages,
-            model: "claude-3-opus-20240229"
+            model: "claude-3-5-sonnet-20240620"
         });
 
         const responseText = this.extractResponseText(response);
