@@ -75,7 +75,7 @@ const SessionPage: React.FC<SessionPageProps> = ({
 
         const startPolling = () => {
             if (session && session.status !== SessionStatus.ShownFeedback && session.status !== SessionStatus.New) {
-                id = setInterval(pollSession, 5000); // Poll every 5 seconds
+                id = setInterval(pollSession, 20000); // Poll every 20 seconds
                 setIntervalId(id);
             }
         };

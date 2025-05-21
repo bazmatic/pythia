@@ -24,7 +24,8 @@ const UNISWAP_V2_PAIR_ABI = [
 // Standard ERC20 ABI for approve and allowance
 const ERC20_ABI = [
   "function approve(address spender, uint256 amount) external returns (bool)",
-  "function allowance(address owner, address spender) external view returns (uint256)"
+  "function allowance(address owner, address spender) external view returns (uint256)",
+  "function balanceOf(address account) external view returns (uint256)"
 ];
 
 const WethFactory = new BigUnitFactory(18, "WETH");
@@ -35,6 +36,7 @@ export interface SwapResult {
   amountOut: number;
   pricePerToken: number;
   transactionHash: string;
+  timestamp: number;
 }
 
 type UniswapConfig = {
@@ -196,6 +198,7 @@ export class UniswapProvider {
       const receipt = await tx.wait();
       
       return {
+        timestamp: new Date().getTime(),
         amountIn,
         amountOut: Number(ethers.utils.formatUnits(amounts[1], tokenOut.decimals)),
         pricePerToken: Number(ethers.utils.formatUnits(amounts[1].mul(ethers.constants.WeiPerEther).div(amountInWei), tokenOut.decimals)),
@@ -207,21 +210,23 @@ export class UniswapProvider {
     }
   }
 
-  async buyWeth(usdcAmountIn: number, slippageTolerance: number = 0.5): Promise<SwapResult> {
-    return this.swap(this.usdcToken, this.wethToken, usdcAmountIn, slippageTolerance);
+  async buyWeth(usdcAmountToSell: number, slippageTolerance: number = 0.5): Promise<SwapResult> {
+    return this.swap(this.usdcToken, this.wethToken, usdcAmountToSell, slippageTolerance);
   }
 
-  async sellWeth(wethAmountIn: number, slippageTolerance: number = 0.5): Promise<SwapResult> {
-    return this.swap(this.wethToken, this.usdcToken, wethAmountIn, slippageTolerance);
+  async sellWeth(wethAmountToSell: number, slippageTolerance: number = 0.5): Promise<SwapResult> {
+    return this.swap(this.wethToken, this.usdcToken, wethAmountToSell, slippageTolerance);
   }
 
   async getWethBalance(): Promise<BigUnit> {
-    const balance = await this.provider.getBalance(this.wallet.address);
+    const wethContract = new ethers.Contract(this.wethToken.address, ERC20_ABI, this.provider);
+    const balance = await wethContract.balanceOf(this.wallet.address);
     return WethFactory.fromBigInt(balance.toBigInt());
   }
 
   async getUsdcBalance(): Promise<BigUnit> {
-    const balance = await this.provider.getBalance(this.wallet.address);
+    const usdcContract = new ethers.Contract(this.usdcToken.address, ERC20_ABI, this.provider);
+    const balance = await usdcContract.balanceOf(this.wallet.address);
     return UsdcFactory.fromBigInt(balance.toBigInt());
   }
 
@@ -229,7 +234,8 @@ export class UniswapProvider {
     const wethPrice = await this.getWethPrice();
     const wethBalance = await this.getWethBalance();
     const usdcBalance = await this.getUsdcBalance();
-    return (wethBalance.mul(wethPrice)).add(usdcBalance);
+    const wethValue = wethBalance.toNumber() * wethPrice.toNumber();
+    return UsdcFactory.fromNumber(wethValue + usdcBalance.toNumber());
   }
 }
 

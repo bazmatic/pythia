@@ -59,7 +59,19 @@ export class UniswapInvestmentProvider implements IInvestmentProvider {
         );
     }
 
+    private async reportBalances() {
+        const valueInUsdc = await this.uniswapProvider.getPortfolioValueInUsdc();
+        // const wethBalance = await this.uniswapProvider.getWethBalance();
+        // const usdcBalance = await this.uniswapProvider.getUsdcBalance();
+       
+        // console.log(`WETH balance: ${wethBalance.toNumber().toFixed(6)}`);
+        // console.log(`USDC balance: ${usdcBalance.toNumber().toFixed(6)}`);
+
+        console.log(`Portfolio value: $${valueInUsdc.toNumber().toFixed(2)}`);
+    }
+
     public async executeInvestment(sessionId: string): Promise<any> {
+        await this.reportBalances();
        
         const privateKey = process.env.UNISWAP_PRIVATE_KEY;
         if (!privateKey) {
@@ -77,7 +89,7 @@ export class UniswapInvestmentProvider implements IInvestmentProvider {
         if (!session) {
             throw new Error("Session not found");
         }
-        if (!session.chosenImageIdx) {
+        if (session.chosenImageIdx === undefined) {
             throw new Error("No investment strategy chosen");
         }
         const strategyIdx = session.chosenImageIdx;
@@ -117,6 +129,7 @@ export class UniswapInvestmentProvider implements IInvestmentProvider {
     }
 
     public async resolveInvestment(sessionId: string): Promise<number | undefined> {
+        await this.reportBalances();
         const session = await this.db.getItem<Session>(
             CollectionName.Sessions,
             sessionId
@@ -145,14 +158,17 @@ export class UniswapInvestmentProvider implements IInvestmentProvider {
             throw new Error("ALCHEMY_API_KEY is not set");
         }
 
-        if (!session.chosenImageIdx) {
+        if (session.chosenImageIdx === undefined) {
             throw new Error("No chosen image index in session");
         }
 
  
         // If the minimum time as not yet passed, return
-        if (new Date().getTime() < MIN_TIME) {
-            console.log(`Minimum time not yet passed. ${Math.floor((MIN_TIME - new Date().getTime()) / 1000 / 60)} minutes remaining`);
+        const now = new Date().getTime();
+        const timeElapsed = now - session.executionReport.timestamp;
+        const timeRemaining = MIN_TIME - timeElapsed;
+        if (timeRemaining > 0) {
+            console.log(`Minimum time not yet passed. ${Math.floor(timeRemaining / 1000 / 60)} minutes remaining`);
             return;
         }
 
@@ -169,8 +185,8 @@ export class UniswapInvestmentProvider implements IInvestmentProvider {
             won = currentPrice.gt(executionPrice);
             // Go ahead and sell the ETH. We'll get more USDC for the same amount of ETH.
             if (won) {
-                const usdcOutAmount = ETH_AMOUNT * executionPrice;
-                uniswapProvider.sellWeth(usdcOutAmount, 0.5).then(() => {
+                //const usdcOutAmount = ETH_AMOUNT * executionPrice;
+                uniswapProvider.sellWeth(ETH_AMOUNT, 0.5).then(() => {
                     console.log("Sold ETH to claim profit");
                 }).catch((error) => {
                     console.error("Error selling ETH to claim profit", error);
@@ -181,8 +197,7 @@ export class UniswapInvestmentProvider implements IInvestmentProvider {
             won = currentPrice.lt(executionPrice);
             // Go ahead and buy ETH again. We'll get more ETH for the same amount of USDC.
             if (won) {
-                const ethInAmount = USDC_AMOUNT / executionPrice;
-                uniswapProvider.buyWeth(ethInAmount, 0.5).then(() => {
+                uniswapProvider.buyWeth(USDC_AMOUNT, 0.5).then(() => {
                     console.log("Bought ETH to claim profit");
                 }).catch((error) => {
                     console.error("Error buying ETH to claim profit", error);
@@ -199,8 +214,4 @@ export class UniswapInvestmentProvider implements IInvestmentProvider {
 
     }
 
-    private async printPortfolioValue(uniswapProvider: UniswapProvider): Promise<void> {
-        const value = await uniswapProvider.getPortfolioValueInUsdc();
-        console.log(`Portfolio value: $${value.toNumber().toFixed(2)}`);
-    }
 }

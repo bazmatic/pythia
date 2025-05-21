@@ -113,9 +113,9 @@ export class SessionService implements ISessionService {
 
     public async executeInvestment(sessionId: string): Promise<void> {
         const session = await this.getSession(sessionId);
-        if (session.status !== SessionStatus.Investing) {
+        if (session.status !== SessionStatus.Judged) {
             console.warn(`Session not in ${SessionStatus.Investing} state. State: ${session.status}`);
-            return;
+            return;``
         }
         //Set status to investing in progress
         await this.saveSession({
@@ -126,6 +126,9 @@ export class SessionService implements ISessionService {
         try {
             console.log("Executing investment...");
             const executionReport = await this.investmentService.executeInvestment(sessionId);
+            if (!executionReport) {
+                throw new Error("Investment execution report not returned");
+            }
             await this.saveSession({
                 ...session,
                 executionReport,
@@ -146,6 +149,7 @@ export class SessionService implements ISessionService {
             console.warn(`Session not in ${SessionStatus.Invested} state. State: ${session.status}`);
             return;
         }
+        try {
         // Resolve the investment and update the session status
         const targetImageIdx = await this.investmentService.resolveInvestment(sessionId);
         if (targetImageIdx === undefined) {
@@ -158,6 +162,13 @@ export class SessionService implements ISessionService {
             status: SessionStatus.InvestmentResolved,
             targetImageIdx,
         });
+        } catch (error) {
+            await this.saveSession({
+                ...session,
+                status: SessionStatus.Judged
+            });
+            console.error(error);
+        }
     }
 
     public async shownFeedback(sessionId: string): Promise<void> {

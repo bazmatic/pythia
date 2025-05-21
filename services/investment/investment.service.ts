@@ -22,8 +22,8 @@ export class InvestmentService  {
         return this.investmentProvider.resolveInvestment(sessionId);
     }
 
-    public async executeInvestment(sessionId: string): Promise<void> {
+    public async executeInvestment(sessionId: string): Promise<any> {
         // Set the status to InvestingInProgress
-        await this.investmentProvider.executeInvestment(sessionId);
+        return  this.investmentProvider.executeInvestment(sessionId);
     }
 }
