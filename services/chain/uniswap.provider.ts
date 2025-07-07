@@ -2,6 +2,7 @@ import { BigUnit, BigUnitFactory } from 'bigunit';
 import { ethers } from 'ethers';
 import { Token } from '@uniswap/sdk-core';
 import { ChainId } from '@uniswap/sdk-core';
+import { CHAIN_CONFIGS, getToken, getAlchemyRpcUrl } from './config';
 
 // Uniswap V2 Router ABI - only the functions we need
 const UNISWAP_V2_ROUTER_ABI = [
@@ -28,7 +29,6 @@ const ERC20_ABI = [
   "function balanceOf(address account) external view returns (uint256)"
 ];
 
-const WethFactory = new BigUnitFactory(18, "WETH");
 const UsdcFactory = new BigUnitFactory(6, "USDC");
 
 export interface SwapResult {
@@ -39,79 +39,23 @@ export interface SwapResult {
   timestamp: number;
 }
 
-type UniswapConfig = {
-  chainId: number;
-  routerAddress: string;
-  factoryAddress: string;
-  wethToken: Token;
-  usdcToken: Token;
-}
-
-const Configs: Record<number, UniswapConfig> = {
-  [ChainId.BASE]: {
-    chainId: ChainId.BASE,
-    factoryAddress: "0x8909Dc15e40173Ff4699343b6eB8132c65e18eC6",
-    routerAddress: "0x4752ba5dbc23f44d87826276bf6fd6b1c372ad24",
-    wethToken: new Token(
-      ChainId.BASE,
-      "0x4200000000000000000000000000000000000006",
-      18,
-      'WETH'
-
-    ),
-    usdcToken: new Token(
-      ChainId.BASE,
-      "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
-      6,
-      'USDC'
-    ),
-  },
-  [ChainId.SEPOLIA]: {
-    chainId: ChainId.SEPOLIA,
-    factoryAddress: "0xF62c03E08ada871A0bEb309762E260a7a6a880E6",
-    routerAddress: "0xeE567Fe1712Faf6149d80dA1E6934E354124CfE3",
-    wethToken: new Token(
-      ChainId.SEPOLIA,
-      "0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14",
-      18,
-      'WETH'
-    ),
-    usdcToken: new Token(
-      ChainId.SEPOLIA,
-      "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238",
-      6,
-      'USDC'
-    ),
-  }
-};
-
-function getAlchemyRpcUrl(chainId: number, apiKey: string): string {
-  switch (chainId) {
-    case ChainId.BASE:
-      return `https://base-mainnet.g.alchemy.com/v2/${apiKey}`;
-    case ChainId.SEPOLIA:
-      return `https://eth-sepolia.g.alchemy.com/v2/${apiKey}`;
-    default:
-      throw new Error(`Unsupported chain ID: ${chainId}`);
-  }
-}
-
 export class UniswapProvider {
   private provider: ethers.providers.JsonRpcProvider;
   private wallet: ethers.Wallet;
   private router: ethers.Contract;
   private factory: ethers.Contract;
   private chainId: number;
-  private wethToken: Token;
   private usdcToken: Token;
+  private otherToken: Token;
 
   constructor(
     privateKey: string,
     alchemyApiKey: string,
-    chainId: number = ChainId.BASE
+    chainId: number = ChainId.BASE,
+    otherTokenSymbol: string = 'WETH'
   ) {
     this.chainId = chainId;
-    const config = Configs[chainId];
+    const config = CHAIN_CONFIGS[chainId];
     if (!config) {
       throw new Error(`Unsupported chain ID: ${chainId}`);
     }
@@ -121,45 +65,55 @@ export class UniswapProvider {
     this.wallet = new ethers.Wallet(privateKey, this.provider);
     this.router = new ethers.Contract(config.routerAddress, UNISWAP_V2_ROUTER_ABI, this.provider);
     this.factory = new ethers.Contract(config.factoryAddress, UNISWAP_V2_FACTORY_ABI, this.provider);
-    this.wethToken = config.wethToken;
-    this.usdcToken = config.usdcToken;
+    this.usdcToken = getToken(chainId, 'USDC');
+    this.otherToken = getToken(chainId, otherTokenSymbol);
   }
 
-  async getWethPrice(): Promise<BigUnit> {
+  async getTokenPrice(): Promise<BigUnit> {
     try {
-      const pairAddress = await this.factory.getPair(this.wethToken.address, this.usdcToken.address);
+      const pairAddress = await this.factory.getPair(this.otherToken.address, this.usdcToken.address);
       if (pairAddress === ethers.constants.AddressZero) {
-        throw new Error('No WETH/USDC pair found');
+        throw new Error(`No ${this.otherToken.symbol}/USDC pair found`);
       }
 
       const pair = new ethers.Contract(pairAddress, UNISWAP_V2_PAIR_ABI, this.provider);
       const [reserve0, reserve1] = await pair.getReserves();
 
-      // Determine which reserve is WETH and which is USDC
-      const wethReserve = this.wethToken.address.toLowerCase() < this.usdcToken.address.toLowerCase() ? reserve0 : reserve1;
-      const usdcReserve = this.wethToken.address.toLowerCase() < this.usdcToken.address.toLowerCase() ? reserve1 : reserve0;
+      // Determine which reserve is the token and which is USDC
+      const tokenReserve = this.otherToken.address.toLowerCase() < this.usdcToken.address.toLowerCase() ? reserve0 : reserve1;
+      const usdcReserve = this.otherToken.address.toLowerCase() < this.usdcToken.address.toLowerCase() ? reserve1 : reserve0;
 
-      // Calculate price in USDC per WETH
-      const price = usdcReserve.mul(ethers.constants.WeiPerEther).div(wethReserve);
+      // Calculate price in USDC per token
+      const price = usdcReserve.mul(ethers.constants.WeiPerEther).div(tokenReserve);
       return UsdcFactory.fromBigInt(price);
     } catch (error) {
-      console.error('Failed to get WETH price:', error);
-      throw new Error(`Failed to get WETH price: ${error instanceof Error ? error.message : error}`);
+      console.error(`Failed to get ${this.otherToken.symbol} price:`, error);
+      throw new Error(`Failed to get ${this.otherToken.symbol} price: ${error instanceof Error ? error.message : error}`);
     }
   }
 
   async swap(
-    tokenIn: Token,
-    tokenOut: Token,
+    tokenInSymbol: string,
+    tokenOutSymbol: string,
     amountIn: number,
     slippageTolerance: number = 0.5
   ): Promise<SwapResult> {
     try {
+      const tokenIn = getToken(this.chainId, tokenInSymbol);
+      const tokenOut = getToken(this.chainId, tokenOutSymbol);
+      
       // Convert amount to wei
       const amountInWei = ethers.utils.parseUnits(amountIn.toString(), tokenIn.decimals);
       
-      // Check and approve token spending if necessary
+      // Check balance first
       const tokenInContract = new ethers.Contract(tokenIn.address, ERC20_ABI, this.wallet);
+      const balance = await tokenInContract.balanceOf(this.wallet.address);
+      
+      if (balance.lt(amountInWei)) {
+        throw new Error(`Insufficient ${tokenInSymbol} balance. Required: ${ethers.utils.formatUnits(amountInWei, tokenIn.decimals)}, Available: ${ethers.utils.formatUnits(balance, tokenIn.decimals)}`);
+      }
+      
+      // Check and approve token spending if necessary
       const currentAllowance = await tokenInContract.allowance(this.wallet.address, this.router.address);
 
       if (currentAllowance.lt(amountInWei)) {
@@ -174,7 +128,6 @@ export class UniswapProvider {
       const amounts = await this.router.getAmountsOut(amountInWei, path);
 
       // Calculate amountOutMin based on slippageTolerance
-      // e.g., if slippageTolerance is 0.5 (0.5%), multiplier is (100 - 0.5) = 99.5. We use 9950/10000 for precision.
       const slippageMultiplier = ethers.BigNumber.from(10000 - Math.floor(slippageTolerance * 100));
       const basisPoints = ethers.BigNumber.from(10000);
       const amountOutMin = amounts[1].mul(slippageMultiplier).div(basisPoints);
@@ -182,11 +135,10 @@ export class UniswapProvider {
       // Calculate deadline (20 minutes from now)
       const deadline = Math.floor(Date.now() / 1000) + 20 * 60;
 
-      let tx;
+      console.log(`Attempting swap: ${amountIn} ${tokenInSymbol} for ${ethers.utils.formatUnits(amounts[1], tokenOut.decimals)} ${tokenOutSymbol}`);
+      console.log(`Minimum output: ${ethers.utils.formatUnits(amountOutMin, tokenOut.decimals)} ${tokenOutSymbol}`);
 
-      // For swapping ERC20 (like USDC) to WETH (ERC20) or WETH (ERC20) to USDC (ERC20),
-      // swapExactTokensForTokens is the correct function.
-      // The path will be [tokenIn.address, tokenOut.address].
+      let tx;
       tx = await this.router.connect(this.wallet).swapExactTokensForTokens(
         amountInWei,
         amountOutMin,
@@ -197,6 +149,10 @@ export class UniswapProvider {
 
       const receipt = await tx.wait();
       
+      if (receipt.status === 0) {
+        throw new Error('Transaction failed');
+      }
+      
       return {
         timestamp: new Date().getTime(),
         amountIn,
@@ -206,36 +162,51 @@ export class UniswapProvider {
       };
     } catch (error) {
       console.error('Swap failed:', error);
-      throw new Error(`Swap failed: ${error instanceof Error ? error.message : error}`);
+      if (error instanceof Error) {
+        throw new Error(`Swap failed: ${error.message}`);
+      }
+      throw error;
     }
   }
 
-  async buyWeth(usdcAmountToSell: number, slippageTolerance: number = 0.5): Promise<SwapResult> {
-    return this.swap(this.usdcToken, this.wethToken, usdcAmountToSell, slippageTolerance);
+  async buyToken(usdcAmountToSell: number, slippageTolerance: number = 0.5): Promise<SwapResult> {
+    if (!this.otherToken.symbol) {
+      throw new Error('Other token symbol is not defined');
+    }
+
+    return this.swap('USDC', this.otherToken.symbol, usdcAmountToSell, slippageTolerance);
   }
 
-  async sellWeth(wethAmountToSell: number, slippageTolerance: number = 0.5): Promise<SwapResult> {
-    return this.swap(this.wethToken, this.usdcToken, wethAmountToSell, slippageTolerance);
+  async sellToken(tokenAmountToSell: number, slippageTolerance: number = 0.5): Promise<SwapResult> {
+    if (!this.otherToken.symbol) {
+      throw new Error('Other token symbol is not defined');
+    }
+    return this.swap(this.otherToken.symbol, 'USDC', tokenAmountToSell, slippageTolerance);
   }
 
-  async getWethBalance(): Promise<BigUnit> {
-    const wethContract = new ethers.Contract(this.wethToken.address, ERC20_ABI, this.provider);
-    const balance = await wethContract.balanceOf(this.wallet.address);
-    return WethFactory.fromBigInt(balance.toBigInt());
+  async getEthBalance(): Promise<BigUnit> {
+    const balance = await this.provider.getBalance(this.wallet.address);
+    return new BigUnitFactory(18, 'ETH').fromBigInt(balance.toBigInt());
+  }
+
+  async getTokenBalance(): Promise<BigUnit> {
+    const tokenContract = new ethers.Contract(this.otherToken.address, ERC20_ABI, this.provider);
+    const balance = await tokenContract.balanceOf(this.wallet.address);
+    return new BigUnitFactory(this.otherToken.decimals, this.otherToken.symbol).fromBigInt(balance.toBigInt());
   }
 
   async getUsdcBalance(): Promise<BigUnit> {
-    const usdcContract = new ethers.Contract(this.usdcToken.address, ERC20_ABI, this.provider);
-    const balance = await usdcContract.balanceOf(this.wallet.address);
+    const tokenContract = new ethers.Contract(this.usdcToken.address, ERC20_ABI, this.provider);
+    const balance = await tokenContract.balanceOf(this.wallet.address);
     return UsdcFactory.fromBigInt(balance.toBigInt());
   }
 
   async getPortfolioValueInUsdc(): Promise<BigUnit> {
-    const wethPrice = await this.getWethPrice();
-    const wethBalance = await this.getWethBalance();
+    const tokenPrice = await this.getTokenPrice();
+    const tokenBalance = await this.getTokenBalance();
     const usdcBalance = await this.getUsdcBalance();
-    const wethValue = wethBalance.toNumber() * wethPrice.toNumber();
-    return UsdcFactory.fromNumber(wethValue + usdcBalance.toNumber());
+    const tokenValue = tokenBalance.toNumber() * tokenPrice.toNumber();
+    return UsdcFactory.fromNumber(tokenValue + usdcBalance.toNumber());
   }
 }
 

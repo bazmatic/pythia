@@ -43,6 +43,7 @@ export type Session = {
     executionReport?: any;
     status: SessionStatus;
     created_at?: number;
+    data?: Record<string, any>;
 };
 
 export type SessionData = {
